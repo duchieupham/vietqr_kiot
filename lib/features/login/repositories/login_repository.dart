@@ -29,12 +29,12 @@ class LoginRepository {
       String device = '';
       if (!PlatformUtils.instance.isWeb()) {
         if (PlatformUtils.instance.isIOsApp()) {
-          platform = 'IOS';
+          platform = 'IOS_KIOT';
           IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
           device =
               '${iosInfo.name.toString()} ${iosInfo.systemVersion.toString()}';
         } else if (PlatformUtils.instance.isAndroidApp()) {
-          platform = 'ANDROID';
+          platform = 'ANDROID_KIOT';
           AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
           device = androidInfo.model.toString();
         }

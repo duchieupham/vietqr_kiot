@@ -1,7 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/route.dart';
@@ -18,18 +21,17 @@ import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
 import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
 import 'package:viet_qr_kiot/models/notification_transaction_success_dto.dart';
 import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
+import 'package:viet_qr_kiot/services/local_notification/notification_service.dart';
 import 'package:viet_qr_kiot/services/providers/add_image_dashboard_provider.dart';
 import 'package:viet_qr_kiot/services/providers/menu_provider.dart';
-import 'package:viet_qr_kiot/services/shared_preferences/account_helper.dart';
-import 'package:viet_qr_kiot/services/shared_preferences/event_bloc_helper.dart';
-import 'package:viet_qr_kiot/services/local_notification/notification_service.dart';
 import 'package:viet_qr_kiot/services/providers/pin_provider.dart';
 import 'package:viet_qr_kiot/services/providers/theme_provider.dart';
+import 'package:viet_qr_kiot/services/shared_preferences/account_helper.dart';
+import 'package:viet_qr_kiot/services/shared_preferences/event_bloc_helper.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/theme_helper.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/user_information_helper.dart';
 
-import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'kiot_web/main_web.dart';
 
 //Share Preferences
 late SharedPreferences sharedPrefs;
@@ -38,11 +40,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   sharedPrefs = await SharedPreferences.getInstance();
   await _initialServiceHelper();
-  await Firebase.initializeApp(
-    // options: EnvConfig.getFirebaseConfig(),
-  );
+  if (!kIsWeb) {
+    await Firebase.initializeApp(
+        // options: EnvConfig.getFirebaseConfig(),
+        );
+  }
+
   LOG.verbose('Config Environment: ${EnvConfig.getEnv()}');
-  runApp(const VietQRApp());
+  if (kIsWeb) {
+    runApp(const VietKiotWeb());
+  } else {
+    runApp(const VietQRApp());
+  }
 }
 
 Future<void> _initialServiceHelper() async {

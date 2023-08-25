@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:viet_qr_kiot/commons/constants/env/env_config.dart';
 import 'package:viet_qr_kiot/commons/enums/authentication_type.dart';
 import 'package:viet_qr_kiot/commons/utils/base_api.dart';
 import 'package:viet_qr_kiot/commons/utils/log.dart';
+import 'package:viet_qr_kiot/commons/utils/platform_utils.dart';
 
 import 'package:viet_qr_kiot/services/shared_preferences/account_helper.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/event_bloc_helper.dart';
@@ -15,7 +18,11 @@ class LogoutRepository {
     bool result = false;
     try {
       final String url = '${EnvConfig.getBaseUrl()}accounts/logout';
-      String fcmToken = await FirebaseMessaging.instance.getToken() ?? '';
+      String fcmToken = '';
+      if (!PlatformUtils.instance.isWeb()) {
+        fcmToken = await FirebaseMessaging.instance.getToken() ?? '';
+      }
+
       final response = await BaseAPIClient.postAPI(
         url: url,
         body: {'fcmToken': fcmToken},

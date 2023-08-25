@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:viet_qr_kiot/commons/constants/env/env_config.dart';
 import 'package:viet_qr_kiot/commons/enums/authentication_type.dart';
 import 'package:viet_qr_kiot/commons/utils/base_api.dart';
@@ -9,10 +12,10 @@ import 'package:viet_qr_kiot/commons/utils/platform_utils.dart';
 import 'package:viet_qr_kiot/models/account_information_dto.dart';
 import 'package:viet_qr_kiot/models/account_login_dto.dart';
 import 'package:viet_qr_kiot/models/code_login_dto.dart';
-// import 'package:viet_qr_kiot/services/firestore/code_login_db.dart';
+import 'package:viet_qr_kiot/models/info_user_dto.dart';
+import 'package:viet_qr_kiot/models/response_message_dto.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/account_helper.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/user_information_helper.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 
 class LoginRepository {
   static final codeLoginController = BehaviorSubject<CodeLoginDTO>();
@@ -24,10 +27,12 @@ class LoginRepository {
     try {
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       String url = '${EnvConfig.getBaseUrl()}accounts';
-      String fcmToken = await FirebaseMessaging.instance.getToken() ?? '';
+      String fcmToken = '';
       String platform = '';
       String device = '';
+      String sharingCode = '';
       if (!PlatformUtils.instance.isWeb()) {
+        fcmToken = await FirebaseMessaging.instance.getToken() ?? '';
         if (PlatformUtils.instance.isIOsApp()) {
           platform = 'IOS_KIOT';
           IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
@@ -49,6 +54,7 @@ class LoginRepository {
         platform: platform,
         device: device,
         fcmToken: fcmToken,
+        sharingCode: sharingCode,
       );
       final response = await BaseAPIClient.postAPI(
         url: url,
@@ -75,52 +81,27 @@ class LoginRepository {
     return result;
   }
 
-  // //listen login code
-  // void listenLoginCode(String code) {
-  //   try {
-  //     CodeLoginDB.instance.listenLoginCode(code).listen((querySnapshot) {
-  //       if (querySnapshot.docs.isNotEmpty) {
-  //         Map<String, dynamic> data =
-  //             querySnapshot.docs.first.data() as Map<String, dynamic>;
-  //         CodeLoginDTO codeLoginDTO = CodeLoginDTO.fromJson(data);
-  //         if (codeLoginDTO.userId.isNotEmpty) {
-  //           codeLoginController.sink.add(codeLoginDTO);
-  //         }
-  //       }
-  //     });
-  //   } catch (e) {
-  //     print('Error at listenLoginCode - LoginRepository: $e');
-  //   }
-  // }
-
-  // //insert login code
-  // Future<bool> insertCodeLogin(CodeLoginDTO dto) async {
-  //   bool result = false;
-  //   try {
-  //     result = await CodeLoginDB.instance.insertCodeLogin(dto);
-  //   } catch (e) {
-  //     print('Error at insertCodeLogin - LoginRepository: $e');
-  //   }
-  //   return result;
-  // }
-
-  // //update login code
-  // Future<void> updateCodeLogin(CodeLoginDTO dto) async {
-  //   try {
-  //     await CodeLoginDB.instance.updateCodeLogin(dto);
-  //   } catch (e) {
-  //     print('Error at updateCodeLogin - LoginRepository: $e');
-  //   }
-  // }
-
-  // //delete login code
-  // Future<bool> deleteCodeLogin(String code) async {
-  //   bool result = false;
-  //   try {
-  //     result = await CodeLoginDB.instance.deleteCodeLogin(code);
-  //   } catch (e) {
-  //     print('Error at deleteCodeLogin - LoginRepository: $e');
-  //   }
-  //   return result;
-  // }
+  Future checkExistPhone(String phone) async {
+    try {
+      String url = '${EnvConfig.getBaseUrl()}accounts/search/$phone';
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.NONE,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data != null) {
+          return InfoUserDTO.fromJson(data);
+        }
+      } else {
+        var data = jsonDecode(response.body);
+        if (data != null) {
+          return ResponseMessageDTO(
+              status: data['status'], message: data['message']);
+        }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+  }
 }

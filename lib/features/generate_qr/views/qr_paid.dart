@@ -113,8 +113,8 @@ class _QRPaid extends State<QRPaid> {
                             style: TextStyle(
                               fontSize: 40,
                               color: (widget.dto.transType.trim() == 'C')
-                                  ? DefaultTheme.NEON
-                                  : DefaultTheme.RED_CALENDAR,
+                                  ? AppColor.NEON
+                                  : AppColor.RED_CALENDAR,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -167,8 +167,8 @@ class _QRPaid extends State<QRPaid> {
                                 }
                               });
                             },
-                            bgColor: DefaultTheme.GREEN,
-                            textColor: DefaultTheme.WHITE,
+                            bgColor: AppColor.GREEN,
+                            textColor: AppColor.WHITE,
                           ),
                         ),
                         (height < 500)

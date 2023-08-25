@@ -114,7 +114,7 @@ class _HomeScreen extends State<HomeScreen> {
                         child: const Icon(
                           Icons.logout_rounded,
                           size: 15,
-                          color: DefaultTheme.RED_TEXT,
+                          color: AppColor.RED_TEXT,
                         ),
                       ),
                     ),
@@ -151,8 +151,8 @@ class _HomeScreen extends State<HomeScreen> {
                               .updateMenuOpen(false);
                           _logoutBloc.add(const LogoutEventSubmit());
                         },
-                        bgColor: DefaultTheme.TRANSPARENT,
-                        textColor: DefaultTheme.RED_TEXT,
+                        bgColor: AppColor.TRANSPARENT,
+                        textColor: AppColor.RED_TEXT,
                       ),
                     ),
                   ],
@@ -292,14 +292,14 @@ class _HomeScreen extends State<HomeScreen> {
                                 Icon(
                                   Icons.image_rounded,
                                   size: 30,
-                                  color: DefaultTheme.GREEN,
+                                  color: AppColor.GREEN,
                                 ),
                                 Padding(padding: EdgeInsets.only(top: 10)),
                                 Text(
                                   'Chọn ảnh',
                                   style: TextStyle(
                                     fontSize: 20,
-                                    color: DefaultTheme.GREEN,
+                                    color: AppColor.GREEN,
                                   ),
                                 ),
                               ],
@@ -351,14 +351,14 @@ class _HomeScreen extends State<HomeScreen> {
                                 Icon(
                                   Icons.image_rounded,
                                   size: 30,
-                                  color: DefaultTheme.GREEN,
+                                  color: AppColor.GREEN,
                                 ),
                                 Padding(padding: EdgeInsets.only(top: 10)),
                                 Text(
                                   'Chọn ảnh',
                                   style: TextStyle(
                                     fontSize: 20,
-                                    color: DefaultTheme.GREEN,
+                                    color: AppColor.GREEN,
                                   ),
                                 ),
                               ],
@@ -732,7 +732,7 @@ class _HomeScreen extends State<HomeScreen> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Theme.of(context).cardColor,
-        textColor: DefaultTheme.GREEN,
+        textColor: AppColor.GREEN,
         fontSize: 15,
       );
       await qrRepository.generateQR(dto).then((value) {
@@ -744,7 +744,7 @@ class _HomeScreen extends State<HomeScreen> {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Theme.of(context).cardColor,
-          textColor: DefaultTheme.GREEN,
+          textColor: AppColor.GREEN,
           fontSize: 15,
         );
       });

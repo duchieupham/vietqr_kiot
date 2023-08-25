@@ -13,11 +13,9 @@ import 'package:viet_qr_kiot/commons/widgets/dialog_widget.dart';
 import 'package:viet_qr_kiot/features/generate_qr/views/qr_generated.dart';
 import 'package:viet_qr_kiot/features/generate_qr/views/qr_paid.dart';
 import 'package:viet_qr_kiot/features/home/views/home_view.dart';
-import 'package:viet_qr_kiot/features/login/blocs/login_bloc.dart';
-import 'package:viet_qr_kiot/features/login/views/login.dart';
+import 'package:viet_qr_kiot/features/login/login.dart';
 import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
 import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
-import 'package:viet_qr_kiot/features/transaction/widgets/transaction_sucess_widget.dart';
 import 'package:viet_qr_kiot/models/notification_transaction_success_dto.dart';
 import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
 import 'package:viet_qr_kiot/services/providers/add_image_dashboard_provider.dart';
@@ -40,7 +38,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   sharedPrefs = await SharedPreferences.getInstance();
   await _initialServiceHelper();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: EnvConfig.getFirebaseConfig(),
+  );
   LOG.verbose('Config Environment: ${EnvConfig.getEnv()}');
   runApp(const VietQRApp());
 }
@@ -160,9 +160,6 @@ class _VietQRApp extends State<VietQRApp> {
       },
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<LoginBloc>(
-            create: (BuildContext context) => LoginBloc(),
-          ),
           BlocProvider<TokenBloc>(
             create: (BuildContext context) => TokenBloc(),
           ),
@@ -198,13 +195,8 @@ class _VietQRApp extends State<VietQRApp> {
                   Routes.LOGIN: (context) => const Login(),
                   Routes.HOME: (context) => const HomeScreen(),
                 },
-                themeMode:
-                    (themeSelect.themeSystem == DefaultTheme.THEME_SYSTEM)
-                        ? ThemeMode.system
-                        : (themeSelect.themeSystem == DefaultTheme.THEME_LIGHT)
-                            ? ThemeMode.light
-                            : ThemeMode.dark,
-                darkTheme: DefaultThemeData(context: context).darkTheme,
+                themeMode: ThemeMode.light,
+                darkTheme: DefaultThemeData(context: context).lightTheme,
                 theme: DefaultThemeData(context: context).lightTheme,
                 localizationsDelegates: const [
                   GlobalMaterialLocalizations.delegate,
@@ -217,7 +209,7 @@ class _VietQRApp extends State<VietQRApp> {
                 ],
                 home: Title(
                   title: 'VietQR',
-                  color: DefaultTheme.BLACK,
+                  color: AppColor.BLACK,
                   child: _homeScreen,
                 ),
               );

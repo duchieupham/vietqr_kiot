@@ -86,7 +86,7 @@ class _QRGenerated extends State<QRGenerated> {
                             '${CurrencyUtils.instance.getCurrencyFormatted(widget.qrGeneratedDTO.amount)} VND',
                             style: const TextStyle(
                               fontSize: 50,
-                              color: DefaultTheme.ORANGE,
+                              color: AppColor.ORANGE,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -102,7 +102,7 @@ class _QRGenerated extends State<QRGenerated> {
                               height: 25,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
-                                color: DefaultTheme.WHITE,
+                                color: AppColor.WHITE,
                                 image: (widget.qrGeneratedDTO.imgId.isEmpty)
                                     ? null
                                     : DecorationImage(
@@ -153,8 +153,8 @@ class _QRGenerated extends State<QRGenerated> {
                                 Navigator.popUntil(
                                     context, (route) => route.isFirst);
                               },
-                              bgColor: DefaultTheme.GREEN,
-                              textColor: DefaultTheme.WHITE,
+                              bgColor: AppColor.GREEN,
+                              textColor: AppColor.WHITE,
                             ),
                             const Padding(padding: EdgeInsets.only(left: 10)),
                             ButtonIconWidget(
@@ -174,13 +174,13 @@ class _QRGenerated extends State<QRGenerated> {
                                     gravity: ToastGravity.BOTTOM,
                                     backgroundColor:
                                         Theme.of(context).cardColor,
-                                    textColor: DefaultTheme.GREEN,
+                                    textColor: AppColor.GREEN,
                                     fontSize: 15,
                                   );
                                 });
                               },
                               bgColor: Theme.of(context).canvasColor,
-                              textColor: DefaultTheme.RED_CALENDAR,
+                              textColor: AppColor.RED_CALENDAR,
                             ),
                             const Padding(padding: EdgeInsets.only(left: 10)),
                             ButtonIconWidget(
@@ -207,7 +207,7 @@ class _QRGenerated extends State<QRGenerated> {
                                 );
                               },
                               bgColor: Theme.of(context).canvasColor,
-                              textColor: DefaultTheme.BLUE_TEXT,
+                              textColor: AppColor.BLUE_TEXT,
                             ),
                             const Padding(padding: EdgeInsets.only(left: 10)),
                             ButtonIconWidget(
@@ -219,7 +219,7 @@ class _QRGenerated extends State<QRGenerated> {
                                 await share(dto: widget.qrGeneratedDTO);
                               },
                               bgColor: Theme.of(context).canvasColor,
-                              textColor: DefaultTheme.GREEN,
+                              textColor: AppColor.GREEN,
                             ),
                           ],
                         ),
@@ -287,8 +287,8 @@ class _QRGenerated extends State<QRGenerated> {
                             Navigator.popUntil(
                                 context, (route) => route.isFirst);
                           },
-                          bgColor: DefaultTheme.GREEN,
-                          textColor: DefaultTheme.WHITE,
+                          bgColor: AppColor.GREEN,
+                          textColor: AppColor.WHITE,
                         ),
                         const Padding(padding: EdgeInsets.only(left: 10)),
                         ButtonIconWidget(
@@ -307,13 +307,13 @@ class _QRGenerated extends State<QRGenerated> {
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 backgroundColor: Theme.of(context).cardColor,
-                                textColor: DefaultTheme.GREEN,
+                                textColor: AppColor.GREEN,
                                 fontSize: 15,
                               );
                             });
                           },
                           bgColor: Theme.of(context).cardColor,
-                          textColor: DefaultTheme.RED_CALENDAR,
+                          textColor: AppColor.RED_CALENDAR,
                         ),
                         const Padding(padding: EdgeInsets.only(left: 10)),
                         ButtonIconWidget(
@@ -339,7 +339,7 @@ class _QRGenerated extends State<QRGenerated> {
                             );
                           },
                           bgColor: Theme.of(context).cardColor,
-                          textColor: DefaultTheme.BLUE_TEXT,
+                          textColor: AppColor.BLUE_TEXT,
                         ),
                         const Padding(padding: EdgeInsets.only(left: 10)),
                         ButtonIconWidget(
@@ -351,7 +351,7 @@ class _QRGenerated extends State<QRGenerated> {
                             await share(dto: widget.qrGeneratedDTO);
                           },
                           bgColor: Theme.of(context).cardColor,
-                          textColor: DefaultTheme.GREEN,
+                          textColor: AppColor.GREEN,
                         ),
                         const Padding(padding: EdgeInsets.only(left: 20)),
                       ],

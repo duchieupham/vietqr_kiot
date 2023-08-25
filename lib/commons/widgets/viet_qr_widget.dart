@@ -83,7 +83,7 @@ class VietQRWidget extends StatelessWidget {
                       height: 40,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: DefaultTheme.WHITE,
+                        color: AppColor.WHITE,
                         image: (qrGeneratedDTO.imgId.isEmpty)
                             ? null
                             : DecorationImage(
@@ -111,7 +111,7 @@ class VietQRWidget extends StatelessWidget {
                   enableShadow: true,
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   margin: const EdgeInsets.symmetric(vertical: 20),
-                  bgColor: DefaultTheme.WHITE,
+                  bgColor: AppColor.WHITE,
                   child: Column(
                     children: [
                       QrImage(
@@ -160,7 +160,7 @@ class VietQRWidget extends StatelessWidget {
                   Text(
                     '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
                     style: const TextStyle(
-                      color: DefaultTheme.ORANGE,
+                      color: AppColor.ORANGE,
                       fontSize: 25,
                       fontWeight: FontWeight.w500,
                     ),
@@ -328,7 +328,7 @@ class VietQRWidget extends StatelessWidget {
             borderRadius: 5,
             padding: const EdgeInsets.all(0),
             alignment: Alignment.center,
-            bgColor: DefaultTheme.WHITE,
+            bgColor: AppColor.WHITE,
             enableShadow: true,
             child: Column(
               children: [
@@ -377,7 +377,7 @@ class VietQRWidget extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: DefaultTheme.GREEN,
+                      color: AppColor.GREEN,
                     ),
                     children: [
                       TextSpan(
@@ -407,7 +407,7 @@ class VietQRWidget extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 15,
-                      color: DefaultTheme.GREEN,
+                      color: AppColor.GREEN,
                     ),
                   ),
                 )

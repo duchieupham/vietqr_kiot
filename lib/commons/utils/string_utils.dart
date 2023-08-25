@@ -11,6 +11,7 @@ class StringUtils {
       r'^[a-zA-Z0-9.,!@#$&*/? ]+$';
   final String _transactionContentPattern = r'^[a-zA-ZÀ-ỹẠ-ỵ0-9.,!@#$&*/? ]+$';
   final String _fullNamePattern = r'^[a-zA-ZÀ-ỹẠ-ỵ0-9 ]+$';
+  final String _phonePattern = r'^(?:[+0]9)?[0-9]{10}$';
 
   bool isNumeric(String text) {
     return int.tryParse(text) != null;
@@ -84,5 +85,39 @@ class StringUtils {
         .map((str) => toBeginningOfSentenceCase(str))
         .join(" ");
     return result;
+  }
+
+  bool? isValidatePhone(String value) {
+    RegExp regExp = RegExp(_phonePattern);
+    if (value.isEmpty || value.length > 10 || value.length < 10) {
+      return true;
+    } else if (!regExp.hasMatch(value)) {
+      return true;
+    }
+    return false;
+  }
+
+  String? validatePhone(String value) {
+    RegExp regExp = RegExp(_phonePattern);
+    if (value.isEmpty) {
+      return null;
+    } else if (!regExp.hasMatch(value)) {
+      return 'Số điện thoại không đúng định dạng.';
+    }
+    return null;
+  }
+
+  String formatPhoneNumberVN(String phoneNumber) {
+    String numericString = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
+
+    if (numericString.length >= 10) {
+      return phoneNumber.replaceAllMapped(RegExp(r'(\d{3})(\d{3})(\d+)'),
+              (Match m) => "${m[1]} ${m[2]} ${m[3]}");
+    } else {
+      if (numericString.length == 8) {
+        return '${numericString.substring(0, 4)} ${numericString.substring(4, 8)}';
+      }
+      return numericString;
+    }
   }
 }

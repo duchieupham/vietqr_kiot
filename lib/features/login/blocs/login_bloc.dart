@@ -1,95 +1,77 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:viet_qr_kiot/commons/constants/configurations/stringify.dart';
+import 'package:viet_qr_kiot/commons/enums/enum_type.dart';
+import 'package:viet_qr_kiot/commons/utils/check_utils.dart';
 import 'package:viet_qr_kiot/features/login/events/login_event.dart';
 import 'package:viet_qr_kiot/features/login/repositories/login_repository.dart';
 import 'package:viet_qr_kiot/features/login/states/login_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:viet_qr_kiot/models/info_user_dto.dart';
+import 'package:viet_qr_kiot/models/response_message_dto.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(LoginInitialState()) {
+  LoginBloc() : super(const LoginState()) {
     on<LoginEventByPhone>(_login);
-    // on<LoginEventGetUserInformation>(_getUserInformation);
-    // on<LoginEventListen>(_listenCodeLogin);
-    // on<LoginEventReceived>(_receivedCodeLogin);
-    // on<LoginEventUpdateCode>(_updateCodeLogin);
-    // on<LoginEventInsertCode>(_insertCodeLogin);
+    on<CheckExitsPhoneEvent>(_checkExitsPhone);
+    on<UpdateEvent>(_updateEvent);
+  }
+
+  void _login(LoginEvent event, Emitter emit) async {
+    try {
+      if (event is LoginEventByPhone) {
+        emit(state.copyWith(
+            status: BlocStatus.LOADING, request: LoginType.NONE));
+        bool check = await loginRepository.login(event.dto);
+        if (check) {
+          emit(state.copyWith(
+              isToast: event.isToast,
+              request: LoginType.TOAST,
+              status: BlocStatus.UNLOADING));
+        } else {
+          emit(state.copyWith(
+              request: LoginType.ERROR,
+              msg: 'Sai mật khẩu. Vui lòng kiểm tra lại mật khẩu của bạn'));
+        }
+      }
+    } catch (e) {
+      emit(state.copyWith(request: LoginType.ERROR));
+    }
+  }
+
+  void _checkExitsPhone(LoginEvent event, Emitter emit) async {
+    try {
+      if (event is CheckExitsPhoneEvent) {
+        emit(state.copyWith(
+            status: BlocStatus.LOADING, request: LoginType.NONE));
+        final data = await loginRepository.checkExistPhone(event.phone);
+        if (data is InfoUserDTO) {
+          emit(
+            state.copyWith(
+                request: LoginType.CHECK_EXIST,
+                status: BlocStatus.UNLOADING,
+                infoUserDTO: data),
+          );
+        } else if (data is ResponseMessageDTO) {
+          if (data.status == Stringify.RESPONSE_STATUS_CHECK) {
+            String message = CheckUtils.instance.getCheckMessage(data.message);
+            emit(
+              state.copyWith(
+                msg: message,
+                request: LoginType.REGISTER,
+                status: BlocStatus.UNLOADING,
+                phone: event.phone,
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      emit(state.copyWith(request: LoginType.ERROR));
+    }
+  }
+
+  void _updateEvent(LoginEvent event, Emitter emit) async {
+    emit(state.copyWith(status: BlocStatus.NONE, request: LoginType.NONE));
   }
 }
 
 const LoginRepository loginRepository = LoginRepository();
-
-void _login(LoginEvent event, Emitter emit) async {
-  try {
-    if (event is LoginEventByPhone) {
-      emit(LoginLoadingState());
-      bool check = await loginRepository.login(event.dto);
-      if (check) {
-        emit(LoginSuccessfulState());
-      } else {
-        emit(LoginFailedState());
-      }
-    }
-  } catch (e) {
-    print('Error at login - LoginBloc: $e');
-    emit(LoginFailedState());
-  }
-}
-
-// void _listenCodeLogin(LoginEvent event, Emitter emit) {
-//   try {
-//     if (event is LoginEventListen) {
-//       loginRepository.listenLoginCode(event.code);
-//       LoginRepository.codeLoginController.listen((codeLoginDTO) {
-//         if (codeLoginDTO.userId.isNotEmpty) {
-//           event.loginBloc.add(LoginEventReceived(dto: codeLoginDTO));
-//         }
-//       });
-//     }
-//   } catch (e) {
-//     print('Error at _listenCodeLogin - LoginBloc: $e');
-//     emit(LoginFailedState());
-//   }
-// }
-
-// void _receivedCodeLogin(LoginEvent event, Emitter emit) async {
-//   try {
-//     if (event is LoginEventReceived) {
-//       if (event.dto.userId.isNotEmpty) {
-//         await UserInformationHelper.instance.setUserId(event.dto.userId);
-//         await loginRepository.deleteCodeLogin(event.dto.code);
-//         emit(LoginSuccessfulState());
-//       }
-//     }
-//   } catch (e) {
-//     print('Error at _receivedCodeLogin - LoginBloc: $e');
-//     emit(LoginFailedState());
-//   }
-// }
-
-// void _updateCodeLogin(LoginEvent event, Emitter emit) async {
-//   try {
-//     if (event is LoginEventUpdateCode) {
-//       CodeLoginDTO dto =
-//           CodeLoginDTO(code: event.code, isScanned: true, userId: event.userId);
-//       await loginRepository.updateCodeLogin(dto);
-//     }
-//   } catch (e) {
-//     print('Error at _updateCodeLogin - LoginBloc: $e');
-//     emit(LoginFailedState());
-//   }
-// }
-
-// void _insertCodeLogin(LoginEvent event, Emitter emit) async {
-//   try {
-//     if (event is LoginEventInsertCode) {
-//       CodeLoginDTO dto =
-//           CodeLoginDTO(code: event.code, isScanned: false, userId: '');
-//       await loginRepository.insertCodeLogin(dto).then(
-//             (value) => event.loginBloc.add(
-//               LoginEventListen(code: event.code, loginBloc: event.loginBloc),
-//             ),
-//           );
-//     }
-//   } catch (e) {
-//     print('Error at _insertCodeLogin - LoginBloc: $e');
-//     emit(LoginFailedState());
-//   }
-// }

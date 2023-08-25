@@ -44,9 +44,9 @@ class QRGeneratedWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: DefaultTheme.WHITE,
+                    color: AppColor.WHITE,
                     border: Border.all(
-                      color: DefaultTheme.GREY_TEXT,
+                      color: AppColor.GREY_TEXT,
                       width: 0.5,
                     ),
                   ),
@@ -75,7 +75,7 @@ class QRGeneratedWidget extends StatelessWidget {
                     Container(
                       width: 0.5,
                       height: 30,
-                      color: DefaultTheme.GREY_TOP_TAB_BAR,
+                      color: AppColor.GREY_TOP_TAB_BAR,
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                     ),
                     SizedBox(
@@ -91,7 +91,7 @@ class QRGeneratedWidget extends StatelessWidget {
                 Text(
                   'Tên chủ TK: ${bankAccountDTO.bankName.toUpperCase()}',
                   style: const TextStyle(
-                    color: DefaultTheme.BLUE_TEXT,
+                    color: AppColor.BLUE_TEXT,
                     fontSize: 13,
                   ),
                 ),
@@ -101,7 +101,7 @@ class QRGeneratedWidget extends StatelessWidget {
                   'Số TK: ${bankAccountDTO.bankAccount}',
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,
-                    color: DefaultTheme.BLUE_TEXT,
+                    color: AppColor.BLUE_TEXT,
                     fontSize: 13,
                   ),
                 ),
@@ -109,7 +109,7 @@ class QRGeneratedWidget extends StatelessWidget {
                 Text(
                   bankAccountDTO.bankName,
                   style: const TextStyle(
-                    color: DefaultTheme.BLUE_TEXT,
+                    color: AppColor.BLUE_TEXT,
                     fontSize: 12,
                   ),
                 ),
@@ -128,7 +128,7 @@ class QRGeneratedWidget extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                   decoration: BoxDecoration(
-                    color: DefaultTheme.WHITE.withOpacity(0.8),
+                    color: AppColor.WHITE.withOpacity(0.8),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -143,9 +143,9 @@ class QRGeneratedWidget extends StatelessWidget {
                         padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: DefaultTheme.WHITE,
+                          color: AppColor.WHITE,
                           border: Border.all(
-                            color: DefaultTheme.GREY_TEXT,
+                            color: AppColor.GREY_TEXT,
                             width: 0.5,
                           ),
                         ),
@@ -164,7 +164,7 @@ class QRGeneratedWidget extends StatelessWidget {
                       Text(
                         'Tên chủ TK: ${bankAccountDTO.bankName.toUpperCase()}',
                         style: const TextStyle(
-                          color: DefaultTheme.BLUE_TEXT,
+                          color: AppColor.BLUE_TEXT,
                           fontSize: 15,
                         ),
                       ),
@@ -174,7 +174,7 @@ class QRGeneratedWidget extends StatelessWidget {
                         'Số TK: ${bankAccountDTO.bankAccount}',
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
-                          color: DefaultTheme.BLUE_TEXT,
+                          color: AppColor.BLUE_TEXT,
                           fontSize: 15,
                         ),
                       ),
@@ -182,7 +182,7 @@ class QRGeneratedWidget extends StatelessWidget {
                       Text(
                         bankAccountDTO.bankName,
                         style: const TextStyle(
-                          color: DefaultTheme.BLUE_TEXT,
+                          color: AppColor.BLUE_TEXT,
                           fontSize: 13,
                         ),
                       ),

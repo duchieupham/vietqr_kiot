@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
+import 'package:viet_qr_kiot/commons/utils/log.dart';
 
 class UserInformationUtils {
   const UserInformationUtils._privateConsrtructor();
@@ -27,13 +30,13 @@ class UserInformationUtils {
   }
 
   Color getMemberRoleColor(int role) {
-    Color result = DefaultTheme.GREEN;
+    Color result = AppColor.GREEN;
     if (role == 1) {
-      result = DefaultTheme.BLUE_TEXT;
+      result = AppColor.BLUE_TEXT;
     } else if (role == 2) {
-      result = DefaultTheme.ORANGE;
+      result = AppColor.ORANGE;
     } else {
-      result = DefaultTheme.GREEN;
+      result = AppColor.GREEN;
     }
     return result;
   }
@@ -46,6 +49,23 @@ class UserInformationUtils {
       result = 3;
     } else {
       result = 3;
+    }
+    return result;
+  }
+
+  Future<String> getIPAddress() async {
+    String result = '';
+    try {
+      for (var interface in await NetworkInterface.list()) {
+        for (var addr in interface.addresses) {
+          // kiểm tra xem địa chỉ IP có phải là IPv4 hay không
+          if (addr.type == InternetAddressType.IPv4 && !addr.isLinkLocal) {
+            result = addr.address;
+          }
+        }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
     }
     return result;
   }

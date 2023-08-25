@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:viet_qr_kiot/main.dart';
 import 'package:viet_qr_kiot/models/account_information_dto.dart';
+import 'package:viet_qr_kiot/models/info_user_dto.dart';
 
 class UserInformationHelper {
   const UserInformationHelper._privateConsrtructor();
 
   static const UserInformationHelper _instance =
       UserInformationHelper._privateConsrtructor();
+
   static UserInformationHelper get instance => _instance;
 
   Future<void> initialUserInformationHelper() async {
@@ -57,5 +59,15 @@ class UserInformationHelper {
   String getUserFullname() {
     return ('${getAccountInformation().lastName} ${getAccountInformation().middleName} ${getAccountInformation().firstName}')
         .trim();
+  }
+
+  Future<void> setLoginAccount(List<String> list) async {
+    await sharedPrefs.setStringList('LOGIN_ACCOUNT', list);
+  }
+
+  List<InfoUserDTO> getLoginAccount() {
+    return ListLoginAccountDTO.fromJson(
+            sharedPrefs.getStringList('LOGIN_ACCOUNT'))
+        .list;
   }
 }

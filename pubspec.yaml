@@ -74,6 +74,9 @@ dependencies:
   url_launcher: ^6.1.10
   image_gallery_saver: ^1.6.8
   audioplayers: ^4.0.1
+  pin_code_fields: ^7.4.0
+  dudv_base:
+  flutter_multi_formatter: ^2.11.6
 
 dev_dependencies:
   flutter_test:
@@ -101,49 +104,7 @@ flutter:
   assets:
       - android/app/src/main/res/raw/notification_sound.mp3
       - assets/rives/
-      - assets/images/ic-pop.png
-      - assets/images/ic-light-theme.png
-      - assets/images/ic-dark-theme.png
-      - assets/images/ic-system-theme.png
-      - assets/images/ic-checked.png
-      - assets/images/ic-uncheck.png
-      - assets/images/ic-dashboard.png
-      - assets/images/ic-dashboard-unselect.png
-      - assets/images/ic-user.png
-      - assets/images/ic-user-unselect.png
-      - assets/images/ic-qr.png
-      - assets/images/ic-qr-unselect.png
-      - assets/images/ic-avatar.png
-      - assets/images/ic-viet-qr.png
-      - assets/images/ic-viet-qr-small.png
-      - assets/images/ic-viet-qr-small-trans.png
-      - assets/images/logo.png
-      - assets/images/ic-dropdown.png
-      - assets/images/bg-qr.png
-      - assets/images/bg-bank-card.png
-      - assets/images/ic-card.png
-      - assets/images/ic-warning.png
-      - assets/images/ic-napas247.png
-      - assets/images/ic-member.png
-      - assets/images/ic-transaction-success.png
-      - assets/images/ic-viet-qr-login.png
-      - assets/images/banks/ic-shb.png
-      - assets/images/banks/ic-mb.png
-      - assets/images/banks/ic-icb.png
-      - assets/images/banks/ic-vcb.png
-      - assets/images/bg-admin-card.png
-      - assets/images/bg-member-card.png
-      - assets/images/ic-viet-qr-org.png
-      - assets/images/ic-business-introduction.png
-      - assets/images/ic-personal-card.png
-      - assets/images/ic-business-card.png
-      - assets/images/ic-avatar-business.png
-      - assets/images/ic-card-unselect.png
-      - assets/images/ic-card-selected.png
-      - assets/images/ic-scan-qr-frame.png
-      - assets/images/ic-qr-payment-selected.png
-      - assets/images/ic-qr-payment-unselect.png
-
+      - assets/images/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

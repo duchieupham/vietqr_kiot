@@ -1,6 +1,6 @@
+import 'package:equatable/equatable.dart';
 import 'package:viet_qr_kiot/features/login/blocs/login_bloc.dart';
 import 'package:viet_qr_kiot/models/account_login_dto.dart';
-import 'package:equatable/equatable.dart';
 import 'package:viet_qr_kiot/models/code_login_dto.dart';
 
 class LoginEvent extends Equatable {
@@ -12,7 +12,9 @@ class LoginEvent extends Equatable {
 
 class LoginEventByPhone extends LoginEvent {
   final AccountLoginDTO dto;
-  const LoginEventByPhone({required this.dto});
+  final bool isToast;
+
+  const LoginEventByPhone({required this.dto, this.isToast = false});
 
   @override
   List<Object?> get props => [dto];
@@ -65,3 +67,14 @@ class LoginEventUpdateCode extends LoginEvent {
   @override
   List<Object?> get props => [code, userId];
 }
+
+class CheckExitsPhoneEvent extends LoginEvent {
+  final String phone;
+
+  const CheckExitsPhoneEvent({required this.phone});
+
+  @override
+  List<Object?> get props => [phone];
+}
+
+class UpdateEvent extends LoginEvent {}

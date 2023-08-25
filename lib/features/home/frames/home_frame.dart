@@ -46,7 +46,7 @@ class HomeFrame extends StatelessWidget {
                   SubHeader(
                     title: 'QUÉT MÃ QR ĐỂ THANH TOÁN',
                     enableNavigator: false,
-                    textColor: DefaultTheme.WHITE,
+                    textColor: AppColor.WHITE,
                     textSized: (height < 500) ? 20 : 35,
                     headWidget: Consumer<MenuProvider>(
                       builder: (context, provider, child) {
@@ -63,12 +63,12 @@ class HomeFrame extends StatelessWidget {
                             child: (provider.menuOpen)
                                 ? const Icon(
                                     Icons.close_rounded,
-                                    color: DefaultTheme.GREY_TEXT,
+                                    color: AppColor.GREY_TEXT,
                                     size: 15,
                                   )
                                 : const Icon(
                                     Icons.menu_rounded,
-                                    color: DefaultTheme.GREY_TEXT,
+                                    color: AppColor.GREY_TEXT,
                                     size: 15,
                                   ),
                           ),
@@ -170,12 +170,12 @@ class HomeFrame extends StatelessWidget {
                       child: (provider.menuOpen)
                           ? const Icon(
                               Icons.close_rounded,
-                              color: DefaultTheme.GREY_TEXT,
+                              color: AppColor.GREY_TEXT,
                               size: 15,
                             )
                           : const Icon(
                               Icons.menu_rounded,
-                              color: DefaultTheme.GREY_TEXT,
+                              color: AppColor.GREY_TEXT,
                               size: 15,
                             ),
                     ),

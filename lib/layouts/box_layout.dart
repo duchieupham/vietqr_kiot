@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BoxLayout extends StatelessWidget {
-  final double width;
-  final Widget child;
+  final double? width;
+  final Widget? child;
   final EdgeInsets? padding;
   final double? borderRadius;
   final double? height;
@@ -13,8 +13,8 @@ class BoxLayout extends StatelessWidget {
 
   const BoxLayout({
     super.key,
-    required this.width,
-    required this.child,
+    this.width,
+    this.child,
     this.padding,
     this.borderRadius,
     this.height,

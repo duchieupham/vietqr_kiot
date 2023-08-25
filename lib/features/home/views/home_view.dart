@@ -14,7 +14,6 @@ import 'package:viet_qr_kiot/commons/utils/platform_utils.dart';
 import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
 import 'package:viet_qr_kiot/commons/widgets/ambient_avatar_widget.dart';
 import 'package:viet_qr_kiot/commons/widgets/button_icon_widget.dart';
-import 'package:viet_qr_kiot/commons/widgets/button_widget.dart';
 import 'package:viet_qr_kiot/commons/widgets/dialog_widget.dart';
 import 'package:viet_qr_kiot/commons/widgets/divider_widget.dart';
 import 'package:viet_qr_kiot/features/generate_qr/repositories/qr_repository.dart';
@@ -42,9 +41,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreen extends State<HomeScreen> {
   //providers
   final ClockProvider clockProvider = ClockProvider('');
+
   //
   late TokenBloc _tokenBloc;
   late LogoutBloc _logoutBloc;
+
   //
   final ImagePicker imagePicker = ImagePicker();
 
@@ -91,293 +92,344 @@ class _HomeScreen extends State<HomeScreen> {
                 LOG.info('Update FCM Token success');
               }
             },
-            child: HomeFrame(
-              bottomMenu: ClipRRect(
-                child: Row(
-                  children: [
-                    _buildAvatarWidget(context),
-                    const Padding(padding: EdgeInsets.only(left: 10)),
-                    Text(UserInformationHelper.instance.getUserFullname()),
-                    const Spacer(),
-                    InkWell(
-                      onTap: () {
-                        Provider.of<MenuProvider>(context, listen: false)
-                            .updateMenuOpen(false);
-                        _logoutBloc.add(const LogoutEventSubmit());
-                      },
-                      child: BoxLayout(
-                        width: 35,
-                        height: 35,
-                        borderRadius: 20,
-                        bgColor: Theme.of(context).canvasColor,
-                        padding: const EdgeInsets.all(0),
-                        child: const Icon(
-                          Icons.logout_rounded,
-                          size: 15,
-                          color: AppColor.RED_TEXT,
-                        ),
-                      ),
-                    ),
-                    const Padding(padding: EdgeInsets.only(right: 10)),
-                  ],
+            child: Container(
+              width: width,
+              height: height,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: Image.asset('assets/images/bgr-header.png').image,
                 ),
               ),
-              leftMenu: ClipRRect(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: width,
-                      child: Row(
+              child: Column(
+                children: [
+                  const SizedBox(height: kToolbarHeight),
+                  Expanded(
+                    flex: 1,
+                    child: BoxLayout(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _buildAvatarWidget(context),
-                          const Padding(padding: EdgeInsets.only(left: 10)),
-                          Text(
-                              UserInformationHelper.instance.getUserFullname()),
+                          const Spacer(),
+                          ValueListenableBuilder(
+                            valueListenable: clockProvider,
+                            builder: (_, clock, child) {
+                              return (clock.toString().isNotEmpty)
+                                  ? SizedBox(
+                                      width: width,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          BoxLayout(
+                                            width: (!PlatformUtils.instance
+                                                    .isLandscape())
+                                                ? width * 0.2
+                                                : width * 0.1,
+                                            height: (!PlatformUtils.instance
+                                                    .isLandscape())
+                                                ? width * 0.2
+                                                : width * 0.1,
+                                            bgColor:
+                                                Theme.of(context).canvasColor,
+                                            alignment: Alignment.center,
+                                            padding: const EdgeInsets.all(0),
+                                            enableShadow: true,
+                                            child: Text(
+                                              clock.toString().split(':')[0],
+                                              style: TextStyle(
+                                                fontSize: fontClockSize,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            ':',
+                                            style: TextStyle(
+                                              fontSize: fontClockSize,
+                                            ),
+                                          ),
+                                          BoxLayout(
+                                            width: (!PlatformUtils.instance
+                                                    .isLandscape())
+                                                ? width * 0.2
+                                                : width * 0.1,
+                                            height: (!PlatformUtils.instance
+                                                    .isLandscape())
+                                                ? width * 0.2
+                                                : width * 0.1,
+                                            bgColor:
+                                                Theme.of(context).canvasColor,
+                                            alignment: Alignment.center,
+                                            padding: const EdgeInsets.all(0),
+                                            enableShadow: true,
+                                            child: Text(
+                                              clock.toString().split(':')[1],
+                                              style: TextStyle(
+                                                fontSize: fontClockSize,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            ':',
+                                            style: TextStyle(
+                                              fontSize: fontClockSize,
+                                            ),
+                                          ),
+                                          BoxLayout(
+                                            width: (!PlatformUtils.instance
+                                                    .isLandscape())
+                                                ? width * 0.2
+                                                : width * 0.1,
+                                            height: (!PlatformUtils.instance
+                                                    .isLandscape())
+                                                ? width * 0.2
+                                                : width * 0.1,
+                                            bgColor:
+                                                Theme.of(context).canvasColor,
+                                            alignment: Alignment.center,
+                                            padding: const EdgeInsets.all(0),
+                                            enableShadow: true,
+                                            child: Text(
+                                              clock.toString().split(':')[2],
+                                              style: TextStyle(
+                                                fontSize: fontClockSize,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : const SizedBox();
+                            },
+                          ),
+                          const Spacer(),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              '${TimeUtils.instance.getCurrentDateInWeek(DateTime.now())}, ${TimeUtils.instance.getCurentDate(DateTime.now())}, năm 2023',
+                              style: TextStyle(fontSize: dateFontSize),
+                            ),
+                          ),
+                          const Spacer(),
                         ],
                       ),
                     ),
-                    const Spacer(),
-                    DividerWidget(width: width),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ButtonIconWidget(
-                        width: width,
-                        height: 40,
-                        icon: Icons.logout_rounded,
-                        title: 'Đăng xuất',
-                        alignment: Alignment.centerLeft,
-                        function: () {
-                          Provider.of<MenuProvider>(context, listen: false)
-                              .updateMenuOpen(false);
-                          _logoutBloc.add(const LogoutEventSubmit());
-                        },
-                        bgColor: AppColor.TRANSPARENT,
-                        textColor: AppColor.RED_TEXT,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              header: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Spacer(),
-                  ValueListenableBuilder(
-                    valueListenable: clockProvider,
-                    builder: (_, clock, child) {
-                      return (clock.toString().isNotEmpty)
-                          ? SizedBox(
-                              width: width,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  BoxLayout(
-                                    width:
-                                        (!PlatformUtils.instance.isLandscape())
-                                            ? width * 0.2
-                                            : width * 0.1,
-                                    height:
-                                        (!PlatformUtils.instance.isLandscape())
-                                            ? width * 0.2
-                                            : width * 0.1,
-                                    bgColor: Theme.of(context).canvasColor,
-                                    alignment: Alignment.center,
-                                    padding: const EdgeInsets.all(0),
-                                    enableShadow: true,
-                                    child: Text(
-                                      clock.toString().split(':')[0],
-                                      style: TextStyle(
-                                        fontSize: fontClockSize,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    ':',
-                                    style: TextStyle(
-                                      fontSize: fontClockSize,
-                                    ),
-                                  ),
-                                  BoxLayout(
-                                    width:
-                                        (!PlatformUtils.instance.isLandscape())
-                                            ? width * 0.2
-                                            : width * 0.1,
-                                    height:
-                                        (!PlatformUtils.instance.isLandscape())
-                                            ? width * 0.2
-                                            : width * 0.1,
-                                    bgColor: Theme.of(context).canvasColor,
-                                    alignment: Alignment.center,
-                                    padding: const EdgeInsets.all(0),
-                                    enableShadow: true,
-                                    child: Text(
-                                      clock.toString().split(':')[1],
-                                      style: TextStyle(
-                                        fontSize: fontClockSize,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    ':',
-                                    style: TextStyle(
-                                      fontSize: fontClockSize,
-                                    ),
-                                  ),
-                                  BoxLayout(
-                                    width:
-                                        (!PlatformUtils.instance.isLandscape())
-                                            ? width * 0.2
-                                            : width * 0.1,
-                                    height:
-                                        (!PlatformUtils.instance.isLandscape())
-                                            ? width * 0.2
-                                            : width * 0.1,
-                                    bgColor: Theme.of(context).canvasColor,
-                                    alignment: Alignment.center,
-                                    padding: const EdgeInsets.all(0),
-                                    enableShadow: true,
-                                    child: Text(
-                                      clock.toString().split(':')[2],
-                                      style: TextStyle(
-                                        fontSize: fontClockSize,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : const SizedBox();
-                    },
                   ),
-                  const Spacer(),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      '${TimeUtils.instance.getCurrentDateInWeek(DateTime.now())}, ${TimeUtils.instance.getCurentDate(DateTime.now())}, năm 2023',
-                      style: TextStyle(fontSize: dateFontSize),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    flex: 1,
+                    child: Consumer<AddImageDashboardProvider>(
+                      builder: (context, provider, child) {
+                        return (provider.bodyImageFile == null)
+                            ? InkWell(
+                                onTap: () async {
+                                  await Permission.mediaLibrary.request();
+                                  await imagePicker
+                                      .pickImage(source: ImageSource.gallery)
+                                      .then(
+                                    (pickedFile) {
+                                      if (pickedFile != null) {
+                                        File? file = File(pickedFile.path);
+                                        File? compressedFile = FileUtils
+                                            .instance
+                                            .compressImage(file);
+                                        Provider.of<AddImageDashboardProvider>(
+                                                context,
+                                                listen: false)
+                                            .updateBodyImage(compressedFile);
+                                      }
+                                    },
+                                  );
+                                },
+                                child: BoxLayout(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 50),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            6, 2, 12, 4),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          color: AppColor.BLUE_TEXT
+                                              .withOpacity(0.4),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset(
+                                              'assets/images/ic-edit-avatar-setting.png',
+                                              width: 30,
+                                              color: AppColor.BLUE_TEXT,
+                                            ),
+                                            const Text(
+                                              'Chọn ảnh',
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: AppColor.BLUE_TEXT,
+                                                  height: 1.4),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: Image.file(
+                                      provider.bodyImageFile!,
+                                      fit: BoxFit.cover,
+                                    ).image,
+                                  ),
+                                ),
+                              );
+                      },
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    flex: 2,
+                    child: Consumer<AddImageDashboardProvider>(
+                      builder: (context, provider, child) {
+                        return (provider.footerImageFile == null)
+                            ? InkWell(
+                                onTap: () async {
+                                  await Permission.mediaLibrary.request();
+                                  await imagePicker
+                                      .pickImage(source: ImageSource.gallery)
+                                      .then(
+                                    (pickedFile) {
+                                      if (pickedFile != null) {
+                                        File? file = File(pickedFile.path);
+                                        File? compressedFile = FileUtils
+                                            .instance
+                                            .compressImage(file);
+                                        Provider.of<AddImageDashboardProvider>(
+                                                context,
+                                                listen: false)
+                                            .updateFooterImage(compressedFile);
+                                      }
+                                    },
+                                  );
+                                },
+                                child: BoxLayout(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 50),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            6, 2, 12, 4),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          color: AppColor.BLUE_TEXT
+                                              .withOpacity(0.4),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset(
+                                              'assets/images/ic-edit-avatar-setting.png',
+                                              width: 30,
+                                              color: AppColor.BLUE_TEXT,
+                                            ),
+                                            const Text(
+                                              'Chọn ảnh',
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: AppColor.BLUE_TEXT,
+                                                  height: 1.4),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: Image.file(
+                                      provider.footerImageFile!,
+                                      fit: BoxFit.cover,
+                                    ).image,
+                                  ),
+                                ),
+                              );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: kToolbarHeight),
+                  Container(
+                    color: AppColor.WHITE,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 12),
+                    child: Row(
+                      children: [
+                        _buildAvatarWidget(context),
+                        const SizedBox(width: 10),
+                        Text(UserInformationHelper.instance.getUserFullname()),
+                        const Spacer(),
+                        Row(
+                          children: [
+                            const Text(
+                              // provider.enableVoice ? 'Bật' : 'Tắt',
+                              'Giọng nói',
+                              style: TextStyle(
+                                  fontSize: 12, color: AppColor.GREY_TEXT),
+                            ),
+                            Switch(
+                              value: true,
+                              activeColor: AppColor.BLUE_TEXT,
+                              onChanged: (bool value) {
+                                // provider.updateOpenVoice(value);
+                                Map<String, dynamic> param = {};
+                                param['userId'] =
+                                    UserInformationHelper.instance.getUserId();
+                                param['value'] = value ? 1 : 0;
+                                param['type'] = 0;
+                                // _updateVoiceSetting(param);
+                              },
+                            ),
+                          ],
+                        ),
+                        // InkWell(
+                        //   onTap: () {
+                        //     Provider.of<MenuProvider>(context, listen: false)
+                        //         .updateMenuOpen(false);
+                        //     _logoutBloc.add(const LogoutEventSubmit());
+                        //   },
+                        //   child: BoxLayout(
+                        //     width: 35,
+                        //     height: 35,
+                        //     borderRadius: 20,
+                        //     bgColor: Theme.of(context).canvasColor,
+                        //     padding: const EdgeInsets.all(0),
+                        //     child: const Icon(
+                        //       Icons.logout_rounded,
+                        //       size: 15,
+                        //       color: AppColor.RED_TEXT,
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  ),
                 ],
-              ),
-              body: Consumer<AddImageDashboardProvider>(
-                builder: (context, provider, child) {
-                  return (provider.bodyImageFile == null)
-                      ? InkWell(
-                          onTap: () async {
-                            await Permission.mediaLibrary.request();
-                            await imagePicker
-                                .pickImage(source: ImageSource.gallery)
-                                .then(
-                              (pickedFile) {
-                                if (pickedFile != null) {
-                                  File? file = File(pickedFile.path);
-                                  File? compressedFile =
-                                      FileUtils.instance.compressImage(file);
-                                  Provider.of<AddImageDashboardProvider>(
-                                          context,
-                                          listen: false)
-                                      .updateBodyImage(compressedFile);
-                                }
-                              },
-                            );
-                          },
-                          child: BoxLayout(
-                            width: width,
-                            height: height,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(
-                                  Icons.image_rounded,
-                                  size: 30,
-                                  color: AppColor.GREEN,
-                                ),
-                                Padding(padding: EdgeInsets.only(top: 10)),
-                                Text(
-                                  'Chọn ảnh',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: AppColor.GREEN,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: Image.file(
-                                provider.bodyImageFile!,
-                                fit: BoxFit.cover,
-                              ).image,
-                            ),
-                          ),
-                        );
-                },
-              ),
-              footer: Consumer<AddImageDashboardProvider>(
-                builder: (context, provider, child) {
-                  return (provider.footerImageFile == null)
-                      ? InkWell(
-                          onTap: () async {
-                            await Permission.mediaLibrary.request();
-                            await imagePicker
-                                .pickImage(source: ImageSource.gallery)
-                                .then(
-                              (pickedFile) {
-                                if (pickedFile != null) {
-                                  File? file = File(pickedFile.path);
-                                  File? compressedFile =
-                                      FileUtils.instance.compressImage(file);
-                                  Provider.of<AddImageDashboardProvider>(
-                                          context,
-                                          listen: false)
-                                      .updateFooterImage(compressedFile);
-                                }
-                              },
-                            );
-                          },
-                          child: BoxLayout(
-                            width: width,
-                            height: height,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(
-                                  Icons.image_rounded,
-                                  size: 30,
-                                  color: AppColor.GREEN,
-                                ),
-                                Padding(padding: EdgeInsets.only(top: 10)),
-                                Text(
-                                  'Chọn ảnh',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: AppColor.GREEN,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: Image.file(
-                                provider.footerImageFile!,
-                                fit: BoxFit.cover,
-                              ).image,
-                            ),
-                          ),
-                        );
-                },
               ),
             ),
 

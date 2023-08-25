@@ -251,7 +251,7 @@ class _LoginState extends State<_Login> {
                   provider.updateInfoUser(null);
                   final data = await Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => Register(phoneNo: ''),
+                      builder: (context) => const Register(phoneNo: ''),
                       settings: const RouteSettings(
                         name: Routes.REGISTER,
                       ),

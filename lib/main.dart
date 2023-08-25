@@ -39,7 +39,7 @@ void main() async {
   sharedPrefs = await SharedPreferences.getInstance();
   await _initialServiceHelper();
   await Firebase.initializeApp(
-    options: EnvConfig.getFirebaseConfig(),
+    // options: EnvConfig.getFirebaseConfig(),
   );
   LOG.verbose('Config Environment: ${EnvConfig.getEnv()}');
   runApp(const VietQRApp());

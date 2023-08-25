@@ -32,157 +32,162 @@ class HomeFrame extends StatelessWidget {
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: Image.asset('assets/images/bg-qr.png').image,
+          image: Image.asset('assets/images/bgr-header.png').image,
         ),
       ),
       child: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              children: [
-                const Padding(padding: EdgeInsets.only(top: 30)),
-                if (PlatformUtils.instance.isLandscape())
-                  SubHeader(
-                    title: 'QUÉT MÃ QR ĐỂ THANH TOÁN',
-                    enableNavigator: false,
-                    textColor: AppColor.WHITE,
-                    textSized: (height < 500) ? 20 : 35,
-                    headWidget: Consumer<MenuProvider>(
-                      builder: (context, provider, child) {
-                        return InkWell(
-                          onTap: () {
-                            provider.updateMenuOpen(!provider.menuOpen);
-                          },
-                          child: BoxLayout(
-                            width: 30,
-                            height: 30,
-                            borderRadius: 15,
-                            bgColor: Theme.of(context).cardColor,
-                            padding: const EdgeInsets.all(0),
-                            child: (provider.menuOpen)
-                                ? const Icon(
-                                    Icons.close_rounded,
-                                    color: AppColor.GREY_TEXT,
-                                    size: 15,
-                                  )
-                                : const Icon(
-                                    Icons.menu_rounded,
-                                    color: AppColor.GREY_TEXT,
-                                    size: 15,
-                                  ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                (PlatformUtils.instance.isLandscape())
-                    ? Expanded(
-                        child: SizedBox(
-                          width: width - 20,
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: width * 0.5 - 15,
-                                child: Column(
-                                  children: [
-                                    BoxLayout(
-                                      width: width * 0.5 - 15,
-                                      height: height * 0.5 - 10,
-                                      child: header,
-                                    ),
-                                    const Padding(
-                                        padding: EdgeInsets.only(top: 10)),
-                                    BoxLayout(
-                                      width: width * 0.5 - 15,
-                                      height: (height < 400)
-                                          ? height * 0.5 - 90
-                                          : height * 0.5 - 120,
-                                      padding: const EdgeInsets.all(0),
-                                      child: footer,
-                                    ),
-                                  ],
+          Column(
+            children: [
+              const Padding(padding: EdgeInsets.only(top: 30)),
+              if (PlatformUtils.instance.isLandscape())
+                SubHeader(
+                  title: 'QUÉT MÃ QR ĐỂ THANH TOÁN',
+                  enableNavigator: false,
+                  textColor: AppColor.WHITE,
+                  textSized: (height < 500) ? 20 : 35,
+                  headWidget: Consumer<MenuProvider>(
+                    builder: (context, provider, child) {
+                      return InkWell(
+                        onTap: () {
+                          provider.updateMenuOpen(!provider.menuOpen);
+                        },
+                        child: BoxLayout(
+                          width: 30,
+                          height: 30,
+                          borderRadius: 15,
+                          bgColor: Theme.of(context).cardColor,
+                          padding: const EdgeInsets.all(0),
+                          child: (provider.menuOpen)
+                              ? const Icon(
+                                  Icons.close_rounded,
+                                  color: AppColor.GREY_TEXT,
+                                  size: 15,
+                                )
+                              : const Icon(
+                                  Icons.menu_rounded,
+                                  color: AppColor.GREY_TEXT,
+                                  size: 15,
                                 ),
-                              ),
-                              const Padding(padding: EdgeInsets.only(left: 10)),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              if (PlatformUtils.instance.isLandscape())
+                Expanded(
+                  child: SizedBox(
+                    width: width - 20,
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: width * 0.5 - 15,
+                          child: Column(
+                            children: [
                               BoxLayout(
                                 width: width * 0.5 - 15,
-                                height: height,
+                                height: height * 0.5 - 10,
+                                child: header,
+                              ),
+                              const Padding(padding: EdgeInsets.only(top: 10)),
+                              BoxLayout(
+                                width: width * 0.5 - 15,
+                                height: (height < 400)
+                                    ? height * 0.5 - 90
+                                    : height * 0.5 - 120,
                                 padding: const EdgeInsets.all(0),
-                                child: body,
+                                child: footer,
                               ),
                             ],
                           ),
                         ),
-                      )
-                    : Expanded(
-                        child: ListView(
-                          shrinkWrap: true,
-                          children: [
-                            BoxLayout(
-                              width: width,
-                              height: 200,
-                              child: header,
-                            ),
-                            const Padding(padding: EdgeInsets.only(top: 10)),
-                            BoxLayout(
-                              width: width,
-                              height: height - 280,
-                              child: body,
-                            ),
-                            const Padding(padding: EdgeInsets.only(top: 10)),
-                            BoxLayout(
-                              width: width,
-                              height: 200,
-                              child: footer,
-                            ),
-                          ],
+                        const Padding(padding: EdgeInsets.only(left: 10)),
+                        BoxLayout(
+                          width: width * 0.5 - 15,
+                          height: height,
+                          padding: const EdgeInsets.all(0),
+                          child: body,
                         ),
-                      ),
-                const Padding(padding: EdgeInsets.only(top: 10)),
-              ],
-            ),
-          ),
-          if (!PlatformUtils.instance.isLandscape())
-            Consumer<MenuProvider>(
-              builder: (context, provider, child) {
-                return AnimatedPositioned(
-                  right: 0,
-                  bottom: (provider.menuOpen) ? 60 : 0,
-                  duration: const Duration(
-                    milliseconds: 200,
-                  ),
-                  child: InkWell(
-                    onTap: () {
-                      provider.updateMenuOpen(!provider.menuOpen);
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 25,
-                      // borderRadius: 20,
-                      // bgColor: Theme.of(context).buttonColor.withOpacity(0.5),
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(5)),
-                        color: Theme.of(context).cardColor.withOpacity(0.8),
-                      ),
-                      padding: const EdgeInsets.all(0),
-                      child: (provider.menuOpen)
-                          ? const Icon(
-                              Icons.close_rounded,
-                              color: AppColor.GREY_TEXT,
-                              size: 15,
-                            )
-                          : const Icon(
-                              Icons.menu_rounded,
-                              color: AppColor.GREY_TEXT,
-                              size: 15,
-                            ),
+                      ],
                     ),
                   ),
-                );
-              },
-            ),
+                )
+              else
+                Expanded(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: BoxLayout(
+                          margin: const EdgeInsets.symmetric(horizontal: 12),
+                          child: header,
+                        ),
+                      ),
+                      const Padding(padding: EdgeInsets.only(top: 10)),
+                      Expanded(
+                        flex: 1,
+                        child: BoxLayout(
+                          margin: const EdgeInsets.symmetric(horizontal: 12),
+                          padding: EdgeInsets.zero,
+                          child: body,
+                        ),
+                      ),
+                      const Padding(padding: EdgeInsets.only(top: 10)),
+                      Expanded(
+                        flex: 2,
+                        child: BoxLayout(
+                          padding: EdgeInsets.zero,
+                          margin: const EdgeInsets.symmetric(horizontal: 12),
+                          child: footer,
+                        ),
+                      ),
+                      const SizedBox(height: kToolbarHeight),
+                      bottomMenu,
+                    ],
+                  ),
+                ),
+            ],
+          ),
+          // if (!PlatformUtils.instance.isLandscape())
+          //   Consumer<MenuProvider>(
+          //     builder: (context, provider, child) {
+          //       return AnimatedPositioned(
+          //         right: 0,
+          //         bottom: (provider.menuOpen) ? 60 : 0,
+          //         duration: const Duration(
+          //           milliseconds: 200,
+          //         ),
+          //         child: InkWell(
+          //           onTap: () {
+          //             provider.updateMenuOpen(!provider.menuOpen);
+          //           },
+          //           child: Container(
+          //             width: 40,
+          //             height: 25,
+          //             // borderRadius: 20,
+          //             // bgColor: Theme.of(context).buttonColor.withOpacity(0.5),
+          //             decoration: BoxDecoration(
+          //               borderRadius: const BorderRadius.vertical(
+          //                   top: Radius.circular(5)),
+          //               color: Theme.of(context).cardColor.withOpacity(0.8),
+          //             ),
+          //             padding: const EdgeInsets.all(0),
+          //             child: (provider.menuOpen)
+          //                 ? const Icon(
+          //                     Icons.close_rounded,
+          //                     color: AppColor.GREY_TEXT,
+          //                     size: 15,
+          //                   )
+          //                 : const Icon(
+          //                     Icons.menu_rounded,
+          //                     color: AppColor.GREY_TEXT,
+          //                     size: 15,
+          //                   ),
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   ),
           if (PlatformUtils.instance.isLandscape())
             Consumer<MenuProvider>(
               builder: (context, provider, child) {

@@ -13,13 +13,9 @@ import 'package:viet_qr_kiot/commons/utils/log.dart';
 import 'package:viet_qr_kiot/commons/utils/platform_utils.dart';
 import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
 import 'package:viet_qr_kiot/commons/widgets/ambient_avatar_widget.dart';
-import 'package:viet_qr_kiot/commons/widgets/button_icon_widget.dart';
 import 'package:viet_qr_kiot/commons/widgets/dialog_widget.dart';
-import 'package:viet_qr_kiot/commons/widgets/divider_widget.dart';
 import 'package:viet_qr_kiot/features/generate_qr/repositories/qr_repository.dart';
-import 'package:viet_qr_kiot/features/home/frames/home_frame.dart';
 import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
-import 'package:viet_qr_kiot/features/logout/events/log_out_event.dart';
 import 'package:viet_qr_kiot/features/logout/states/log_out_state.dart';
 import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
 import 'package:viet_qr_kiot/features/token/events/token_event.dart';
@@ -28,7 +24,6 @@ import 'package:viet_qr_kiot/layouts/box_layout.dart';
 import 'package:viet_qr_kiot/models/qr_create_dto.dart';
 import 'package:viet_qr_kiot/services/providers/add_image_dashboard_provider.dart';
 import 'package:viet_qr_kiot/services/providers/clock_provider.dart';
-import 'package:viet_qr_kiot/services/providers/menu_provider.dart';
 import 'package:viet_qr_kiot/services/user_information_helper.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -107,6 +102,7 @@ class _HomeScreen extends State<HomeScreen> {
                   Expanded(
                     flex: 1,
                     child: BoxLayout(
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -218,159 +214,169 @@ class _HomeScreen extends State<HomeScreen> {
                   const SizedBox(height: 16),
                   Expanded(
                     flex: 1,
-                    child: Consumer<AddImageDashboardProvider>(
-                      builder: (context, provider, child) {
-                        return (provider.bodyImageFile == null)
-                            ? InkWell(
-                                onTap: () async {
-                                  await Permission.mediaLibrary.request();
-                                  await imagePicker
-                                      .pickImage(source: ImageSource.gallery)
-                                      .then(
-                                    (pickedFile) {
-                                      if (pickedFile != null) {
-                                        File? file = File(pickedFile.path);
-                                        File? compressedFile = FileUtils
-                                            .instance
-                                            .compressImage(file);
-                                        Provider.of<AddImageDashboardProvider>(
-                                                context,
-                                                listen: false)
-                                            .updateBodyImage(compressedFile);
-                                      }
-                                    },
-                                  );
-                                },
-                                child: BoxLayout(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 50),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            6, 2, 12, 4),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                          color: AppColor.BLUE_TEXT
-                                              .withOpacity(0.4),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Consumer<AddImageDashboardProvider>(
+                        builder: (context, provider, child) {
+                          return (provider.bodyImageFile == null)
+                              ? InkWell(
+                                  onTap: () async {
+                                    await Permission.mediaLibrary.request();
+                                    await imagePicker
+                                        .pickImage(source: ImageSource.gallery)
+                                        .then(
+                                      (pickedFile) {
+                                        if (pickedFile != null) {
+                                          File? file = File(pickedFile.path);
+                                          File? compressedFile = FileUtils
+                                              .instance
+                                              .compressImage(file);
+                                          Provider.of<AddImageDashboardProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .updateBodyImage(compressedFile);
+                                        }
+                                      },
+                                    );
+                                  },
+                                  child: BoxLayout(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 50),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              6, 2, 12, 2),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            color: AppColor.BLUE_TEXT
+                                                .withOpacity(0.4),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(
+                                                'assets/images/ic-edit-avatar-setting.png',
+                                                width: 30,
+                                                color: AppColor.BLUE_TEXT,
+                                              ),
+                                              const Text(
+                                                'Chọn ảnh',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: AppColor.BLUE_TEXT,
+                                                    height: 1.4),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Image.asset(
-                                              'assets/images/ic-edit-avatar-setting.png',
-                                              width: 30,
-                                              color: AppColor.BLUE_TEXT,
-                                            ),
-                                            const Text(
-                                              'Chọn ảnh',
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: AppColor.BLUE_TEXT,
-                                                  height: 1.4),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              )
-                            : Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: Image.file(
-                                      provider.bodyImageFile!,
+                                )
+                              : Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    image: DecorationImage(
                                       fit: BoxFit.cover,
-                                    ).image,
+                                      image: Image.file(
+                                        provider.bodyImageFile!,
+                                        fit: BoxFit.cover,
+                                      ).image,
+                                    ),
                                   ),
-                                ),
-                              );
-                      },
+                                );
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
                   Expanded(
                     flex: 2,
-                    child: Consumer<AddImageDashboardProvider>(
-                      builder: (context, provider, child) {
-                        return (provider.footerImageFile == null)
-                            ? InkWell(
-                                onTap: () async {
-                                  await Permission.mediaLibrary.request();
-                                  await imagePicker
-                                      .pickImage(source: ImageSource.gallery)
-                                      .then(
-                                    (pickedFile) {
-                                      if (pickedFile != null) {
-                                        File? file = File(pickedFile.path);
-                                        File? compressedFile = FileUtils
-                                            .instance
-                                            .compressImage(file);
-                                        Provider.of<AddImageDashboardProvider>(
-                                                context,
-                                                listen: false)
-                                            .updateFooterImage(compressedFile);
-                                      }
-                                    },
-                                  );
-                                },
-                                child: BoxLayout(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 50),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            6, 2, 12, 4),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                          color: AppColor.BLUE_TEXT
-                                              .withOpacity(0.4),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Consumer<AddImageDashboardProvider>(
+                        builder: (context, provider, child) {
+                          return (provider.footerImageFile == null)
+                              ? InkWell(
+                                  onTap: () async {
+                                    Navigator.pushNamed(
+                                        context, Routes.PAYMENT_SUCCESS);
+                                    // await Permission.mediaLibrary.request();
+                                    // await imagePicker
+                                    //     .pickImage(source: ImageSource.gallery)
+                                    //     .then(
+                                    //   (pickedFile) {
+                                    //     if (pickedFile != null) {
+                                    //       File? file = File(pickedFile.path);
+                                    //       File? compressedFile = FileUtils
+                                    //           .instance
+                                    //           .compressImage(file);
+                                    //       Provider.of<AddImageDashboardProvider>(
+                                    //               context,
+                                    //               listen: false)
+                                    //           .updateFooterImage(compressedFile);
+                                    //     }
+                                    //   },
+                                    // );
+                                  },
+                                  child: BoxLayout(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 50),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              6, 2, 12, 2),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            color: AppColor.BLUE_TEXT
+                                                .withOpacity(0.4),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(
+                                                'assets/images/ic-edit-avatar-setting.png',
+                                                width: 30,
+                                                color: AppColor.BLUE_TEXT,
+                                              ),
+                                              const Text(
+                                                'Chọn ảnh',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: AppColor.BLUE_TEXT,
+                                                    height: 1.4),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Image.asset(
-                                              'assets/images/ic-edit-avatar-setting.png',
-                                              width: 30,
-                                              color: AppColor.BLUE_TEXT,
-                                            ),
-                                            const Text(
-                                              'Chọn ảnh',
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: AppColor.BLUE_TEXT,
-                                                  height: 1.4),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              )
-                            : Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: Image.file(
-                                      provider.footerImageFile!,
+                                )
+                              : Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    image: DecorationImage(
                                       fit: BoxFit.cover,
-                                    ).image,
+                                      image: Image.file(
+                                        provider.footerImageFile!,
+                                        fit: BoxFit.cover,
+                                      ).image,
+                                    ),
                                   ),
-                                ),
-                              );
-                      },
+                                );
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(height: kToolbarHeight),

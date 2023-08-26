@@ -5,9 +5,11 @@ class CurrencyUtils {
   const CurrencyUtils._privateConsrtructor();
 
   static const CurrencyUtils _instance = CurrencyUtils._privateConsrtructor();
+
   static CurrencyUtils get instance => _instance;
 
   static const _locale = 'en';
+
   String _formatNumber(String s) =>
       NumberFormat.decimalPattern(_locale).format(int.tryParse(s) ?? '0');
 
@@ -22,6 +24,9 @@ class CurrencyUtils {
     } else {
       result = '0';
     }
+
+    result = result.replaceAll(',', '.');
+
     return result;
   }
 

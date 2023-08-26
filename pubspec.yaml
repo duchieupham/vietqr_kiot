@@ -65,6 +65,7 @@ dependencies:
   http: ^0.13.5
   jwt_decoder: ^2.0.1
   rive: ^0.10.1
+  go_router: ^6.5.5
   device_info_plus: ^8.1.0
   image_picker: ^0.8.6+4
   image: ^4.0.15
@@ -77,6 +78,7 @@ dependencies:
   pin_code_fields: ^7.4.0
   dudv_base:
   flutter_multi_formatter: ^2.11.6
+  flutter_analog_clock: ^1.0.3
 
 dev_dependencies:
   flutter_test:

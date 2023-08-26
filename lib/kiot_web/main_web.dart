@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
 import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
+import 'package:viet_qr_kiot/kiot_web/feature/home/views/home_web_view.dart';
+import 'package:viet_qr_kiot/kiot_web/feature/login/login_web.dart';
 
-import '../commons/constants/configurations/route.dart';
 import '../commons/constants/configurations/theme.dart';
-import '../features/home/views/home_view.dart';
-import '../features/login/login.dart';
 import '../main.dart';
 import '../services/providers/add_image_dashboard_provider.dart';
 import '../services/providers/menu_provider.dart';
@@ -25,8 +25,6 @@ class VietKiotWeb extends StatefulWidget {
 }
 
 class _VietKiotWeb extends State<VietKiotWeb> {
-  static Widget _homeScreen = const Login();
-
   @override
   void initState() {
     super.initState();
@@ -37,11 +35,40 @@ class _VietKiotWeb extends State<VietKiotWeb> {
     await Permission.notification.request();
   }
 
+  final GoRouter _router = GoRouter(
+    navigatorKey: NavigationService.navigatorKey,
+    routes: <RouteBase>[
+      GoRoute(
+        path: '/',
+        redirect: (context, state) {
+          return (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/home'
+              : '/login';
+        },
+      ),
+      GoRoute(
+        path: '/login',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/home'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const LoginWeb(),
+      ),
+      GoRoute(
+        path: '/home',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/home'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const HomeWebScreen(),
+      ),
+    ],
+  );
+
   @override
   Widget build(BuildContext context) {
-    _homeScreen = (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-        ? const HomeScreen()
-        : const Login();
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -65,8 +92,9 @@ class _VietKiotWeb extends State<VietKiotWeb> {
           ],
           child: Consumer<ThemeProvider>(
             builder: (context, themeSelect, child) {
-              return MaterialApp(
-                navigatorKey: NavigationService.navigatorKey,
+              return MaterialApp.router(
+                onGenerateTitle: (context) =>
+                    'VietQR Kiot - Mã QR thanh toán Ngân hàng Việt Nam',
                 debugShowCheckedModeBanner: false,
                 builder: (context, child) {
                   //ignore system scale factor
@@ -77,12 +105,7 @@ class _VietKiotWeb extends State<VietKiotWeb> {
                     child: child ?? Container(),
                   );
                 },
-                initialRoute: '/',
-                routes: {
-                  Routes.APP: (context) => const VietQRApp(),
-                  Routes.LOGIN: (context) => const Login(),
-                  Routes.HOME: (context) => const HomeScreen(),
-                },
+                routerConfig: _router,
                 themeMode: ThemeMode.light,
                 darkTheme: DefaultThemeData(context: context).lightTheme,
                 theme: DefaultThemeData(context: context).lightTheme,
@@ -95,11 +118,6 @@ class _VietKiotWeb extends State<VietKiotWeb> {
                   //  Locale('en'), // English
                   Locale('vi'), // Vietnamese
                 ],
-                home: Title(
-                  title: 'VietQR',
-                  color: AppColor.BLACK,
-                  child: _homeScreen,
-                ),
               );
             },
           ),

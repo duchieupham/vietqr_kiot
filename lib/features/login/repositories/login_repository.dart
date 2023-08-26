@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:rxdart/subjects.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:viet_qr_kiot/commons/constants/env/env_config.dart';
 import 'package:viet_qr_kiot/commons/enums/authentication_type.dart';
 import 'package:viet_qr_kiot/commons/utils/base_api.dart';

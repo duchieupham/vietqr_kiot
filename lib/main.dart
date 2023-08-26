@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -18,6 +19,8 @@ import 'package:viet_qr_kiot/features/generate_qr/views/qr_paid.dart';
 import 'package:viet_qr_kiot/features/home/views/home_view.dart';
 import 'package:viet_qr_kiot/features/login/login.dart';
 import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
+import 'package:viet_qr_kiot/features/notification/payment_qr_view.dart';
+import 'package:viet_qr_kiot/features/notification/payment_success_view.dart';
 import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
 import 'package:viet_qr_kiot/models/notification_transaction_success_dto.dart';
 import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
@@ -41,9 +44,7 @@ void main() async {
   sharedPrefs = await SharedPreferences.getInstance();
   await _initialServiceHelper();
   if (!kIsWeb) {
-    await Firebase.initializeApp(
-        // options: EnvConfig.getFirebaseConfig(),
-        );
+    await Firebase.initializeApp();
   }
 
   LOG.verbose('Config Environment: ${EnvConfig.getEnv()}');
@@ -88,6 +89,13 @@ class _VietQRApp extends State<VietQRApp> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+        statusBarBrightness: Brightness.light, // For iOS (dark icons)
+      ),
+    );
     // Đăng ký callback onMessage
     onFcmMessage();
     // Đăng ký callback onMessageOpenedApp
@@ -203,6 +211,9 @@ class _VietQRApp extends State<VietQRApp> {
                   Routes.APP: (context) => const VietQRApp(),
                   Routes.LOGIN: (context) => const Login(),
                   Routes.HOME: (context) => const HomeScreen(),
+                  Routes.PAYMENT_QR: (context) => const PaymentQRView(),
+                  Routes.PAYMENT_SUCCESS: (context) =>
+                      const PaymentSuccessView(),
                 },
                 themeMode: ThemeMode.light,
                 darkTheme: DefaultThemeData(context: context).lightTheme,

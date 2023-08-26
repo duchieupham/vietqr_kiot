@@ -7,6 +7,10 @@ class QRGeneratedDTO {
   final String content;
   final String qrCode;
   final String imgId;
+  final String? transactionId;
+  final int? existing;
+  final String? bankTypeId;
+  final bool isNaviAddBank;
 
   const QRGeneratedDTO({
     required this.bankCode,
@@ -17,6 +21,10 @@ class QRGeneratedDTO {
     required this.content,
     required this.qrCode,
     required this.imgId,
+    this.transactionId,
+    this.existing,
+    this.bankTypeId,
+    this.isNaviAddBank = false,
   });
 
   factory QRGeneratedDTO.fromJson(Map<String, dynamic> json) {
@@ -29,6 +37,8 @@ class QRGeneratedDTO {
       content: json['content'],
       qrCode: json['qrCode'],
       imgId: json['imgId'],
+      transactionId: json['transactionId'],
+      existing: json['existing'],
     );
   }
 
@@ -42,6 +52,8 @@ class QRGeneratedDTO {
     data['content'] = content;
     data['qrCode'] = qrCode;
     data['imgId'] = imgId;
+    data['transactionId'] = transactionId;
+    data['existing'] = existing;
     return data;
   }
 }

@@ -297,7 +297,7 @@ class _HomeScreen extends State<HomeWebScreen> {
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: Image.file(
-                      provider.bodyImageFile!,
+                      provider.bodyImageFile! as File,
                       fit: BoxFit.cover,
                     ).image,
                   ),

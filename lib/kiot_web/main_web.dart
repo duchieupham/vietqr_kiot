@@ -13,7 +13,7 @@ import 'package:viet_qr_kiot/services/shared_preferences/web_socket_helper.dart'
 
 import '../commons/constants/configurations/theme.dart';
 import '../main.dart';
-import '../services/providers/add_image_dashboard_provider.dart';
+import '../services/providers/add_image_dashboard_web_provider.dart';
 import '../services/providers/menu_provider.dart';
 import '../services/providers/pin_provider.dart';
 import '../services/providers/setting_provider.dart';
@@ -94,7 +94,7 @@ class _VietKiotWeb extends State<VietKiotWeb> {
             ChangeNotifierProvider(create: (context) => MenuProvider()),
             ChangeNotifierProvider(create: (context) => SettingProvider()),
             ChangeNotifierProvider(
-                create: (context) => AddImageDashboardProvider()),
+                create: (context) => AddImageWebDashboardProvider()),
           ],
           child: Consumer<ThemeProvider>(
             builder: (context, themeSelect, child) {

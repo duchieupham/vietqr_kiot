@@ -1,12 +1,15 @@
 import 'dart:async';
+import 'dart:html' as html;
 import 'dart:io';
+import 'dart:js' as js;
+import 'dart:ui' as ui;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'dart:ui' as ui;
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:viet_qr_kiot/commons/utils/currency_utils.dart';
 import 'package:viet_qr_kiot/commons/utils/log.dart';
 import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
@@ -58,6 +61,26 @@ class ShareUtils {
         pngBytes,
         quality: 100,
       );
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+  }
+
+  Future<void> saveImageToGalleryWeb(
+      GlobalKey globalKey, String nameFile) async {
+    try {
+      RenderRepaintBoundary boundary =
+          globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage();
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      List<int> dataImage = pngBytes;
+      js.context.callMethod("saveAs", [
+        html.Blob([dataImage]),
+        '$nameFile.png'
+      ]);
     } catch (e) {
       LOG.error(e.toString());
     }

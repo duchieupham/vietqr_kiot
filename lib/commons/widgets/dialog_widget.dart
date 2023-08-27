@@ -627,7 +627,8 @@ class DialogWidget {
         });
   }
 
-  openWidgetDialog({required Widget child}) {
+  openWidgetDialog(
+      {required Widget child, EdgeInsets? padding, Color? bgColor}) {
     final BuildContext context = NavigationService.navigatorKey.currentContext!;
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
@@ -637,18 +638,24 @@ class DialogWidget {
         builder: (BuildContext context) {
           return Material(
             color: AppColor.TRANSPARENT,
-            child: Center(
-                child: Container(
-              width: width * 0.8,
-              height: height * 0.8,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: child,
-            )),
+            child: LayoutBuilder(builder: (context, constraints) {
+              print(
+                  '-------------------------------------------${constraints.maxWidth}');
+
+              return Center(
+                  child: Container(
+                width: constraints.maxWidth < 750 ? width : width * 0.8,
+                height: constraints.maxWidth < 750 ? height : height * 0.8,
+                alignment: Alignment.center,
+                padding: padding ??
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                decoration: BoxDecoration(
+                  color: bgColor ?? Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: child,
+              ));
+            }),
           );
         });
   }

@@ -1,3 +1,4 @@
+import 'dart:html' as html;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ import 'package:viet_qr_kiot/services/providers/clock_provider.dart';
 import 'package:viet_qr_kiot/services/providers/setting_provider.dart';
 import 'package:viet_qr_kiot/services/user_information_helper.dart';
 
+import '../../../../services/providers/add_image_dashboard_web_provider.dart';
 import '../events/setting_event.dart';
 
 class HomeWebScreen extends StatefulWidget {
@@ -234,24 +236,27 @@ class _HomeScreen extends State<HomeWebScreen> {
   }
 
   Widget _buildLayout2() {
-    return Consumer<AddImageDashboardProvider>(
+    return Consumer<AddImageWebDashboardProvider>(
       builder: (context, provider, child) {
         return (provider.bodyImageFile == null)
             ? InkWell(
                 onTap: () async {
-                  await Permission.mediaLibrary.request();
-                  await imagePicker.pickImage(source: ImageSource.gallery).then(
-                    (pickedFile) {
-                      if (pickedFile != null) {
-                        File? file = File(pickedFile.path);
-                        File? compressedFile =
-                            FileUtils.instance.compressImage(file);
-                        Provider.of<AddImageDashboardProvider>(context,
-                                listen: false)
-                            .updateBodyImage(compressedFile);
-                      }
-                    },
-                  );
+                  html.FileUploadInputElement uploadInput =
+                      html.FileUploadInputElement();
+                  uploadInput.accept = '.png,.jpg';
+                  uploadInput.multiple = true;
+                  uploadInput.draggable = true;
+                  uploadInput.click();
+                  uploadInput.onChange.listen((event) async {
+                    final files = uploadInput.files;
+                    final file = files![0];
+                    final reader = html.FileReader();
+                    reader.readAsArrayBuffer(file);
+                    await reader.onLoad.first;
+                    provider.updateBodyImage(files.first);
+
+                    // reader.readAsDataUrl(file);
+                  });
                 },
                 child: BoxLayout(
                   padding: const EdgeInsets.symmetric(vertical: 50),

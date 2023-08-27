@@ -20,12 +20,16 @@ import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
 import 'package:viet_qr_kiot/features/logout/states/log_out_state.dart';
 import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
 import 'package:viet_qr_kiot/features/token/states/token_state.dart';
+import 'package:viet_qr_kiot/kiot_web/feature/home/blocs/setting_bloc.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/frames/home_frame.dart';
 import 'package:viet_qr_kiot/layouts/box_layout.dart';
 import 'package:viet_qr_kiot/models/qr_create_dto.dart';
 import 'package:viet_qr_kiot/services/providers/add_image_dashboard_provider.dart';
 import 'package:viet_qr_kiot/services/providers/clock_provider.dart';
+import 'package:viet_qr_kiot/services/providers/setting_provider.dart';
 import 'package:viet_qr_kiot/services/user_information_helper.dart';
+
+import '../events/setting_event.dart';
 
 class HomeWebScreen extends StatefulWidget {
   const HomeWebScreen({super.key});
@@ -51,6 +55,7 @@ class _HomeScreen extends State<HomeWebScreen> {
     _logoutBloc = BlocProvider.of(context);
     // _tokenBloc.add(const TokenFcmUpdateEvent());
     clockProvider.getRealTime();
+    Provider.of<SettingProvider>(context, listen: false).getSettingVoiceKiot();
     super.initState();
   }
 
@@ -154,8 +159,6 @@ class _HomeScreen extends State<HomeWebScreen> {
 
   Widget _buildClock(double width, double height) {
     return LayoutBuilder(builder: (context, constraints) {
-      print('-----------height---------------${constraints.maxHeight}');
-      print('--------------------------${constraints.maxWidth}');
       double sizeText = 30;
       if (constraints.maxWidth >= 300 &&
           constraints.maxHeight >= 260 &&
@@ -369,57 +372,64 @@ class _HomeScreen extends State<HomeWebScreen> {
   }
 
   Widget _buildFooter() {
-    return Container(
-      color: AppColor.WHITE,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      child: Row(
-        children: [
-          _buildAvatarWidget(context),
-          const SizedBox(width: 10),
-          Text(UserInformationHelper.instance.getUserFullname()),
-          const Spacer(),
-          Row(
+    return BlocProvider<SettingBloc>(
+      create: (context) => SettingBloc(),
+      child: Consumer<SettingProvider>(builder: (context, provider, child) {
+        return Container(
+          color: AppColor.WHITE,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          child: Row(
             children: [
-              const Text(
-                // provider.enableVoice ? 'Bật' : 'Tắt',
-                'Giọng nói',
-                style: TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
+              _buildAvatarWidget(context),
+              const SizedBox(width: 10),
+              Text(UserInformationHelper.instance.getUserFullname()),
+              const Spacer(),
+              Row(
+                children: [
+                  const Text(
+                    // provider.enableVoice ? 'Bật' : 'Tắt',
+                    'Giọng nói',
+                    style: TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
+                  ),
+                  Switch(
+                    value: provider.enableVoice,
+                    activeColor: AppColor.BLUE_TEXT,
+                    onChanged: (bool value) {
+                      provider.updateOpenVoice(value);
+                      Map<String, dynamic> param = {};
+                      param['userId'] =
+                          UserInformationHelper.instance.getUserId();
+                      param['value'] = value ? 1 : 0;
+                      param['type'] = 1;
+                      BlocProvider.of<SettingBloc>(context)
+                          .add(UpdateVoiceSetting(param: param));
+                    },
+                  ),
+                ],
               ),
-              Switch(
-                value: true,
-                activeColor: AppColor.BLUE_TEXT,
-                onChanged: (bool value) {
-                  // provider.updateOpenVoice(value);
-                  Map<String, dynamic> param = {};
-                  param['userId'] = UserInformationHelper.instance.getUserId();
-                  param['value'] = value ? 1 : 0;
-                  param['type'] = 0;
-                  // _updateVoiceSetting(param);
-                },
-              ),
+              // InkWell(
+              //   onTap: () {
+              //     Provider.of<MenuProvider>(context, listen: false)
+              //         .updateMenuOpen(false);
+              //     _logoutBloc.add(const LogoutEventSubmit());
+              //   },
+              //   child: BoxLayout(
+              //     width: 35,
+              //     height: 35,
+              //     borderRadius: 20,
+              //     bgColor: Theme.of(context).canvasColor,
+              //     padding: const EdgeInsets.all(0),
+              //     child: const Icon(
+              //       Icons.logout_rounded,
+              //       size: 15,
+              //       color: AppColor.RED_TEXT,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
-          // InkWell(
-          //   onTap: () {
-          //     Provider.of<MenuProvider>(context, listen: false)
-          //         .updateMenuOpen(false);
-          //     _logoutBloc.add(const LogoutEventSubmit());
-          //   },
-          //   child: BoxLayout(
-          //     width: 35,
-          //     height: 35,
-          //     borderRadius: 20,
-          //     bgColor: Theme.of(context).canvasColor,
-          //     padding: const EdgeInsets.all(0),
-          //     child: const Icon(
-          //       Icons.logout_rounded,
-          //       size: 15,
-          //       color: AppColor.RED_TEXT,
-          //     ),
-          //   ),
-          // ),
-        ],
-      ),
+        );
+      }),
     );
   }
 }

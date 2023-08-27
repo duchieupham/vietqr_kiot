@@ -15,6 +15,7 @@ import 'package:viet_qr_kiot/models/code_login_dto.dart';
 import 'package:viet_qr_kiot/models/info_user_dto.dart';
 import 'package:viet_qr_kiot/models/response_message_dto.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/account_helper.dart';
+import 'package:viet_qr_kiot/services/shared_preferences/session.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/user_information_helper.dart';
 
 class LoginRepository {
@@ -73,6 +74,7 @@ class LoginRepository {
             .setUserId(accountInformationDTO.userId);
         await UserInformationHelper.instance
             .setAccountInformation(accountInformationDTO);
+        Session.instance.fetchAccountSetting();
         result = true;
       }
     } catch (e) {

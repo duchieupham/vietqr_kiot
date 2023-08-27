@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:viet_qr_kiot/main.dart';
 import 'package:viet_qr_kiot/models/account_information_dto.dart';
 import 'package:viet_qr_kiot/models/info_user_dto.dart';
+import 'package:viet_qr_kiot/models/setting_account_sto.dart';
 
 class UserInformationHelper {
   const UserInformationHelper._privateConsrtructor();
@@ -69,5 +70,14 @@ class UserInformationHelper {
     return ListLoginAccountDTO.fromJson(
             sharedPrefs.getStringList('LOGIN_ACCOUNT'))
         .list;
+  }
+
+  Future<void> setAccountSetting(SettingAccountDTO dto) async {
+    await sharedPrefs.setString('ACCOUNT_SETTING', dto.toSPJson().toString());
+  }
+
+  SettingAccountDTO getAccountSetting() {
+    return SettingAccountDTO.fromJson(
+        json.decode(sharedPrefs.getString('ACCOUNT_SETTING')!));
   }
 }

@@ -8,12 +8,14 @@ import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
 import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/views/home_web_view.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/login/login_web.dart';
+import 'package:viet_qr_kiot/services/shared_preferences/session.dart';
 
 import '../commons/constants/configurations/theme.dart';
 import '../main.dart';
 import '../services/providers/add_image_dashboard_provider.dart';
 import '../services/providers/menu_provider.dart';
 import '../services/providers/pin_provider.dart';
+import '../services/providers/setting_provider.dart';
 import '../services/providers/theme_provider.dart';
 import '../services/shared_preferences/user_information_helper.dart';
 
@@ -28,6 +30,7 @@ class _VietKiotWeb extends State<VietKiotWeb> {
   @override
   void initState() {
     super.initState();
+    Session.load;
     requestNotificationPermission();
   }
 
@@ -87,6 +90,7 @@ class _VietKiotWeb extends State<VietKiotWeb> {
             ChangeNotifierProvider(create: (context) => ThemeProvider()),
             ChangeNotifierProvider(create: (context) => PinProvider()),
             ChangeNotifierProvider(create: (context) => MenuProvider()),
+            ChangeNotifierProvider(create: (context) => SettingProvider()),
             ChangeNotifierProvider(
                 create: (context) => AddImageDashboardProvider()),
           ],

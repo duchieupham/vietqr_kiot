@@ -9,6 +9,7 @@ import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/views/home_web_view.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/login/login_web.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/session.dart';
+import 'package:viet_qr_kiot/services/shared_preferences/web_socket_helper.dart';
 
 import '../commons/constants/configurations/theme.dart';
 import '../main.dart';
@@ -31,6 +32,7 @@ class _VietKiotWeb extends State<VietKiotWeb> {
   void initState() {
     super.initState();
     Session.load;
+    WebSocketHelper.instance.listenTransactionSocket();
     requestNotificationPermission();
   }
 

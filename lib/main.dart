@@ -33,6 +33,7 @@ import 'package:viet_qr_kiot/services/shared_preferences/account_helper.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/event_bloc_helper.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/theme_helper.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/user_information_helper.dart';
+import 'package:viet_qr_kiot/services/shared_preferences/web_socket_helper.dart';
 
 import 'kiot_web/main_web.dart';
 
@@ -45,6 +46,8 @@ void main() async {
   await _initialServiceHelper();
   if (!kIsWeb) {
     await Firebase.initializeApp();
+  } else {
+    await WebSocketHelper.instance.initialWebSocket();
   }
 
   LOG.verbose('Config Environment: ${EnvConfig.getEnv()}');

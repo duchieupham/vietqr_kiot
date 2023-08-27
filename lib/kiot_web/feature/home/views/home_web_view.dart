@@ -1,16 +1,14 @@
 import 'dart:html' as html;
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_analog_clock/flutter_analog_clock.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/route.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
-import 'package:viet_qr_kiot/commons/utils/file_utils.dart';
 import 'package:viet_qr_kiot/commons/utils/log.dart';
 import 'package:viet_qr_kiot/commons/utils/platform_utils.dart';
 import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
@@ -25,7 +23,6 @@ import 'package:viet_qr_kiot/kiot_web/feature/home/blocs/setting_bloc.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/frames/home_frame.dart';
 import 'package:viet_qr_kiot/layouts/box_layout.dart';
 import 'package:viet_qr_kiot/models/qr_create_dto.dart';
-import 'package:viet_qr_kiot/services/providers/add_image_dashboard_provider.dart';
 import 'package:viet_qr_kiot/services/providers/clock_provider.dart';
 import 'package:viet_qr_kiot/services/providers/setting_provider.dart';
 import 'package:viet_qr_kiot/services/user_information_helper.dart';
@@ -253,7 +250,7 @@ class _HomeScreen extends State<HomeWebScreen> {
                     final reader = html.FileReader();
                     reader.readAsArrayBuffer(file);
                     await reader.onLoad.first;
-                    provider.updateBodyImage(files.first);
+                    provider.updateBodyImage(reader.result as Uint8List);
 
                     // reader.readAsDataUrl(file);
                   });
@@ -296,7 +293,7 @@ class _HomeScreen extends State<HomeWebScreen> {
                   borderRadius: BorderRadius.circular(15),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: Image.file(
+                    image: Image.memory(
                       provider.bodyImageFile!,
                       fit: BoxFit.cover,
                     ).image,
@@ -308,24 +305,27 @@ class _HomeScreen extends State<HomeWebScreen> {
   }
 
   Widget _buildLayout3() {
-    return Consumer<AddImageDashboardProvider>(
+    return Consumer<AddImageWebDashboardProvider>(
       builder: (context, provider, child) {
         return (provider.footerImageFile == null)
             ? InkWell(
                 onTap: () async {
-                  await Permission.mediaLibrary.request();
-                  await imagePicker.pickImage(source: ImageSource.gallery).then(
-                    (pickedFile) {
-                      if (pickedFile != null) {
-                        File? file = File(pickedFile.path);
-                        File? compressedFile =
-                            FileUtils.instance.compressImage(file);
-                        Provider.of<AddImageDashboardProvider>(context,
-                                listen: false)
-                            .updateFooterImage(compressedFile);
-                      }
-                    },
-                  );
+                  html.FileUploadInputElement uploadInput =
+                      html.FileUploadInputElement();
+                  uploadInput.accept = '.png,.jpg';
+                  uploadInput.multiple = true;
+                  uploadInput.draggable = true;
+                  uploadInput.click();
+                  uploadInput.onChange.listen((event) async {
+                    final files = uploadInput.files;
+                    final file = files![0];
+                    final reader = html.FileReader();
+                    reader.readAsArrayBuffer(file);
+                    await reader.onLoad.first;
+                    provider.updateFooterImage(reader.result as Uint8List);
+
+                    // reader.readAsDataUrl(file);
+                  });
                 },
                 child: BoxLayout(
                   padding: const EdgeInsets.symmetric(vertical: 50),
@@ -365,7 +365,7 @@ class _HomeScreen extends State<HomeWebScreen> {
                   borderRadius: BorderRadius.circular(15),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: Image.file(
+                    image: Image.memory(
                       provider.footerImageFile!,
                       fit: BoxFit.cover,
                     ).image,

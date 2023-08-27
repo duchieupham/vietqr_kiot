@@ -5,7 +5,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
 import 'package:viet_qr_kiot/commons/utils/image_utils.dart';
 import 'package:viet_qr_kiot/commons/utils/share_utils.dart';
-import 'package:viet_qr_kiot/commons/widgets/dialog_widget.dart';
 import 'package:viet_qr_kiot/commons/widgets/repaint_boundary_widget.dart';
 import 'package:viet_qr_kiot/layouts/viet_qr.dart';
 import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
@@ -250,23 +249,6 @@ class _PaymentQRViewState extends State<PopupQRView> {
     }
   }
 
-  void onSaveImage() async {
-    DialogWidget.instance.openLoadingDialog();
-    await Future.delayed(const Duration(milliseconds: 200), () async {
-      await ShareUtils.instance.saveImageToGallery(globalKey).then((value) {
-        Navigator.pop(context);
-        Fluttertoast.showToast(
-          msg: 'Đã lưu ảnh',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          backgroundColor: Theme.of(context).cardColor,
-          textColor: Theme.of(context).cardColor,
-          fontSize: 15,
-        );
-      });
-    });
-  }
-
   void onCopy({required dynamic dto}) async {
     String text = '';
     if (dto != null) {
@@ -388,7 +370,6 @@ class _PaymentQRViewState extends State<PopupQRView> {
     DataModel(title: 'Trang chủ', url: 'assets/images/ic-home.png'),
     DataModel(title: 'Lưu ảnh', url: 'assets/images/ic-img-blue.png'),
     DataModel(title: 'Sao chép', url: 'assets/images/ic-copy-blue.png'),
-    DataModel(title: 'Chia sẻ', url: 'assets/images/ic-share-blue.png'),
   ];
 }
 

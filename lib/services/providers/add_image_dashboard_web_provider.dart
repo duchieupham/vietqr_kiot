@@ -1,20 +1,20 @@
-import 'dart:html';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
 class AddImageWebDashboardProvider with ChangeNotifier {
-  File? _footerImageFile;
-  File? _bodyImageFile;
+  Uint8List? _footerImageFile;
+  Uint8List? _bodyImageFile;
 
-  File? get footerImageFile => _footerImageFile;
-  File? get bodyImageFile => _bodyImageFile;
+  Uint8List? get footerImageFile => _footerImageFile;
+  Uint8List? get bodyImageFile => _bodyImageFile;
 
-  void updateFooterImage(File? file) {
+  void updateFooterImage(Uint8List? file) {
     _footerImageFile = file;
     notifyListeners();
   }
 
-  void updateBodyImage(File? file) {
+  void updateBodyImage(Uint8List? file) {
     _bodyImageFile = file;
     notifyListeners();
   }

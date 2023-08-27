@@ -53,9 +53,12 @@ class WebSocketHelper {
                   data['notificationType'] ==
                       Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
                 MediaHelper.instance.playAudio(data);
-                Session.instance.updatedata(
-                    NotificationTransactionSuccessDTO.fromJson(data));
-                DialogWidget.instance.openWidgetDialog(
+                if (Session.instance.isShowingPopup) {
+                  Navigator.pop(NavigationService.navigatorKey.currentContext!);
+                }
+                Session.instance
+                    .updateStatusShowingPopup(!Session.instance.isShowingPopup);
+                DialogWidget.instance.openWidgetWebDialog(
                   padding: EdgeInsets.zero,
                   bgColor: AppColor.TRANSPARENT,
                   child: TransactionSuccessWebWidget(
@@ -67,9 +70,14 @@ class WebSocketHelper {
               if (data['notificationType'] != null &&
                   data['notificationType'] ==
                       Stringify.NOTI_TYPE_NEW_TRANSACTION) {
+                if (Session.instance.isShowingPopup) {
+                  Navigator.pop(NavigationService.navigatorKey.currentContext!);
+                }
+                Session.instance
+                    .updateStatusShowingPopup(!Session.instance.isShowingPopup);
                 QRGeneratedDTO qrGeneratedDTO = QRGeneratedDTO.fromJson(data);
 
-                DialogWidget.instance.openWidgetDialog(
+                DialogWidget.instance.openWidgetWebDialog(
                   padding: EdgeInsets.zero,
                   bgColor: AppColor.TRANSPARENT,
                   child: PopupQRView(

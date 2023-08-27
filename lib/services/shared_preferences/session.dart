@@ -8,7 +8,6 @@ import 'package:viet_qr_kiot/models/setting_account_sto.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/user_information_helper.dart';
 
 import '../../commons/enums/event_type.dart';
-import '../../models/notification_transaction_success_dto.dart';
 
 class Session {
   static final Session _singleton = Session._privateConstructor();
@@ -93,26 +92,9 @@ class Session {
     _settingDto = settingAccount;
   }
 
-  NotificationTransactionSuccessDTO _dtoNoti =
-      NotificationTransactionSuccessDTO(
-          notificationType: '',
-          traceId: '',
-          bankAccount: '',
-          bankName: '',
-          bankCode: '',
-          amount: '',
-          bankId: '',
-          branchName: '',
-          businessName: '',
-          notificationId: '',
-          time: 0,
-          refId: '',
-          transactionReceiveId: '',
-          content: '',
-          status: 0,
-          transType: '');
-  NotificationTransactionSuccessDTO get dtoNoti => _dtoNoti;
-  Future updatedata(NotificationTransactionSuccessDTO dto) async {
-    _dtoNoti = dto;
+  bool _isShowingPopup = false;
+  bool get isShowingPopup => _isShowingPopup;
+  updateStatusShowingPopup(bool show) {
+    _isShowingPopup = show;
   }
 }

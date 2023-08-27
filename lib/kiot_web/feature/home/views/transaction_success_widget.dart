@@ -8,6 +8,7 @@ import 'package:viet_qr_kiot/commons/utils/share_utils.dart';
 import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
 import 'package:viet_qr_kiot/commons/widgets/dialog_widget.dart';
 import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
+import 'package:viet_qr_kiot/services/shared_preferences/session.dart';
 
 import '../../../../commons/utils/currency_utils.dart';
 import '../../../../commons/utils/transaction_utils.dart';
@@ -93,6 +94,7 @@ class _TransactionSuccessViewState extends State<TransactionSuccessWebWidget> {
                         _doEndAnimation();
                         Future.delayed(const Duration(milliseconds: 500), () {
                           if (Navigator.canPop(context)) {
+                            Session.instance.updateStatusShowingPopup(false);
                             Navigator.of(context).pop();
                           }
                         });
@@ -357,6 +359,7 @@ class _TransactionSuccessViewState extends State<TransactionSuccessWebWidget> {
               _doEndAnimation();
               Future.delayed(const Duration(milliseconds: 500), () {
                 if (Navigator.canPop(context)) {
+                  Session.instance.updateStatusShowingPopup(false);
                   Navigator.of(context).pop();
                 }
               });

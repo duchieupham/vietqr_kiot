@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/route.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
 import 'package:viet_qr_kiot/commons/utils/log.dart';
-import 'package:viet_qr_kiot/commons/utils/platform_utils.dart';
 import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
 import 'package:viet_qr_kiot/commons/widgets/ambient_avatar_widget.dart';
 import 'package:viet_qr_kiot/commons/widgets/dialog_widget.dart';
@@ -62,8 +61,6 @@ class _HomeScreen extends State<HomeWebScreen> {
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
-    final double fontClockSize =
-        (!PlatformUtils.instance.isLandscape() || height < 1000) ? 30 : 50;
 
     return Scaffold(
       body: BlocListener<LogoutBloc, LogoutState>(
@@ -158,16 +155,29 @@ class _HomeScreen extends State<HomeWebScreen> {
 
   Widget _buildClock(double width, double height) {
     return LayoutBuilder(builder: (context, constraints) {
-      double sizeText = 30;
+      double sizeText = 28;
+      double ratio = constraints.maxHeight / constraints.maxWidth;
+      3;
       if (constraints.maxWidth >= 300 &&
           constraints.maxHeight >= 260 &&
           constraints.maxWidth <= 440) {
+        if (constraints.maxWidth < 335) {
+          sizeText = constraints.maxWidth * 0.083;
+        } else {
+          sizeText = constraints.maxHeight * 0.07;
+        }
+
         return Column(
           children: [
             const SizedBox(
               height: 40,
             ),
-            const Expanded(flex: 2, child: AnalogClock()),
+            Expanded(
+              child: SizedBox(
+                height: constraints.maxHeight * 0.3,
+                child: const AnalogClock(),
+              ),
+            ),
             const SizedBox(
               height: 20,
             ),
@@ -177,19 +187,57 @@ class _HomeScreen extends State<HomeWebScreen> {
           ],
         );
       }
+
+      if (constraints.maxHeight < 130) {
+        print('----------------------------${constraints.maxWidth} ');
+        if (constraints.maxHeight > 87) {
+          sizeText = constraints.maxWidth * 0.06;
+        } else {
+          sizeText = constraints.maxHeight * 0.23;
+        }
+      } else {
+        if (constraints.maxWidth < 500) {
+          sizeText = constraints.maxWidth * 0.056;
+        }
+      }
+      if (constraints.maxWidth < 340 && constraints.maxHeight > 190) {
+        return Column(
+          children: [
+            const SizedBox(
+              height: 40,
+            ),
+            Expanded(
+              child: SizedBox(
+                height: constraints.maxHeight * 0.3,
+                child: const AnalogClock(),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: _buildTime(contentCenter: true, sizeText: sizeText),
+            ),
+          ],
+        );
+      }
+
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(),
           Row(
             children: [
-              const Expanded(child: AnalogClock()),
+              Expanded(
+                  child: SizedBox(
+                      height: constraints.maxHeight * 0.9,
+                      child: const AnalogClock())),
               const SizedBox(
                 width: 20,
               ),
               Expanded(
                 flex: 3,
-                child: _buildTime(),
+                child: _buildTime(sizeText: sizeText),
               ),
             ],
           ),
@@ -224,8 +272,8 @@ class _HomeScreen extends State<HomeWebScreen> {
             height: contentCenter ? 4 : 16,
           ),
           Text(
-            '${TimeUtils.instance.getCurrentDateInWeek(DateTime.now())}, ${TimeUtils.instance.getCurentDate(DateTime.now())}, năm 2023',
-            style: const TextStyle(fontSize: 20),
+            '${TimeUtils.instance.getCurrentDateInWeek(DateTime.now())}, ${TimeUtils.instance.getDateNormal(DateTime.now())}, 2023',
+            style: TextStyle(fontSize: sizeText),
           ),
         ],
       ),
@@ -256,7 +304,6 @@ class _HomeScreen extends State<HomeWebScreen> {
                   });
                 },
                 child: BoxLayout(
-                  padding: const EdgeInsets.symmetric(vertical: 50),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -328,7 +375,6 @@ class _HomeScreen extends State<HomeWebScreen> {
                   });
                 },
                 child: BoxLayout(
-                  padding: const EdgeInsets.symmetric(vertical: 50),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

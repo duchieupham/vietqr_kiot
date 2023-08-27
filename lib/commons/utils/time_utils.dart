@@ -1,5 +1,5 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:viet_qr_kiot/commons/utils/log.dart';
 
 class TimeUtils {
@@ -116,6 +116,14 @@ class TimeUtils {
     String formatted = format.format(now);
     result = formatDateOfWeek(formatted.split('-')[3]);
     return result;
+  }
+
+  //get date normal
+  String getDateNormal(DateTime? now) {
+    now ??= DateTime.now();
+    DateFormat format = DateFormat('yyyy-MM-dd');
+    String formatted = format.format(now);
+    return formatted;
   }
 
   //get current date to display today_view

@@ -22,6 +22,7 @@ import 'package:viet_qr_kiot/layouts/button_widget.dart';
 import 'package:viet_qr_kiot/models/account_login_dto.dart';
 import 'package:viet_qr_kiot/models/info_user_dto.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/user_information_helper.dart';
+import 'package:viet_qr_kiot/services/shared_preferences/web_socket_helper.dart';
 
 import 'blocs/login_web_provider.dart';
 
@@ -138,6 +139,7 @@ class _LoginState extends State<_Login> {
                 await UserInformationHelper.instance.setLoginAccount(list);
                 provider.updateListInfoUser();
               }
+              WebSocketHelper.instance.listenTransactionSocket();
               context.go('/home');
 
               if (state.isToast) {
@@ -375,6 +377,9 @@ class _LoginState extends State<_Login> {
               PhoneWidget(
                 phoneController: phoneNoController,
                 onChanged: provider.updatePhone,
+                onSubmitted: (value) {
+                  _bloc.add(CheckExitsPhoneEvent(phone: provider.phone));
+                },
               ),
               if (provider.errorPhone != null)
                 Padding(
@@ -449,6 +454,10 @@ class _LoginState extends State<_Login> {
                         PhoneWidget(
                           phoneController: phoneNoController,
                           onChanged: provider.updatePhone,
+                          onSubmitted: (value) {
+                            _bloc.add(
+                                CheckExitsPhoneEvent(phone: provider.phone));
+                          },
                         ),
                         Visibility(
                           visible: provider.errorPhone != null,

@@ -1,10 +1,10 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/route.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
 import 'package:viet_qr_kiot/commons/enums/enum_type.dart';
@@ -367,6 +367,7 @@ class _LoginState extends State<_Login> {
                                 PhoneWidget(
                                   phoneController: phoneNoController,
                                   onChanged: provider.updatePhone,
+                                  onSubmitted: (value) {},
                                 ),
                                 Visibility(
                                   visible: provider.errorPhone != null,

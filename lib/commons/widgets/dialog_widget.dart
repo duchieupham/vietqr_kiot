@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:provider/provider.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/numeral.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
 import 'package:viet_qr_kiot/commons/utils/bank_information_utils.dart';
@@ -639,7 +639,7 @@ class DialogWidget {
             color: AppColor.TRANSPARENT,
             child: Center(
                 child: Container(
-              width: width - 20,
+              width: width * 0.8,
               height: height * 0.8,
               alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),

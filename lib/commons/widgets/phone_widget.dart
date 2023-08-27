@@ -4,12 +4,14 @@ import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
 
 class PhoneWidget extends StatefulWidget {
   final ValueChanged<String>? onChanged;
+  final ValueChanged<String> onSubmitted;
   final TextEditingController phoneController;
   final bool isShowTitle;
 
   const PhoneWidget(
       {super.key,
       this.onChanged,
+      required this.onSubmitted,
       required this.phoneController,
       this.isShowTitle = false});
 
@@ -111,7 +113,7 @@ class _BodyWidget extends State<PhoneWidget> {
               Expanded(
                 child: TextFormField(
                   keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
+                  textInputAction: TextInputAction.done,
                   controller: widget.phoneController,
                   onChanged: widget.onChanged,
                   autofocus: true,
@@ -154,6 +156,7 @@ class _BodyWidget extends State<PhoneWidget> {
                       ),
                     ),
                   ),
+                  onFieldSubmitted: widget.onSubmitted,
                   inputFormatters: [
                     PhoneInputFormatter(
                       allowEndlessPhone: false,

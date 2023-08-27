@@ -129,6 +129,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               PhoneWidget(
                                 onChanged: provider.updatePhone,
                                 phoneController: _phoneNoController,
+                                onSubmitted: (value) {},
                               ),
                               Visibility(
                                 visible: provider.phoneErr,

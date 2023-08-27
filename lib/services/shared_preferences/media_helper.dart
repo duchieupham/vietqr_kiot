@@ -18,7 +18,7 @@ class MediaHelper {
     Map<String, dynamic> param = {};
     param['userId'] = UserInformationHelper.instance.getUserId();
     param['amount'] = data['amount'];
-    param['type'] = 0;
+    param['type'] = 1;
     param['transactionId'] = data['transactionReceiveId'];
     ResponseMessageDTO messageDTO =
         await settingRepository.voiceTransaction(param);

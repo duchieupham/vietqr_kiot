@@ -5,6 +5,14 @@ class SettingProvider with ChangeNotifier {
   bool _enableVoice = false;
 
   bool get enableVoice => _enableVoice;
+  bool _isMenuOpen = false;
+
+  bool get menuOpen => _isMenuOpen;
+
+  void updateMenuOpen(bool value) {
+    _isMenuOpen = value;
+    notifyListeners();
+  }
 
   bool _isMenuOpen = false;
 

@@ -54,7 +54,7 @@ class HomeWebFrame extends StatelessWidget {
                             Expanded(
                               child: BoxLayout(
                                   padding: const EdgeInsets.all(2),
-                                  child: layout2),
+                                  child: layout3),
                             ),
                           ],
                         )),
@@ -67,7 +67,7 @@ class HomeWebFrame extends StatelessWidget {
                               Expanded(
                                 child: BoxLayout(
                                     padding: const EdgeInsets.all(2),
-                                    child: layout3),
+                                    child: layout2),
                               ),
                             ],
                           ),

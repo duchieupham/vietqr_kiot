@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -5,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+
+// import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,22 +16,18 @@ import 'package:viet_qr_kiot/commons/constants/configurations/route.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/stringify.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
 import 'package:viet_qr_kiot/commons/constants/env/env_config.dart';
+import 'package:viet_qr_kiot/commons/mixin/event.dart';
 import 'package:viet_qr_kiot/commons/utils/log.dart';
-import 'package:viet_qr_kiot/commons/widgets/dialog_widget.dart';
-import 'package:viet_qr_kiot/features/generate_qr/views/qr_generated.dart';
-import 'package:viet_qr_kiot/features/generate_qr/views/qr_paid.dart';
+import 'package:viet_qr_kiot/commons/utils/navigator_utils.dart';
 import 'package:viet_qr_kiot/features/home/views/home_view.dart';
 import 'package:viet_qr_kiot/features/login/login.dart';
 import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
-import 'package:viet_qr_kiot/features/notification/payment_qr_view.dart';
-import 'package:viet_qr_kiot/features/notification/payment_success_view.dart';
 import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
-import 'package:viet_qr_kiot/models/notification_transaction_success_dto.dart';
-import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
 import 'package:viet_qr_kiot/services/local_notification/notification_service.dart';
 import 'package:viet_qr_kiot/services/providers/add_image_dashboard_provider.dart';
 import 'package:viet_qr_kiot/services/providers/menu_provider.dart';
 import 'package:viet_qr_kiot/services/providers/pin_provider.dart';
+import 'package:viet_qr_kiot/services/providers/setting_provider.dart';
 import 'package:viet_qr_kiot/services/providers/theme_provider.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/account_helper.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/event_bloc_helper.dart';
@@ -45,7 +44,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   sharedPrefs = await SharedPreferences.getInstance();
   await _initialServiceHelper();
-  setUrlStrategy(PathUrlStrategy());
+  // setUrlStrategy(PathUrlStrategy());
   if (!kIsWeb) {
     await Firebase.initializeApp();
   } else {
@@ -77,10 +76,6 @@ Future<void> _initialServiceHelper() async {
   await EventBlocHelper.instance.initialEventBlocHelper();
 }
 
-class NavigationService {
-  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-}
-
 class VietQRApp extends StatefulWidget {
   const VietQRApp({super.key});
 
@@ -90,6 +85,10 @@ class VietQRApp extends StatefulWidget {
 
 class _VietQRApp extends State<VietQRApp> {
   static Widget _homeScreen = const Login();
+
+  bool isNavi = false;
+
+  StreamSubscription? _subscription;
 
   @override
   void initState() {
@@ -101,6 +100,13 @@ class _VietQRApp extends State<VietQRApp> {
         statusBarBrightness: Brightness.light, // For iOS (dark icons)
       ),
     );
+
+    _subscription = eventBus.on<ChangeNavi>().listen((data) {
+      setState(() {
+        isNavi = data.isNavi;
+      });
+    });
+
     // Đăng ký callback onMessage
     onFcmMessage();
     // Đăng ký callback onMessageOpenedApp
@@ -115,50 +121,46 @@ class _VietQRApp extends State<VietQRApp> {
 
   void onFcmMessage() async {
     await NotificationService().initialNotification();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      // Xử lý push notification nếu ứng dụng đang chạy
-      LOG.info(
-          "Push notification received: ${message.notification?.title} - ${message.notification?.body}");
-      LOG.info("receive data: ${message.data}");
-      if (Navigator.canPop(context)) {
-        Navigator.popUntil(context, (route) => route.isFirst);
-      }
-      if (message.data.isEmpty) {
-        NotificationService().showNotification(
-          title: message.notification?.title,
-          body: message.notification?.body,
-        );
-      } else {
-        if (message.data['notificationType'] != null &&
-            message.data['notificationType'] !=
-                Stringify.NOTI_TYPE_NEW_TRANSACTION) {
+    FirebaseMessaging.onMessage.listen(
+          (RemoteMessage message) {
+        // Xử lý push notification nếu ứng dụng đang chạy
+        LOG.info(
+            "Push notification received: ${message.notification?.title} - ${message.notification?.body}");
+        LOG.info("receive data: ${message.data}");
+        if (Navigator.canPop(context)) {
+          Navigator.popUntil(context, (route) => route.isFirst);
+        }
+        if (message.data.isEmpty) {
           NotificationService().showNotification(
             title: message.notification?.title,
             body: message.notification?.body,
           );
+        } else {
+          if (message.data['notificationType'] != null &&
+              message.data['notificationType'] !=
+                  Stringify.NOTI_TYPE_NEW_TRANSACTION) {
+            NotificationService().showNotification(
+              title: message.notification?.title,
+              body: message.notification?.body,
+            );
+          }
         }
-      }
 
-      //process when receive data
-      if (message.data.isNotEmpty) {
-        //process success transcation
-        if (message.data['notificationType'] != null &&
-            message.data['notificationType'] ==
-                Stringify.NOTI_TYPE_NEW_TRANSACTION) {
-          DialogWidget.instance.showFullModalBottomContent(
-              widget: QRGenerated(
-                  qrGeneratedDTO: QRGeneratedDTO.fromJson(message.data)));
-        } else if (message.data['notificationType'] != null &&
-            message.data['notificationType'] ==
-                Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-          DialogWidget.instance.showFullModalBottomContent(
-            widget: QRPaid(
-              dto: NotificationTransactionSuccessDTO.fromJson(message.data),
-            ),
-          );
+        //process when receive data
+        if (message.data.isNotEmpty) {
+          //process success transcation
+
+          NavigatorUtils.handleNavigationForMessage(
+              type: message.data['notificationType'],
+              messageData: message.data,
+              isNavi: isNavi);
+
+          setState(() {
+            isNavi = true;
+          });
         }
-      }
-    });
+      },
+    );
   }
 
   void onFcmMessageOpenedApp() {
@@ -194,13 +196,14 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => ThemeProvider()),
             ChangeNotifierProvider(create: (context) => PinProvider()),
             ChangeNotifierProvider(create: (context) => MenuProvider()),
+            ChangeNotifierProvider(create: (context) => SettingProvider()),
             ChangeNotifierProvider(
                 create: (context) => AddImageDashboardProvider()),
           ],
           child: Consumer<ThemeProvider>(
             builder: (context, themeSelect, child) {
               return MaterialApp(
-                navigatorKey: NavigationService.navigatorKey,
+                navigatorKey: NavigatorUtils.navigatorKey,
                 debugShowCheckedModeBanner: false,
                 builder: (context, child) {
                   //ignore system scale factor
@@ -216,9 +219,6 @@ class _VietQRApp extends State<VietQRApp> {
                   Routes.APP: (context) => const VietQRApp(),
                   Routes.LOGIN: (context) => const Login(),
                   Routes.HOME: (context) => const HomeScreen(),
-                  Routes.PAYMENT_QR: (context) => const PaymentQRView(),
-                  Routes.PAYMENT_SUCCESS: (context) =>
-                      const PaymentSuccessView(),
                 },
                 themeMode: ThemeMode.light,
                 darkTheme: DefaultThemeData(context: context).lightTheme,
@@ -245,3 +245,4 @@ class _VietQRApp extends State<VietQRApp> {
     );
   }
 }
+

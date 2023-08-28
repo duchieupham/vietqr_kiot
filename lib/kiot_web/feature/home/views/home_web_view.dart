@@ -1,4 +1,4 @@
-import 'dart:html' as html;
+// import 'dart:html' as html;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -286,22 +286,22 @@ class _HomeScreen extends State<HomeWebScreen> {
         return (provider.bodyImageFile == null)
             ? InkWell(
                 onTap: () async {
-                  html.FileUploadInputElement uploadInput =
-                      html.FileUploadInputElement();
-                  uploadInput.accept = '.png,.jpg';
-                  uploadInput.multiple = true;
-                  uploadInput.draggable = true;
-                  uploadInput.click();
-                  uploadInput.onChange.listen((event) async {
-                    final files = uploadInput.files;
-                    final file = files![0];
-                    final reader = html.FileReader();
-                    reader.readAsArrayBuffer(file);
-                    await reader.onLoad.first;
-                    provider.updateBodyImage(reader.result as Uint8List);
-
-                    // reader.readAsDataUrl(file);
-                  });
+                  // html.FileUploadInputElement uploadInput =
+                  //     html.FileUploadInputElement();
+                  // uploadInput.accept = '.png,.jpg';
+                  // uploadInput.multiple = true;
+                  // uploadInput.draggable = true;
+                  // uploadInput.click();
+                  // uploadInput.onChange.listen((event) async {
+                  //   final files = uploadInput.files;
+                  //   final file = files![0];
+                  //   final reader = html.FileReader();
+                  //   reader.readAsArrayBuffer(file);
+                  //   await reader.onLoad.first;
+                  //   provider.updateBodyImage(reader.result as Uint8List);
+                  //
+                  //   // reader.readAsDataUrl(file);
+                  // });
                 },
                 child: BoxLayout(
                   child: Row(
@@ -357,22 +357,22 @@ class _HomeScreen extends State<HomeWebScreen> {
         return (provider.footerImageFile == null)
             ? InkWell(
                 onTap: () async {
-                  html.FileUploadInputElement uploadInput =
-                      html.FileUploadInputElement();
-                  uploadInput.accept = '.png,.jpg';
-                  uploadInput.multiple = true;
-                  uploadInput.draggable = true;
-                  uploadInput.click();
-                  uploadInput.onChange.listen((event) async {
-                    final files = uploadInput.files;
-                    final file = files![0];
-                    final reader = html.FileReader();
-                    reader.readAsArrayBuffer(file);
-                    await reader.onLoad.first;
-                    provider.updateFooterImage(reader.result as Uint8List);
-
-                    // reader.readAsDataUrl(file);
-                  });
+                  // html.FileUploadInputElement uploadInput =
+                  //     html.FileUploadInputElement();
+                  // uploadInput.accept = '.png,.jpg';
+                  // uploadInput.multiple = true;
+                  // uploadInput.draggable = true;
+                  // uploadInput.click();
+                  // uploadInput.onChange.listen((event) async {
+                  //   final files = uploadInput.files;
+                  //   final file = files![0];
+                  //   final reader = html.FileReader();
+                  //   reader.readAsArrayBuffer(file);
+                  //   await reader.onLoad.first;
+                  //   provider.updateFooterImage(reader.result as Uint8List);
+                  //
+                  //   // reader.readAsDataUrl(file);
+                  // });
                 },
                 child: BoxLayout(
                   child: Row(

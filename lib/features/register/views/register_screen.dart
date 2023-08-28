@@ -129,7 +129,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               PhoneWidget(
                                 onChanged: provider.updatePhone,
                                 phoneController: _phoneNoController,
-                                onSubmitted: (value) {},
+                                onSubmitted: (String value) {},
                               ),
                               Visibility(
                                 visible: provider.phoneErr,
@@ -215,19 +215,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  Consumer<RegisterProvider>(
-                    builder: (context, provider, child) {
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildButtonSubmit(context, heights),
-                          if (!provider.isShowButton)
-                            SizedBox(height: viewInsets.bottom),
-                          const SizedBox(height: 10),
-                        ],
-                      );
-                    },
-                  ),
+                  (PlatformUtils.instance.checkResize(width))
+                      ? const SizedBox()
+                      : Consumer<RegisterProvider>(
+                          builder: (context, provider, child) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _buildButtonSubmit(context, heights),
+                                if (!provider.isShowButton)
+                                  SizedBox(height: viewInsets.bottom),
+                                const SizedBox(height: 10),
+                              ],
+                            );
+                          },
+                        ),
                 ],
               ),
             ),
@@ -317,7 +319,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           }
                         },
                       ),
-                      // SizedBox(height: provider.height - 56),
+                      SizedBox(height: provider.height - kToolbarHeight),
                     ],
                   );
                 },

@@ -9,4 +9,9 @@ class MenuProvider with ChangeNotifier {
     _isMenuOpen = value;
     notifyListeners();
   }
+
+  void reset() {
+    _isMenuOpen = false;
+    notifyListeners();
+  }
 }

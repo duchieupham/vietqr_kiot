@@ -2,6 +2,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
+import 'package:viet_qr_kiot/commons/mixin/event.dart';
 import 'package:viet_qr_kiot/commons/utils/share_utils.dart';
 import 'package:viet_qr_kiot/commons/widgets/dialog_widget.dart';
 import 'package:viet_qr_kiot/commons/widgets/repaint_boundary_widget.dart';
@@ -9,24 +10,35 @@ import 'package:viet_qr_kiot/layouts/viet_qr.dart';
 import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
 
 class PaymentQRView extends StatefulWidget {
-  const PaymentQRView({super.key});
+  final QRGeneratedDTO? dto;
+
+  const PaymentQRView({super.key, this.dto});
 
   @override
   State<PaymentQRView> createState() => _PaymentQRViewState();
 }
 
 class _PaymentQRViewState extends State<PaymentQRView> {
-  final dto = const QRGeneratedDTO(
+  QRGeneratedDTO dto = const QRGeneratedDTO(
       bankCode: '',
-      bankName: 'Ngan Hang Quan Doi',
-      bankAccount: '0962906213000',
-      userBankName: 'CAN QUANG TRIEU',
-      amount: '3000000',
-      content: 'Noi dung chuyen khoan o day',
+      bankName: '',
+      bankAccount: '',
+      userBankName: '',
+      amount: '',
+      content: '',
       qrCode: '',
       imgId: '');
 
   final globalKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.dto != null) {
+      dto = widget.dto!;
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +99,7 @@ class _PaymentQRViewState extends State<PaymentQRView> {
   void onHandle(int index) async {
     switch (index) {
       case 0:
+        eventBus.fire(ChangeNavi(false));
         Navigator.of(context).pop();
         return;
       case 1:
@@ -127,7 +140,7 @@ class _PaymentQRViewState extends State<PaymentQRView> {
       }
     }
     await FlutterClipboard.copy(text).then(
-      (value) => Fluttertoast.showToast(
+          (value) => Fluttertoast.showToast(
         msg: 'Đã sao chép',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,

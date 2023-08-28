@@ -23,8 +23,8 @@ class _DialogRegisterState extends State<DialogRegister> {
     return Material(
       color: Colors.transparent,
       child: Container(
-        width: MediaQuery.of(context).size.width / 2,
-        height: MediaQuery.of(context).size.width / 2,
+        width: 300,
+        height: 300,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: AppColor.WHITE,

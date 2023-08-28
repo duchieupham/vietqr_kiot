@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:viet_qr_kiot/commons/utils/navigator_utils.dart';
 import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
 import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/views/home_web_view.dart';
@@ -41,7 +42,7 @@ class _VietKiotWeb extends State<VietKiotWeb> {
   }
 
   final GoRouter _router = GoRouter(
-    navigatorKey: NavigationService.navigatorKey,
+    navigatorKey: NavigatorUtils.navigatorKey,
     routes: <RouteBase>[
       GoRoute(
         path: '/',

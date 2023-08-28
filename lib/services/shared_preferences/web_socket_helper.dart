@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:viet_qr_kiot/commons/utils/navigator_utils.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/views/qr_popup.dart';
 import 'package:viet_qr_kiot/main.dart';
 import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
@@ -54,7 +55,7 @@ class WebSocketHelper {
                       Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
                 MediaHelper.instance.playAudio(data);
                 if (Session.instance.isShowingPopup) {
-                  Navigator.pop(NavigationService.navigatorKey.currentContext!);
+                  Navigator.pop(NavigatorUtils.navigatorKey.currentContext!);
                 }
                 Session.instance
                     .updateStatusShowingPopup(!Session.instance.isShowingPopup);
@@ -71,7 +72,7 @@ class WebSocketHelper {
                   data['notificationType'] ==
                       Stringify.NOTI_TYPE_NEW_TRANSACTION) {
                 if (Session.instance.isShowingPopup) {
-                  Navigator.pop(NavigationService.navigatorKey.currentContext!);
+                  Navigator.pop(NavigatorUtils.navigatorKey.currentContext!);
                 }
                 Session.instance
                     .updateStatusShowingPopup(!Session.instance.isShowingPopup);

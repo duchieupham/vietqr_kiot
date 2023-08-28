@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:viet_qr_kiot/main.dart';
+import 'package:viet_qr_kiot/commons/utils/navigator_utils.dart';
 
 class PlatformUtils {
   const PlatformUtils._privateConsrtructor();
@@ -47,21 +47,21 @@ class PlatformUtils {
 
   //check iOS Platform
   bool isIOsApp() {
-    BuildContext context = NavigationService.navigatorKey.currentContext!;
+    BuildContext context = NavigatorUtils.navigatorKey.currentContext!;
     final platform = Theme.of(context).platform;
     return (!isWeb() && platform == TargetPlatform.iOS);
   }
 
   //check android Platform
   bool isAndroidApp() {
-    BuildContext context = NavigationService.navigatorKey.currentContext!;
+    BuildContext context = NavigatorUtils.navigatorKey.currentContext!;
     final platform = Theme.of(context).platform;
     return (!isWeb() && platform == TargetPlatform.android);
   }
 
   bool isLandscape() {
     bool result = false;
-    BuildContext context = NavigationService.navigatorKey.currentContext!;
+    BuildContext context = NavigatorUtils.navigatorKey.currentContext!;
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     result = ((width >= height) || width > 750);

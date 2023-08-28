@@ -7,6 +7,7 @@ class AddImageDashboardProvider with ChangeNotifier {
   File? _bodyImageFile;
 
   File? get footerImageFile => _footerImageFile;
+
   File? get bodyImageFile => _bodyImageFile;
 
   void updateFooterImage(File? file) {
@@ -16,6 +17,12 @@ class AddImageDashboardProvider with ChangeNotifier {
 
   void updateBodyImage(File? file) {
     _bodyImageFile = file;
+    notifyListeners();
+  }
+
+  void reset() {
+    _footerImageFile = null;
+    _bodyImageFile = null;
     notifyListeners();
   }
 }

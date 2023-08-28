@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart' as rive;
 import 'package:viet_qr_kiot/commons/constants/configurations/stringify.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
-import 'package:viet_qr_kiot/layouts/button_widget.dart';
+import 'package:viet_qr_kiot/commons/mixin/event.dart';
+import 'package:viet_qr_kiot/commons/utils/currency_utils.dart';
+import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
+import 'package:viet_qr_kiot/commons/utils/transaction_utils.dart';
+import 'package:viet_qr_kiot/models/notification_transaction_success_dto.dart';
 
 class PaymentSuccessView extends StatefulWidget {
-  final String? money;
-  final String? phoneNo;
+  final NotificationTransactionSuccessDTO dto;
 
-  const PaymentSuccessView({super.key, this.money, this.phoneNo});
+  const PaymentSuccessView({super.key, required this.dto});
 
   @override
   State<PaymentSuccessView> createState() => _PaymentSuccessViewState();
@@ -85,9 +88,11 @@ class _PaymentSuccessViewState extends State<PaymentSuccessView> {
                 padding: const EdgeInsets.symmetric(horizontal: 50),
                 child: Column(
                   children: [
-                    const Text(
-                      'THANH TOÁN THÀNH CÔNG',
-                      style: TextStyle(
+                    Text(
+                      (widget.dto.transType.trim() == 'C')
+                          ? 'THANH TOÁN THÀNH CÔNG'.toUpperCase()
+                          : 'BIẾN ĐỘNG SỐ DƯ'.toUpperCase(),
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -96,7 +101,7 @@ class _PaymentSuccessViewState extends State<PaymentSuccessView> {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        '+ ${widget.money} VND',
+                        '${TransactionUtils.instance.getTransType(widget.dto.transType)} ${CurrencyUtils.instance.getCurrencyFormatted(widget.dto.amount)} VND',
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -105,36 +110,38 @@ class _PaymentSuccessViewState extends State<PaymentSuccessView> {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      '25/08/2023 10:27',
+                    Text(
+                      TimeUtils.instance
+                          .formatDateFromInt(widget.dto.time, false),
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'CAN QUANG TRIEU',
+                    Text(
+                      '${widget.dto.bankCode} - ${widget.dto.bankName}',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Text(
-                      '0962906213000',
+                    Text(
+                      widget.dto.bankAccount,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Noi dung chuyen tien',
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 16),
-                    ),
+                    if (widget.dto.content.isNotEmpty)
+                      Text(
+                        widget.dto.content,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 16),
+                      ),
                   ],
                 ),
               ),
@@ -145,6 +152,7 @@ class _PaymentSuccessViewState extends State<PaymentSuccessView> {
                 GestureDetector(
                   onTap: () {
                     _doEndAnimation();
+                    eventBus.fire(ChangeNavi(false));
                     Future.delayed(const Duration(milliseconds: 500), () {
                       Navigator.of(context).pop();
                     });

@@ -41,6 +41,7 @@ class TokenRepository {
           type: AuthenticationType.SYSTEM,
         );
         if (response.statusCode == 200) {
+          await AccountHelper.instance.setFcmToken(newToken);
           result = true;
         }
       } else {

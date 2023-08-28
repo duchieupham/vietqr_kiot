@@ -8,6 +8,7 @@ import 'package:viet_qr_kiot/commons/utils/share_utils.dart';
 import 'package:viet_qr_kiot/commons/widgets/repaint_boundary_widget.dart';
 import 'package:viet_qr_kiot/layouts/viet_qr.dart';
 import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
+import 'package:viet_qr_kiot/services/shared_preferences/session.dart';
 
 import '../../../../commons/utils/currency_utils.dart';
 
@@ -72,36 +73,35 @@ class _PaymentQRViewState extends State<PopupQRView> {
             children: [
               Expanded(
                 flex: 6,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildInfoPayment(widget.dto),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: List.generate(_list.length, (index) {
-                          return GestureDetector(
-                            onTap: () {
-                              onHandle(index);
-                              setState(() {});
-                            },
-                            child: _buildItem(
-                              _list[index],
-                              index,
-                            ),
-                          );
-                        }).toList(),
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildInfoPayment(widget.dto),
+                      const SizedBox(
+                        height: 40,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 60,
-                    ),
-                  ],
-                ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: List.generate(_list.length, (index) {
+                            return GestureDetector(
+                              onTap: () {
+                                onHandle(index);
+                                setState(() {});
+                              },
+                              child: _buildItem(
+                                _list[index],
+                                index,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
               ),
               const Expanded(child: SizedBox.shrink()),
               RepaintBoundaryWidget(
@@ -130,7 +130,9 @@ class _PaymentQRViewState extends State<PopupQRView> {
                           width: 100,
                         ),
                         QrImage(
-                          size: 260,
+                          size: constraints.maxHeight < 500
+                              ? constraints.maxHeight * 0.52
+                              : 260,
                           data: widget.dto.qrCode,
                           version: QrVersions.auto,
                           embeddedImage: const AssetImage(
@@ -234,6 +236,7 @@ class _PaymentQRViewState extends State<PopupQRView> {
   void onHandle(int index) async {
     switch (index) {
       case 0:
+        Session.instance.updateStatusShowingPopup(false);
         Navigator.of(context).pop();
         return;
       case 1:

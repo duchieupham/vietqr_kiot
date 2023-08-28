@@ -56,8 +56,10 @@ class WebSocketHelper {
                 if (Session.instance.isShowingPopup) {
                   Navigator.pop(NavigationService.navigatorKey.currentContext!);
                 }
-                Session.instance
-                    .updateStatusShowingPopup(!Session.instance.isShowingPopup);
+                if (!Session.instance.isShowingPopup) {
+                  Session.instance.updateStatusShowingPopup(true);
+                }
+
                 DialogWidget.instance.openWidgetWebDialog(
                   padding: EdgeInsets.zero,
                   bgColor: AppColor.TRANSPARENT,
@@ -73,8 +75,9 @@ class WebSocketHelper {
                 if (Session.instance.isShowingPopup) {
                   Navigator.pop(NavigationService.navigatorKey.currentContext!);
                 }
-                Session.instance
-                    .updateStatusShowingPopup(!Session.instance.isShowingPopup);
+                if (!Session.instance.isShowingPopup) {
+                  Session.instance.updateStatusShowingPopup(true);
+                }
                 QRGeneratedDTO qrGeneratedDTO = QRGeneratedDTO.fromJson(data);
 
                 DialogWidget.instance.openWidgetWebDialog(

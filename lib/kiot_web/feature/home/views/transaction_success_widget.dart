@@ -125,9 +125,6 @@ class _TransactionSuccessViewState extends State<TransactionSuccessWebWidget> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 60,
-                    ),
                   ],
                 ),
               ),

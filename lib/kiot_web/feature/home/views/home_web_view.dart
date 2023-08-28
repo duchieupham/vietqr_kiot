@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_analog_clock/flutter_analog_clock.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:viet_qr_kiot/commons/constants/configurations/route.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
 import 'package:viet_qr_kiot/commons/utils/log.dart';
 import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
@@ -72,7 +72,7 @@ class _HomeScreen extends State<HomeWebScreen> {
               if (Navigator.canPop(context)) {
                 Navigator.pop(context);
               }
-              Navigator.of(context).pushReplacementNamed(Routes.LOGIN);
+              context.go('/login');
             }
             if (state is LogoutFailedState) {
               Navigator.pop(context);
@@ -86,7 +86,7 @@ class _HomeScreen extends State<HomeWebScreen> {
             listener: (context, state) {},
             child: HomeWebFrame(
               layout1: _buildClock(width, height),
-              footer: _buildFooter(),
+              footer: _buildFooter(width),
               layout2: _buildLayout2(),
               layout3: _buildLayout3(),
             ),
@@ -262,8 +262,7 @@ class _HomeScreen extends State<HomeWebScreen> {
                   ? Text(
                       '${clock.toString().split(':')[0]}  :  ${clock.toString().split(':')[1]}  :  ${clock.toString().split(':')[2]} ',
                       style: TextStyle(
-                        fontSize: sizeText,
-                      ),
+                          fontSize: sizeText + 2, fontWeight: FontWeight.bold),
                     )
                   : const SizedBox();
             },
@@ -422,7 +421,7 @@ class _HomeScreen extends State<HomeWebScreen> {
     );
   }
 
-  Widget _buildFooter() {
+  Widget _buildFooter(double width) {
     return BlocProvider<SettingBloc>(
       create: (context) => SettingBloc(),
       child: Consumer<SettingProvider>(builder: (context, provider, child) {
@@ -431,9 +430,44 @@ class _HomeScreen extends State<HomeWebScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           child: Row(
             children: [
+              // Consumer<SettingProvider>(
+              //   builder: (context, provider, child) {
+              //     return Container(
+              //       width: 150,
+              //       height: 45,
+              //       decoration: BoxDecoration(
+              //         color: Theme.of(context).cardColor,
+              //         borderRadius: const BorderRadius.horizontal(
+              //             right: Radius.circular(16)),
+              //       ),
+              //       padding: EdgeInsets.zero,
+              //       child: Padding(
+              //         padding: const EdgeInsets.symmetric(horizontal: 20),
+              //         child: ButtonIconWidget(
+              //           width: width,
+              //           height: 40,
+              //           icon: Icons.logout_rounded,
+              //           title: 'Đăng xuất',
+              //           alignment: Alignment.centerLeft,
+              //           function: () {
+              //             _logoutBloc.add(const LogoutEventSubmit());
+              //           },
+              //           bgColor: AppColor.TRANSPARENT,
+              //           textColor: AppColor.RED_TEXT,
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // ),
               _buildAvatarWidget(context),
               const SizedBox(width: 10),
               Text(UserInformationHelper.instance.getUserFullname()),
+              const Spacer(),
+              Image.asset(
+                'assets/images/logo-kiot.png',
+                height: 40,
+                fit: BoxFit.fitHeight,
+              ),
               const Spacer(),
               Row(
                 children: [
@@ -458,25 +492,6 @@ class _HomeScreen extends State<HomeWebScreen> {
                   ),
                 ],
               ),
-              // InkWell(
-              //   onTap: () {
-              //     Provider.of<MenuProvider>(context, listen: false)
-              //         .updateMenuOpen(false);
-              //     _logoutBloc.add(const LogoutEventSubmit());
-              //   },
-              //   child: BoxLayout(
-              //     width: 35,
-              //     height: 35,
-              //     borderRadius: 20,
-              //     bgColor: Theme.of(context).canvasColor,
-              //     padding: const EdgeInsets.all(0),
-              //     child: const Icon(
-              //       Icons.logout_rounded,
-              //       size: 15,
-              //       color: AppColor.RED_TEXT,
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         );

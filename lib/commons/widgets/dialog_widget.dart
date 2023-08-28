@@ -639,18 +639,10 @@ class DialogWidget {
           return Material(
             color: AppColor.TRANSPARENT,
             child: LayoutBuilder(builder: (context, constraints) {
-              print(
-                  '-------------------------------------------${constraints.maxHeight}');
-
               return Center(
                   child: Container(
-                width: constraints.maxWidth < 750 && constraints.maxHeight > 500
-                    ? width
-                    : width * 0.9,
-                height:
-                    constraints.maxWidth < 750 && constraints.maxHeight > 500
-                        ? height
-                        : height * 0.9,
+                width: width,
+                height: height,
                 alignment: Alignment.center,
                 padding: padding ??
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -679,13 +671,8 @@ class DialogWidget {
             child: LayoutBuilder(builder: (context, constraints) {
               return Center(
                   child: Container(
-                width: constraints.maxWidth < 750 || constraints.maxHeight < 500
-                    ? width
-                    : width * 0.9,
-                height:
-                    constraints.maxWidth < 750 || constraints.maxHeight < 500
-                        ? height
-                        : height * 0.9,
+                width: width,
+                height: height,
                 alignment: Alignment.center,
                 padding: padding ??
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 20),

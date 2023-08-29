@@ -296,6 +296,7 @@ class _LoginState extends State<_Login> {
             }
 
             return Scaffold(
+              resizeToAvoidBottomInset: false,
               body: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

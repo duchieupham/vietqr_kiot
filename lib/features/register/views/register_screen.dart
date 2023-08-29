@@ -124,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       return Expanded(
                         child: SingleChildScrollView(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               PhoneWidget(
                                 onChanged: provider.updatePhone,
@@ -174,14 +174,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              SizedBox(
-                                height: 40,
-                                child: PinCodeInput(
-                                  autoFocus: true,
-                                  obscureText: true,
-                                  onChanged: (value) {
-                                    provider.updatePassword(value);
-                                  },
+                              UnconstrainedBox(
+                                child: SizedBox(
+                                  height: 40,
+                                  width: 380,
+                                  child: PinCodeInput(
+                                    autoFocus: true,
+                                    obscureText: true,
+                                    onChanged: (value) {
+                                      provider.updatePassword(value);
+                                    },
+                                  ),
                                 ),
                               ),
                               Visibility(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
 
 import '../../../../layouts/box_layout.dart';
 
@@ -7,13 +8,18 @@ class HomeWebFrame extends StatelessWidget {
   final Widget footer;
   final Widget layout2;
   final Widget layout3;
-
+  final Widget? settingPopup;
+  final VoidCallback? onHidePopup;
+  final bool showPopupSetting;
   const HomeWebFrame({
     super.key,
     required this.layout1,
     required this.footer,
     required this.layout2,
     required this.layout3,
+    this.settingPopup,
+    this.onHidePopup,
+    this.showPopupSetting = false,
   });
 
   @override
@@ -31,78 +37,81 @@ class HomeWebFrame extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const SizedBox(
-            height: 20,
-          ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  if (constraints.maxWidth >= 700) {
-                    return Row(
-                      children: [
-                        Expanded(
-                            child: Column(
+            child: Stack(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (constraints.maxWidth >= 700) {
+                        return Row(
                           children: [
                             Expanded(
-                              child: BoxLayout(child: layout1),
-                            ),
+                                child: Column(
+                              children: [
+                                Expanded(
+                                  child: BoxLayout(child: layout1),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Expanded(
+                                  child: BoxLayout(
+                                      padding: const EdgeInsets.all(2),
+                                      child: layout3),
+                                ),
+                              ],
+                            )),
                             const SizedBox(
-                              height: 20,
+                              width: 20,
                             ),
                             Expanded(
-                              child: BoxLayout(
-                                  padding: const EdgeInsets.all(2),
-                                  child: layout3),
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: BoxLayout(
+                                        padding: const EdgeInsets.all(2),
+                                        child: layout2),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
-                        )),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: BoxLayout(
-                                    padding: const EdgeInsets.all(2),
-                                    child: layout2),
-                              ),
-                            ],
+                        );
+                      }
+                      return Column(
+                        children: [
+                          Expanded(
+                            child: BoxLayout(child: layout1),
                           ),
-                        ),
-                      ],
-                    );
-                  }
-                  return Column(
-                    children: [
-                      Expanded(
-                        child: BoxLayout(child: layout1),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: BoxLayout(
-                            padding: const EdgeInsets.all(2), child: layout2),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Expanded(
-                        child: BoxLayout(
-                            padding: const EdgeInsets.all(2), child: layout3),
-                      ),
-                    ],
-                  );
-                },
-              ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: BoxLayout(
+                                padding: const EdgeInsets.all(2),
+                                child: layout2),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Expanded(
+                            child: BoxLayout(
+                                padding: const EdgeInsets.all(2),
+                                child: layout3),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                if (showPopupSetting)
+                  _buildSetting(height, width, onHidePopup!),
+              ],
             ),
-          ),
-          const SizedBox(
-            height: 20,
           ),
           Container(
             width: width,
@@ -110,6 +119,19 @@ class HomeWebFrame extends StatelessWidget {
             child: footer,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSetting(double height, double width, VoidCallback onHide) {
+    return GestureDetector(
+      onTap: onHide,
+      child: Container(
+        width: width,
+        height: height,
+        color: AppColor.BLACK_DARK.withOpacity(0.6),
+        alignment: Alignment.bottomLeft,
+        child: settingPopup,
       ),
     );
   }

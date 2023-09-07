@@ -67,6 +67,7 @@ class AppColor {
   static const Color RED_MB = Color(0xFFF4272A);
   static const secondary400 = Color(0xff464F77);
   static const greyF0F0F0 = Color(0xffF0F0F0);
+  static const Color ITEM_MENU_SELECTED = Color(0xFFb5d7ff);
   static const grey979797 = Color(0xff979797);
 
   //THEME NAME
@@ -106,8 +107,8 @@ class DefaultThemeData {
       splashColor: AppColor.TRANSPARENT,
       highlightColor: AppColor.TRANSPARENT,
       textTheme: Theme.of(context).textTheme.apply(
-        bodyColor: AppColor.WHITE,
-      ),
+            bodyColor: AppColor.WHITE,
+          ),
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColor.TRANSPARENT,
         systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -160,8 +161,8 @@ class DefaultThemeData {
       splashColor: AppColor.TRANSPARENT,
       highlightColor: AppColor.TRANSPARENT,
       textTheme: Theme.of(context).textTheme.apply(
-        bodyColor: AppColor.BLACK,
-      ),
+            bodyColor: AppColor.BLACK,
+          ),
       appBarTheme: const AppBarTheme(
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,

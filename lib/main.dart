@@ -36,8 +36,6 @@ import 'package:viet_qr_kiot/services/shared_preferences/theme_helper.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/user_information_helper.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/web_socket_helper.dart';
 
-import 'kiot_web/main_web.dart';
-
 //Share Preferences
 late SharedPreferences sharedPrefs;
 
@@ -53,11 +51,11 @@ void main() async {
   }
 
   LOG.verbose('Config Environment: ${EnvConfig.getEnv()}');
-  if (kIsWeb) {
-    runApp(const VietKiotWeb());
-  } else {
-    runApp(const VietQRApp());
-  }
+  // if (kIsWeb) {
+  //   runApp(const VietKiotWeb());
+  // } else {
+  runApp(const VietQRApp());
+  // }
 }
 
 Future<void> _initialServiceHelper() async {

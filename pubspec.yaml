@@ -82,6 +82,7 @@ dependencies:
   flutter_analog_clock: ^1.0.3
   just_audio: ^0.9.32
   web_socket_channel: ^2.4.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

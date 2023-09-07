@@ -305,25 +305,22 @@ class DialogWidget {
     BuildContext context = NavigationService.navigatorKey.currentContext!;
     final double width = MediaQuery.of(context).size.width;
     return showDialog(
-        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          return Material(
-            color: AppColor.TRANSPARENT,
-            child: Center(
-              child: Container(
-                width: width,
-                height: 400,
-                alignment: Alignment.center,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: child,
+          return Center(
+            child: Container(
+              width: width * 0.7,
+              height: 350,
+              alignment: Alignment.topCenter,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                image: const DecorationImage(
+                    image: AssetImage('assets/images/bg-admin-card.png'),
+                    fit: BoxFit.fill),
+                borderRadius: BorderRadius.circular(10),
               ),
+              child: child,
             ),
           );
         });
@@ -682,6 +679,34 @@ class DialogWidget {
                 ),
                 child: child,
               ));
+            }),
+          );
+        });
+  }
+
+  openWidgetSettingDialog(
+      {required Widget child, EdgeInsets? padding, Color? bgColor}) {
+    final BuildContext context = NavigationService.navigatorKey.currentContext!;
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Material(
+            color: AppColor.TRANSPARENT,
+            child: LayoutBuilder(builder: (context, constraints) {
+              return Container(
+                width: width,
+                height: height,
+                alignment: Alignment.bottomLeft,
+                padding: padding ??
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                decoration: BoxDecoration(
+                  color: bgColor ?? Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: child,
+              );
             }),
           );
         });

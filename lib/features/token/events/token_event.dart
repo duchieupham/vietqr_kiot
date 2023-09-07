@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
 
 class TokenEvent extends Equatable {
@@ -19,4 +21,15 @@ class TokenFcmUpdateEvent extends TokenEvent {
 
   @override
   List<Object?> get props => [];
+}
+
+class GetListQrEvent extends TokenEvent {}
+
+class UploadImageEvent extends TokenEvent {
+  final Map<String, dynamic> param;
+  final Uint8List? imageByte;
+  const UploadImageEvent(this.param, this.imageByte);
+
+  @override
+  List<Object?> get props => [param, imageByte];
 }

@@ -80,4 +80,12 @@ class UserInformationHelper {
     return SettingAccountDTO.fromJson(
         json.decode(sharedPrefs.getString('ACCOUNT_SETTING')!));
   }
+
+  Future setSettingMainScreen(int setting) async {
+    await sharedPrefs.setInt('SETTING_MAIN_SCREEN', setting);
+  }
+
+  int getSettingMainScreen() {
+    return sharedPrefs.getInt('SETTING_MAIN_SCREEN') ?? 0;
+  }
 }

@@ -1,0 +1,570 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.vietqr.kiot"
+4    android:versionCode="6"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="33" />
+10    <!--
+11         The INTERNET permission is required for development. Specifically,
+12         the Flutter tool needs it to communicate with the running application
+13         to allow setting breakpoints, to provide hot reload, etc.
+14    -->
+15    <uses-permission android:name="android.permission.INTERNET" />
+15-->D:\vietQr\vietqr_kiot\android\app\src\main\AndroidManifest.xml:53:5-67
+15-->D:\vietQr\vietqr_kiot\android\app\src\main\AndroidManifest.xml:53:22-64
+16    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+16-->D:\vietQr\vietqr_kiot\android\app\src\main\AndroidManifest.xml:54:5-79
+16-->D:\vietQr\vietqr_kiot\android\app\src\main\AndroidManifest.xml:54:22-76
+17    <uses-permission android:name="android.permission.CAMERA" />
+17-->D:\vietQr\vietqr_kiot\android\app\src\main\AndroidManifest.xml:55:5-65
+17-->D:\vietQr\vietqr_kiot\android\app\src\main\AndroidManifest.xml:55:22-62
+18    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+18-->D:\vietQr\vietqr_kiot\android\app\src\main\AndroidManifest.xml:56:5-77
+18-->D:\vietQr\vietqr_kiot\android\app\src\main\AndroidManifest.xml:56:22-74
+19    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+19-->D:\vietQr\vietqr_kiot\android\app\src\main\AndroidManifest.xml:57:5-77
+19-->D:\vietQr\vietqr_kiot\android\app\src\main\AndroidManifest.xml:57:22-74
+20    <uses-permission android:name="android.permission.WAKE_LOCK" />
+20-->[:firebase_analytics] D:\vietQr\vietqr_kiot\build\firebase_analytics\intermediates\merged_manifest\debug\AndroidManifest.xml:11:5-68
+20-->[:firebase_analytics] D:\vietQr\vietqr_kiot\build\firebase_analytics\intermediates\merged_manifest\debug\AndroidManifest.xml:11:22-65
+21    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+21-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:9:5-81
+21-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:9:22-78
+22    <uses-permission android:name="android.permission.VIBRATE" />
+22-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:10:5-66
+22-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:10:22-63
+23    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+23-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:11:5-81
+23-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:11:22-78
+24    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> <!-- Required by older versions of Google Play services to create IID tokens -->
+24-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:12:5-79
+24-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:12:22-76
+25    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+25-->[com.google.firebase:firebase-messaging:23.1.2] C:\Users\diamond\.gradle\caches\transforms-3\5b8d808cc3a5aebe18d8bd6a3dbed182\transformed\jetified-firebase-messaging-23.1.2\AndroidManifest.xml:28:5-82
+25-->[com.google.firebase:firebase-messaging:23.1.2] C:\Users\diamond\.gradle\caches\transforms-3\5b8d808cc3a5aebe18d8bd6a3dbed182\transformed\jetified-firebase-messaging-23.1.2\AndroidManifest.xml:28:22-79
+26    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+26-->[com.google.android.gms:play-services-measurement-api:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\bc627602a3930e81d9ab88f0863913b2\transformed\jetified-play-services-measurement-api-21.2.1\AndroidManifest.xml:25:5-79
+26-->[com.google.android.gms:play-services-measurement-api:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\bc627602a3930e81d9ab88f0863913b2\transformed\jetified-play-services-measurement-api-21.2.1\AndroidManifest.xml:25:22-76
+27    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+27-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:26:5-110
+27-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:26:22-107
+28
+29    <queries>
+29-->[androidx.media2:media2-session:1.2.1] C:\Users\diamond\.gradle\caches\transforms-3\613949701fa8c63dc026c169c0cd5fbb\transformed\jetified-media2-session-1.2.1\AndroidManifest.xml:24:5-34:15
+30        <intent>
+30-->[androidx.media2:media2-session:1.2.1] C:\Users\diamond\.gradle\caches\transforms-3\613949701fa8c63dc026c169c0cd5fbb\transformed\jetified-media2-session-1.2.1\AndroidManifest.xml:25:9-27:18
+31            <action android:name="android.media.browse.MediaBrowserService" />
+31-->[androidx.media2:media2-session:1.2.1] C:\Users\diamond\.gradle\caches\transforms-3\613949701fa8c63dc026c169c0cd5fbb\transformed\jetified-media2-session-1.2.1\AndroidManifest.xml:26:13-79
+31-->[androidx.media2:media2-session:1.2.1] C:\Users\diamond\.gradle\caches\transforms-3\613949701fa8c63dc026c169c0cd5fbb\transformed\jetified-media2-session-1.2.1\AndroidManifest.xml:26:21-76
+32        </intent>
+33        <intent>
+33-->[androidx.media2:media2-session:1.2.1] C:\Users\diamond\.gradle\caches\transforms-3\613949701fa8c63dc026c169c0cd5fbb\transformed\jetified-media2-session-1.2.1\AndroidManifest.xml:28:9-30:18
+34            <action android:name="androidx.media2.session.MediaSessionService" />
+34-->[androidx.media2:media2-session:1.2.1] C:\Users\diamond\.gradle\caches\transforms-3\613949701fa8c63dc026c169c0cd5fbb\transformed\jetified-media2-session-1.2.1\AndroidManifest.xml:29:13-82
+34-->[androidx.media2:media2-session:1.2.1] C:\Users\diamond\.gradle\caches\transforms-3\613949701fa8c63dc026c169c0cd5fbb\transformed\jetified-media2-session-1.2.1\AndroidManifest.xml:29:21-79
+35        </intent>
+36        <intent>
+36-->[androidx.media2:media2-session:1.2.1] C:\Users\diamond\.gradle\caches\transforms-3\613949701fa8c63dc026c169c0cd5fbb\transformed\jetified-media2-session-1.2.1\AndroidManifest.xml:31:9-33:18
+37            <action android:name="androidx.media2.session.MediaLibraryService" />
+37-->[androidx.media2:media2-session:1.2.1] C:\Users\diamond\.gradle\caches\transforms-3\613949701fa8c63dc026c169c0cd5fbb\transformed\jetified-media2-session-1.2.1\AndroidManifest.xml:32:13-82
+37-->[androidx.media2:media2-session:1.2.1] C:\Users\diamond\.gradle\caches\transforms-3\613949701fa8c63dc026c169c0cd5fbb\transformed\jetified-media2-session-1.2.1\AndroidManifest.xml:32:21-79
+38        </intent>
+39    </queries>
+40
+41    <permission
+41-->[androidx.core:core:1.9.0] C:\Users\diamond\.gradle\caches\transforms-3\0154182a74adcde5b438825664e00ac5\transformed\core-1.9.0\AndroidManifest.xml:22:5-24:47
+42        android:name="com.vietqr.kiot.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+42-->[androidx.core:core:1.9.0] C:\Users\diamond\.gradle\caches\transforms-3\0154182a74adcde5b438825664e00ac5\transformed\core-1.9.0\AndroidManifest.xml:23:9-81
+43        android:protectionLevel="signature" />
+43-->[androidx.core:core:1.9.0] C:\Users\diamond\.gradle\caches\transforms-3\0154182a74adcde5b438825664e00ac5\transformed\core-1.9.0\AndroidManifest.xml:24:9-44
+44
+45    <uses-permission android:name="com.vietqr.kiot.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+45-->[androidx.core:core:1.9.0] C:\Users\diamond\.gradle\caches\transforms-3\0154182a74adcde5b438825664e00ac5\transformed\core-1.9.0\AndroidManifest.xml:26:5-97
+45-->[androidx.core:core:1.9.0] C:\Users\diamond\.gradle\caches\transforms-3\0154182a74adcde5b438825664e00ac5\transformed\core-1.9.0\AndroidManifest.xml:26:22-94
+46
+47    <application
+48        android:name="android.app.Application"
+49        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+49-->[androidx.core:core:1.9.0] C:\Users\diamond\.gradle\caches\transforms-3\0154182a74adcde5b438825664e00ac5\transformed\core-1.9.0\AndroidManifest.xml:28:18-86
+50        android:debuggable="true"
+51        android:icon="@mipmap/ic_launcher"
+52        android:label="VietQR Kiot" >
+53        <activity
+54            android:name="com.vietqr.kiot.MainActivity"
+55            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+56            android:exported="true"
+57            android:hardwareAccelerated="true"
+58            android:launchMode="singleTop"
+59            android:requestLegacyExternalStorage="true"
+60            android:showWhenLocked="true"
+61            android:theme="@style/LaunchTheme"
+62            android:turnScreenOn="true"
+63            android:windowSoftInputMode="adjustResize" >
+64
+65            <!--
+66                 Specifies an Android theme to apply to this Activity as soon as
+67                 the Android process has started. This theme is visible to the user
+68                 while the Flutter UI initializes. After that, this theme continues
+69                 to determine the Window background behind the Flutter UI.
+70            -->
+71            <meta-data
+72                android:name="io.flutter.embedding.android.NormalTheme"
+73                android:resource="@style/NormalTheme" />
+74
+75            <intent-filter>
+76                <action android:name="android.intent.action.MAIN" />
+77
+78                <category android:name="android.intent.category.LAUNCHER" />
+79            </intent-filter>
+80            <intent-filter>
+81                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+82
+83                <category android:name="android.intent.category.DEFAULT" />
+84            </intent-filter>
+85            <intent-filter android:autoVerify="true" >
+86                <action android:name="android.intent.action.VIEW" />
+87
+88                <category android:name="android.intent.category.DEFAULT" />
+89                <category android:name="android.intent.category.BROWSABLE" />
+90
+91                <data android:scheme="mbmobile" />
+92            </intent-filter>
+93        </activity>
+94        <!--
+95             Don't delete the meta-data below.
+96             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+97        -->
+98        <meta-data
+99            android:name="flutterEmbedding"
+100            android:value="2" />
+101        <meta-data
+102            android:name="firebase_messaging_auto_init_enabled"
+103            android:value="false" />
+104        <meta-data
+105            android:name="firebase_analytics_collection_enabled"
+106            android:value="false" />
+107
+108        <service
+108-->[:cloud_firestore] D:\vietQr\vietqr_kiot\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:10:9-14:19
+109            android:name="com.google.firebase.components.ComponentDiscoveryService"
+109-->[:cloud_firestore] D:\vietQr\vietqr_kiot\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:10:18-89
+110            android:directBootAware="true"
+110-->[com.google.firebase:firebase-common:20.3.2] C:\Users\diamond\.gradle\caches\transforms-3\4ed8bcd41b26fbe90aa68fa676e9be37\transformed\jetified-firebase-common-20.3.2\AndroidManifest.xml:34:13-43
+111            android:exported="false" >
+111-->[com.google.firebase:firebase-analytics-ktx:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\0290c86d8a7aadefb45d63ece1fc5fd2\transformed\jetified-firebase-analytics-ktx-21.2.1\AndroidManifest.xml:10:13-37
+112            <meta-data
+112-->[:cloud_firestore] D:\vietQr\vietqr_kiot\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-13:85
+113                android:name="com.google.firebase.components:io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreRegistrar"
+113-->[:cloud_firestore] D:\vietQr\vietqr_kiot\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:12:17-134
+114                android:value="com.google.firebase.components.ComponentRegistrar" />
+114-->[:cloud_firestore] D:\vietQr\vietqr_kiot\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:13:17-82
+115            <meta-data
+115-->[:firebase_analytics] D:\vietQr\vietqr_kiot\build\firebase_analytics\intermediates\merged_manifest\debug\AndroidManifest.xml:15:13-17:85
+116                android:name="com.google.firebase.components:io.flutter.plugins.firebase.analytics.FlutterFirebaseAppRegistrar"
+116-->[:firebase_analytics] D:\vietQr\vietqr_kiot\build\firebase_analytics\intermediates\merged_manifest\debug\AndroidManifest.xml:16:17-128
+117                android:value="com.google.firebase.components.ComponentRegistrar" />
+117-->[:firebase_analytics] D:\vietQr\vietqr_kiot\build\firebase_analytics\intermediates\merged_manifest\debug\AndroidManifest.xml:17:17-82
+118            <meta-data
+118-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:38:13-40:85
+119                android:name="com.google.firebase.components:io.flutter.plugins.firebase.messaging.FlutterFirebaseAppRegistrar"
+119-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:39:17-128
+120                android:value="com.google.firebase.components.ComponentRegistrar" />
+120-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:40:17-82
+121            <meta-data
+121-->[:firebase_core] D:\vietQr\vietqr_kiot\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-13:85
+122                android:name="com.google.firebase.components:io.flutter.plugins.firebase.core.FlutterFirebaseCoreRegistrar"
+122-->[:firebase_core] D:\vietQr\vietqr_kiot\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:12:17-124
+123                android:value="com.google.firebase.components.ComponentRegistrar" />
+123-->[:firebase_core] D:\vietQr\vietqr_kiot\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:13:17-82
+124            <meta-data
+124-->[com.google.firebase:firebase-analytics-ktx:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\0290c86d8a7aadefb45d63ece1fc5fd2\transformed\jetified-firebase-analytics-ktx-21.2.1\AndroidManifest.xml:11:13-13:85
+125                android:name="com.google.firebase.components:com.google.firebase.analytics.ktx.FirebaseAnalyticsKtxRegistrar"
+125-->[com.google.firebase:firebase-analytics-ktx:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\0290c86d8a7aadefb45d63ece1fc5fd2\transformed\jetified-firebase-analytics-ktx-21.2.1\AndroidManifest.xml:12:17-126
+126                android:value="com.google.firebase.components.ComponentRegistrar" />
+126-->[com.google.firebase:firebase-analytics-ktx:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\0290c86d8a7aadefb45d63ece1fc5fd2\transformed\jetified-firebase-analytics-ktx-21.2.1\AndroidManifest.xml:13:17-82
+127            <meta-data
+127-->[com.google.firebase:firebase-messaging:23.1.2] C:\Users\diamond\.gradle\caches\transforms-3\5b8d808cc3a5aebe18d8bd6a3dbed182\transformed\jetified-firebase-messaging-23.1.2\AndroidManifest.xml:55:13-57:85
+128                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+128-->[com.google.firebase:firebase-messaging:23.1.2] C:\Users\diamond\.gradle\caches\transforms-3\5b8d808cc3a5aebe18d8bd6a3dbed182\transformed\jetified-firebase-messaging-23.1.2\AndroidManifest.xml:56:17-119
+129                android:value="com.google.firebase.components.ComponentRegistrar" />
+129-->[com.google.firebase:firebase-messaging:23.1.2] C:\Users\diamond\.gradle\caches\transforms-3\5b8d808cc3a5aebe18d8bd6a3dbed182\transformed\jetified-firebase-messaging-23.1.2\AndroidManifest.xml:57:17-82
+130            <meta-data
+130-->[com.google.firebase:firebase-common-ktx:20.3.2] C:\Users\diamond\.gradle\caches\transforms-3\11ccf0cb55dc0f59e314dba5e01ddaa7\transformed\jetified-firebase-common-ktx-20.3.2\AndroidManifest.xml:14:13-16:85
+131                android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonKtxRegistrar"
+131-->[com.google.firebase:firebase-common-ktx:20.3.2] C:\Users\diamond\.gradle\caches\transforms-3\11ccf0cb55dc0f59e314dba5e01ddaa7\transformed\jetified-firebase-common-ktx-20.3.2\AndroidManifest.xml:15:17-113
+132                android:value="com.google.firebase.components.ComponentRegistrar" />
+132-->[com.google.firebase:firebase-common-ktx:20.3.2] C:\Users\diamond\.gradle\caches\transforms-3\11ccf0cb55dc0f59e314dba5e01ddaa7\transformed\jetified-firebase-common-ktx-20.3.2\AndroidManifest.xml:16:17-82
+133            <meta-data
+133-->[com.google.firebase:firebase-firestore:24.4.5] C:\Users\diamond\.gradle\caches\transforms-3\7b0f90b5f36d518ade1ceb87a7404b50\transformed\jetified-firebase-firestore-24.4.5\AndroidManifest.xml:19:13-21:85
+134                android:name="com.google.firebase.components:com.google.firebase.firestore.FirestoreRegistrar"
+134-->[com.google.firebase:firebase-firestore:24.4.5] C:\Users\diamond\.gradle\caches\transforms-3\7b0f90b5f36d518ade1ceb87a7404b50\transformed\jetified-firebase-firestore-24.4.5\AndroidManifest.xml:20:17-111
+135                android:value="com.google.firebase.components.ComponentRegistrar" />
+135-->[com.google.firebase:firebase-firestore:24.4.5] C:\Users\diamond\.gradle\caches\transforms-3\7b0f90b5f36d518ade1ceb87a7404b50\transformed\jetified-firebase-firestore-24.4.5\AndroidManifest.xml:21:17-82
+136            <meta-data
+136-->[com.google.firebase:firebase-iid:21.1.0] C:\Users\diamond\.gradle\caches\transforms-3\9cde616b7dfbd3c38882882a3e922aa5\transformed\jetified-firebase-iid-21.1.0\AndroidManifest.xml:32:13-34:85
+137                android:name="com.google.firebase.components:com.google.firebase.iid.Registrar"
+137-->[com.google.firebase:firebase-iid:21.1.0] C:\Users\diamond\.gradle\caches\transforms-3\9cde616b7dfbd3c38882882a3e922aa5\transformed\jetified-firebase-iid-21.1.0\AndroidManifest.xml:33:17-96
+138                android:value="com.google.firebase.components.ComponentRegistrar" />
+138-->[com.google.firebase:firebase-iid:21.1.0] C:\Users\diamond\.gradle\caches\transforms-3\9cde616b7dfbd3c38882882a3e922aa5\transformed\jetified-firebase-iid-21.1.0\AndroidManifest.xml:34:17-82
+139            <meta-data
+139-->[com.google.firebase:firebase-datatransport:18.1.7] C:\Users\diamond\.gradle\caches\transforms-3\c2837dab6064d3e3bffd41cd2be53500\transformed\jetified-firebase-datatransport-18.1.7\AndroidManifest.xml:27:13-29:85
+140                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+140-->[com.google.firebase:firebase-datatransport:18.1.7] C:\Users\diamond\.gradle\caches\transforms-3\c2837dab6064d3e3bffd41cd2be53500\transformed\jetified-firebase-datatransport-18.1.7\AndroidManifest.xml:28:17-115
+141                android:value="com.google.firebase.components.ComponentRegistrar" />
+141-->[com.google.firebase:firebase-datatransport:18.1.7] C:\Users\diamond\.gradle\caches\transforms-3\c2837dab6064d3e3bffd41cd2be53500\transformed\jetified-firebase-datatransport-18.1.7\AndroidManifest.xml:29:17-82
+142            <meta-data
+142-->[com.google.android.gms:play-services-measurement-api:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\bc627602a3930e81d9ab88f0863913b2\transformed\jetified-play-services-measurement-api-21.2.1\AndroidManifest.xml:31:13-33:85
+143                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+143-->[com.google.android.gms:play-services-measurement-api:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\bc627602a3930e81d9ab88f0863913b2\transformed\jetified-play-services-measurement-api-21.2.1\AndroidManifest.xml:32:17-139
+144                android:value="com.google.firebase.components.ComponentRegistrar" />
+144-->[com.google.android.gms:play-services-measurement-api:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\bc627602a3930e81d9ab88f0863913b2\transformed\jetified-play-services-measurement-api-21.2.1\AndroidManifest.xml:33:17-82
+145            <meta-data
+145-->[com.google.firebase:firebase-installations:17.1.3] C:\Users\diamond\.gradle\caches\transforms-3\29e47e2bf25acc927cef4ec7e39d990a\transformed\jetified-firebase-installations-17.1.3\AndroidManifest.xml:17:13-19:85
+146                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+146-->[com.google.firebase:firebase-installations:17.1.3] C:\Users\diamond\.gradle\caches\transforms-3\29e47e2bf25acc927cef4ec7e39d990a\transformed\jetified-firebase-installations-17.1.3\AndroidManifest.xml:18:17-127
+147                android:value="com.google.firebase.components.ComponentRegistrar" />
+147-->[com.google.firebase:firebase-installations:17.1.3] C:\Users\diamond\.gradle\caches\transforms-3\29e47e2bf25acc927cef4ec7e39d990a\transformed\jetified-firebase-installations-17.1.3\AndroidManifest.xml:19:17-82
+148        </service>
+149        <service
+149-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:16:9-19:72
+150            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingBackgroundService"
+150-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:17:13-107
+151            android:exported="false"
+151-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:18:13-37
+152            android:permission="android.permission.BIND_JOB_SERVICE" />
+152-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:19:13-69
+153        <service
+153-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:20:9-26:19
+154            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingService"
+154-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:21:13-97
+155            android:exported="false" >
+155-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:22:13-37
+156            <intent-filter>
+156-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:23:13-25:29
+157                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+157-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:24:17-78
+157-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:24:25-75
+158            </intent-filter>
+159        </service>
+160
+161        <receiver
+161-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:28:9-35:20
+162            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingReceiver"
+162-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:29:13-98
+163            android:exported="true"
+163-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:30:13-36
+164            android:permission="com.google.android.c2dm.permission.SEND" >
+164-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:31:13-73
+165            <intent-filter>
+165-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:32:13-34:29
+166                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+166-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:33:17-81
+166-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:33:25-78
+167            </intent-filter>
+168        </receiver>
+169
+170        <provider
+170-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:43:9-47:38
+171            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingInitProvider"
+171-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:44:13-102
+172            android:authorities="com.vietqr.kiot.flutterfirebasemessaginginitprovider"
+172-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:45:13-88
+173            android:exported="false"
+173-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:46:13-37
+174            android:initOrder="99" />
+174-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:47:13-35
+175        <provider
+175-->[:image_picker_android] D:\vietQr\vietqr_kiot\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:10:9-18:20
+176            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+176-->[:image_picker_android] D:\vietQr\vietqr_kiot\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-82
+177            android:authorities="com.vietqr.kiot.flutter.image_provider"
+177-->[:image_picker_android] D:\vietQr\vietqr_kiot\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-74
+178            android:exported="false"
+178-->[:image_picker_android] D:\vietQr\vietqr_kiot\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:13:13-37
+179            android:grantUriPermissions="true" >
+179-->[:image_picker_android] D:\vietQr\vietqr_kiot\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:14:13-47
+180            <meta-data
+180-->[:image_picker_android] D:\vietQr\vietqr_kiot\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:15:13-17:75
+181                android:name="android.support.FILE_PROVIDER_PATHS"
+181-->[:image_picker_android] D:\vietQr\vietqr_kiot\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:16:17-67
+182                android:resource="@xml/flutter_image_picker_file_paths" />
+182-->[:image_picker_android] D:\vietQr\vietqr_kiot\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:17:17-72
+183        </provider>
+184
+185        <receiver
+185-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:16:9-18:40
+186            android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver"
+186-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:17:13-91
+187            android:exported="false" />
+187-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:18:13-37
+188        <receiver
+188-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:19:9-21:40
+189            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+189-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:20:13-97
+190            android:exported="false" />
+190-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:21:13-37
+191        <receiver
+191-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:22:9-31:20
+192            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+192-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:23:13-101
+193            android:exported="false" >
+193-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:24:13-37
+194            <intent-filter>
+194-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:25:13-30:29
+195                <action android:name="android.intent.action.BOOT_COMPLETED" />
+195-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:26:17-79
+195-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:26:25-76
+196                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+196-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:27:17-84
+196-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:27:25-81
+197                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+197-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:28:17-82
+197-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:28:25-79
+198                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+198-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:29:17-82
+198-->[:flutter_local_notifications] D:\vietQr\vietqr_kiot\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:29:25-79
+199            </intent-filter>
+200        </receiver>
+201
+202        <activity
+202-->[:url_launcher_android] D:\vietQr\vietqr_kiot\build\url_launcher_android\intermediates\merged_manifest\debug\AndroidManifest.xml:10:9-13:74
+203            android:name="io.flutter.plugins.urllauncher.WebViewActivity"
+203-->[:url_launcher_android] D:\vietQr\vietqr_kiot\build\url_launcher_android\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-74
+204            android:exported="false"
+204-->[:url_launcher_android] D:\vietQr\vietqr_kiot\build\url_launcher_android\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-37
+205            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+205-->[:url_launcher_android] D:\vietQr\vietqr_kiot\build\url_launcher_android\intermediates\merged_manifest\debug\AndroidManifest.xml:13:13-71
+206        <!--
+207           Declares a provider which allows us to store files to share in
+208           '.../caches/share_plus' and grant the receiving action access
+209        -->
+210        <provider
+210-->[:share_plus] D:\vietQr\vietqr_kiot\build\share_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:15:9-23:20
+211            android:name="dev.fluttercommunity.plus.share.ShareFileProvider"
+211-->[:share_plus] D:\vietQr\vietqr_kiot\build\share_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:16:13-77
+212            android:authorities="com.vietqr.kiot.flutter.share_provider"
+212-->[:share_plus] D:\vietQr\vietqr_kiot\build\share_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:17:13-74
+213            android:exported="false"
+213-->[:share_plus] D:\vietQr\vietqr_kiot\build\share_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:18:13-37
+214            android:grantUriPermissions="true" >
+214-->[:share_plus] D:\vietQr\vietqr_kiot\build\share_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:19:13-47
+215            <meta-data
+215-->[:image_picker_android] D:\vietQr\vietqr_kiot\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:15:13-17:75
+216                android:name="android.support.FILE_PROVIDER_PATHS"
+216-->[:image_picker_android] D:\vietQr\vietqr_kiot\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:16:17-67
+217                android:resource="@xml/flutter_share_file_paths" />
+217-->[:image_picker_android] D:\vietQr\vietqr_kiot\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:17:17-72
+218        </provider>
+219        <!--
+220           This manifest declared broadcast receiver allows us to use an explicit
+221           Intent when creating a PendingItent to be informed of the user's choice
+222        -->
+223        <receiver
+223-->[:share_plus] D:\vietQr\vietqr_kiot\build\share_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:28:9-34:20
+224            android:name="dev.fluttercommunity.plus.share.SharePlusPendingIntent"
+224-->[:share_plus] D:\vietQr\vietqr_kiot\build\share_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:29:13-82
+225            android:exported="true" >
+225-->[:share_plus] D:\vietQr\vietqr_kiot\build\share_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:30:13-36
+226            <intent-filter>
+226-->[:share_plus] D:\vietQr\vietqr_kiot\build\share_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:31:13-33:29
+227                <action android:name="EXTRA_CHOSEN_COMPONENT" />
+227-->[:share_plus] D:\vietQr\vietqr_kiot\build\share_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:32:17-65
+227-->[:share_plus] D:\vietQr\vietqr_kiot\build\share_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:32:25-62
+228            </intent-filter>
+229        </receiver>
+230        <receiver
+230-->[com.google.firebase:firebase-messaging:23.1.2] C:\Users\diamond\.gradle\caches\transforms-3\5b8d808cc3a5aebe18d8bd6a3dbed182\transformed\jetified-firebase-messaging-23.1.2\AndroidManifest.xml:31:9-38:20
+231            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+231-->[com.google.firebase:firebase-messaging:23.1.2] C:\Users\diamond\.gradle\caches\transforms-3\5b8d808cc3a5aebe18d8bd6a3dbed182\transformed\jetified-firebase-messaging-23.1.2\AndroidManifest.xml:32:13-78
+232            android:exported="true"
+232-->[com.google.firebase:firebase-messaging:23.1.2] C:\Users\diamond\.gradle\caches\transforms-3\5b8d808cc3a5aebe18d8bd6a3dbed182\transformed\jetified-firebase-messaging-23.1.2\AndroidManifest.xml:33:13-36
+233            android:permission="com.google.android.c2dm.permission.SEND" >
+233-->[com.google.firebase:firebase-messaging:23.1.2] C:\Users\diamond\.gradle\caches\transforms-3\5b8d808cc3a5aebe18d8bd6a3dbed182\transformed\jetified-firebase-messaging-23.1.2\AndroidManifest.xml:34:13-73
+234            <intent-filter>
+234-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:32:13-34:29
+235                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+235-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:33:17-81
+235-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:33:25-78
+236            </intent-filter>
+237        </receiver>
+238        <!--
+239             FirebaseMessagingService performs security checks at runtime,
+240             but set to not exported to explicitly avoid allowing another app to call it.
+241        -->
+242        <service
+242-->[com.google.firebase:firebase-messaging:23.1.2] C:\Users\diamond\.gradle\caches\transforms-3\5b8d808cc3a5aebe18d8bd6a3dbed182\transformed\jetified-firebase-messaging-23.1.2\AndroidManifest.xml:44:9-51:19
+243            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+243-->[com.google.firebase:firebase-messaging:23.1.2] C:\Users\diamond\.gradle\caches\transforms-3\5b8d808cc3a5aebe18d8bd6a3dbed182\transformed\jetified-firebase-messaging-23.1.2\AndroidManifest.xml:45:13-82
+244            android:directBootAware="true"
+244-->[com.google.firebase:firebase-messaging:23.1.2] C:\Users\diamond\.gradle\caches\transforms-3\5b8d808cc3a5aebe18d8bd6a3dbed182\transformed\jetified-firebase-messaging-23.1.2\AndroidManifest.xml:46:13-43
+245            android:exported="false" >
+245-->[com.google.firebase:firebase-messaging:23.1.2] C:\Users\diamond\.gradle\caches\transforms-3\5b8d808cc3a5aebe18d8bd6a3dbed182\transformed\jetified-firebase-messaging-23.1.2\AndroidManifest.xml:47:13-37
+246            <intent-filter android:priority="-500" >
+246-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:23:13-25:29
+247                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+247-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:24:17-78
+247-->[:firebase_messaging] D:\vietQr\vietqr_kiot\build\firebase_messaging\intermediates\merged_manifest\debug\AndroidManifest.xml:24:25-75
+248            </intent-filter>
+249        </service>
+250
+251        <provider
+251-->[com.google.firebase:firebase-common:20.3.2] C:\Users\diamond\.gradle\caches\transforms-3\4ed8bcd41b26fbe90aa68fa676e9be37\transformed\jetified-firebase-common-20.3.2\AndroidManifest.xml:25:9-30:39
+252            android:name="com.google.firebase.provider.FirebaseInitProvider"
+252-->[com.google.firebase:firebase-common:20.3.2] C:\Users\diamond\.gradle\caches\transforms-3\4ed8bcd41b26fbe90aa68fa676e9be37\transformed\jetified-firebase-common-20.3.2\AndroidManifest.xml:26:13-77
+253            android:authorities="com.vietqr.kiot.firebaseinitprovider"
+253-->[com.google.firebase:firebase-common:20.3.2] C:\Users\diamond\.gradle\caches\transforms-3\4ed8bcd41b26fbe90aa68fa676e9be37\transformed\jetified-firebase-common-20.3.2\AndroidManifest.xml:27:13-72
+254            android:directBootAware="true"
+254-->[com.google.firebase:firebase-common:20.3.2] C:\Users\diamond\.gradle\caches\transforms-3\4ed8bcd41b26fbe90aa68fa676e9be37\transformed\jetified-firebase-common-20.3.2\AndroidManifest.xml:28:13-43
+255            android:exported="false"
+255-->[com.google.firebase:firebase-common:20.3.2] C:\Users\diamond\.gradle\caches\transforms-3\4ed8bcd41b26fbe90aa68fa676e9be37\transformed\jetified-firebase-common-20.3.2\AndroidManifest.xml:29:13-37
+256            android:initOrder="100" />
+256-->[com.google.firebase:firebase-common:20.3.2] C:\Users\diamond\.gradle\caches\transforms-3\4ed8bcd41b26fbe90aa68fa676e9be37\transformed\jetified-firebase-common-20.3.2\AndroidManifest.xml:30:13-36
+257
+258        <service
+258-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\8bd51f62aae44bb0c5f5ed9bb760017b\transformed\jetified-play-services-mlkit-barcode-scanning-18.0.0\AndroidManifest.xml:9:9-15:19
+259            android:name="com.google.mlkit.common.internal.MlKitComponentDiscoveryService"
+259-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\8bd51f62aae44bb0c5f5ed9bb760017b\transformed\jetified-play-services-mlkit-barcode-scanning-18.0.0\AndroidManifest.xml:10:13-91
+260            android:directBootAware="true"
+260-->[com.google.mlkit:common:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\541da8fab274427e904b5504b81a280f\transformed\jetified-common-18.0.0\AndroidManifest.xml:17:13-43
+261            android:exported="false" >
+261-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\8bd51f62aae44bb0c5f5ed9bb760017b\transformed\jetified-play-services-mlkit-barcode-scanning-18.0.0\AndroidManifest.xml:11:13-37
+262            <meta-data
+262-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\8bd51f62aae44bb0c5f5ed9bb760017b\transformed\jetified-play-services-mlkit-barcode-scanning-18.0.0\AndroidManifest.xml:12:13-14:85
+263                android:name="com.google.firebase.components:com.google.mlkit.vision.barcode.internal.BarcodeRegistrar"
+263-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\8bd51f62aae44bb0c5f5ed9bb760017b\transformed\jetified-play-services-mlkit-barcode-scanning-18.0.0\AndroidManifest.xml:13:17-120
+264                android:value="com.google.firebase.components.ComponentRegistrar" />
+264-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\8bd51f62aae44bb0c5f5ed9bb760017b\transformed\jetified-play-services-mlkit-barcode-scanning-18.0.0\AndroidManifest.xml:14:17-82
+265            <meta-data
+265-->[com.google.mlkit:vision-common:17.0.0] C:\Users\diamond\.gradle\caches\transforms-3\bf74d82bc18898d4f8ee4367a15761d9\transformed\jetified-vision-common-17.0.0\AndroidManifest.xml:12:13-14:85
+266                android:name="com.google.firebase.components:com.google.mlkit.vision.common.internal.VisionCommonRegistrar"
+266-->[com.google.mlkit:vision-common:17.0.0] C:\Users\diamond\.gradle\caches\transforms-3\bf74d82bc18898d4f8ee4367a15761d9\transformed\jetified-vision-common-17.0.0\AndroidManifest.xml:13:17-124
+267                android:value="com.google.firebase.components.ComponentRegistrar" />
+267-->[com.google.mlkit:vision-common:17.0.0] C:\Users\diamond\.gradle\caches\transforms-3\bf74d82bc18898d4f8ee4367a15761d9\transformed\jetified-vision-common-17.0.0\AndroidManifest.xml:14:17-82
+268            <meta-data
+268-->[com.google.mlkit:common:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\541da8fab274427e904b5504b81a280f\transformed\jetified-common-18.0.0\AndroidManifest.xml:20:13-22:85
+269                android:name="com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar"
+269-->[com.google.mlkit:common:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\541da8fab274427e904b5504b81a280f\transformed\jetified-common-18.0.0\AndroidManifest.xml:21:17-120
+270                android:value="com.google.firebase.components.ComponentRegistrar" />
+270-->[com.google.mlkit:common:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\541da8fab274427e904b5504b81a280f\transformed\jetified-common-18.0.0\AndroidManifest.xml:22:17-82
+271        </service>
+272
+273        <provider
+273-->[com.google.mlkit:common:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\541da8fab274427e904b5504b81a280f\transformed\jetified-common-18.0.0\AndroidManifest.xml:9:9-13:38
+274            android:name="com.google.mlkit.common.internal.MlKitInitProvider"
+274-->[com.google.mlkit:common:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\541da8fab274427e904b5504b81a280f\transformed\jetified-common-18.0.0\AndroidManifest.xml:10:13-78
+275            android:authorities="com.vietqr.kiot.mlkitinitprovider"
+275-->[com.google.mlkit:common:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\541da8fab274427e904b5504b81a280f\transformed\jetified-common-18.0.0\AndroidManifest.xml:11:13-69
+276            android:exported="false"
+276-->[com.google.mlkit:common:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\541da8fab274427e904b5504b81a280f\transformed\jetified-common-18.0.0\AndroidManifest.xml:12:13-37
+277            android:initOrder="99" />
+277-->[com.google.mlkit:common:18.0.0] C:\Users\diamond\.gradle\caches\transforms-3\541da8fab274427e904b5504b81a280f\transformed\jetified-common-18.0.0\AndroidManifest.xml:13:13-35
+278
+279        <activity
+279-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\diamond\.gradle\caches\transforms-3\32dbb57a76a26ea3fd4575a4c674ce2e\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:20:9-22:45
+280            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+280-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\diamond\.gradle\caches\transforms-3\32dbb57a76a26ea3fd4575a4c674ce2e\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:20:19-85
+281            android:exported="false"
+281-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\diamond\.gradle\caches\transforms-3\32dbb57a76a26ea3fd4575a4c674ce2e\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:22:19-43
+282            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+282-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\diamond\.gradle\caches\transforms-3\32dbb57a76a26ea3fd4575a4c674ce2e\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:21:19-78
+283
+284        <receiver
+284-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:29:9-33:20
+285            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+285-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:30:13-85
+286            android:enabled="true"
+286-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:31:13-35
+287            android:exported="false" >
+287-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:32:13-37
+288        </receiver>
+289
+290        <service
+290-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:35:9-38:40
+291            android:name="com.google.android.gms.measurement.AppMeasurementService"
+291-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:36:13-84
+292            android:enabled="true"
+292-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:37:13-35
+293            android:exported="false" />
+293-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:38:13-37
+294        <service
+294-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:39:9-43:72
+295            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+295-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:40:13-87
+296            android:enabled="true"
+296-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:41:13-35
+297            android:exported="false"
+297-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:42:13-37
+298            android:permission="android.permission.BIND_JOB_SERVICE" />
+298-->[com.google.android.gms:play-services-measurement:21.2.1] C:\Users\diamond\.gradle\caches\transforms-3\46b0a5ed4b58004e05006b2a51ceaf49\transformed\jetified-play-services-measurement-21.2.1\AndroidManifest.xml:43:13-69
+299
+300        <meta-data
+300-->[com.google.android.gms:play-services-basement:18.1.0] C:\Users\diamond\.gradle\caches\transforms-3\ffab2070c030f6a84e69ea898e188aa5\transformed\jetified-play-services-basement-18.1.0\AndroidManifest.xml:21:9-23:69
+301            android:name="com.google.android.gms.version"
+301-->[com.google.android.gms:play-services-basement:18.1.0] C:\Users\diamond\.gradle\caches\transforms-3\ffab2070c030f6a84e69ea898e188aa5\transformed\jetified-play-services-basement-18.1.0\AndroidManifest.xml:22:13-58
+302            android:value="@integer/google_play_services_version" />
+302-->[com.google.android.gms:play-services-basement:18.1.0] C:\Users\diamond\.gradle\caches\transforms-3\ffab2070c030f6a84e69ea898e188aa5\transformed\jetified-play-services-basement-18.1.0\AndroidManifest.xml:23:13-66
+303
+304        <uses-library
+304-->[androidx.window:window:1.0.0-beta04] C:\Users\diamond\.gradle\caches\transforms-3\1f3f3c7bf247259442b6db1757087228\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:25:9-27:40
+305            android:name="androidx.window.extensions"
+305-->[androidx.window:window:1.0.0-beta04] C:\Users\diamond\.gradle\caches\transforms-3\1f3f3c7bf247259442b6db1757087228\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:26:13-54
+306            android:required="false" />
+306-->[androidx.window:window:1.0.0-beta04] C:\Users\diamond\.gradle\caches\transforms-3\1f3f3c7bf247259442b6db1757087228\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:27:13-37
+307        <uses-library
+307-->[androidx.window:window:1.0.0-beta04] C:\Users\diamond\.gradle\caches\transforms-3\1f3f3c7bf247259442b6db1757087228\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:28:9-30:40
+308            android:name="androidx.window.sidecar"
+308-->[androidx.window:window:1.0.0-beta04] C:\Users\diamond\.gradle\caches\transforms-3\1f3f3c7bf247259442b6db1757087228\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:29:13-51
+309            android:required="false" />
+309-->[androidx.window:window:1.0.0-beta04] C:\Users\diamond\.gradle\caches\transforms-3\1f3f3c7bf247259442b6db1757087228\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:30:13-37
+310
+311        <service
+311-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\diamond\.gradle\caches\transforms-3\5806bd48b318b5112f6a9569b4e3a9fc\transformed\jetified-transport-backend-cct-3.1.8\AndroidManifest.xml:28:9-34:19
+312            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+312-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\diamond\.gradle\caches\transforms-3\5806bd48b318b5112f6a9569b4e3a9fc\transformed\jetified-transport-backend-cct-3.1.8\AndroidManifest.xml:29:13-103
+313            android:exported="false" >
+313-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\diamond\.gradle\caches\transforms-3\5806bd48b318b5112f6a9569b4e3a9fc\transformed\jetified-transport-backend-cct-3.1.8\AndroidManifest.xml:30:13-37
+314            <meta-data
+314-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\diamond\.gradle\caches\transforms-3\5806bd48b318b5112f6a9569b4e3a9fc\transformed\jetified-transport-backend-cct-3.1.8\AndroidManifest.xml:31:13-33:39
+315                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+315-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\diamond\.gradle\caches\transforms-3\5806bd48b318b5112f6a9569b4e3a9fc\transformed\jetified-transport-backend-cct-3.1.8\AndroidManifest.xml:32:17-94
+316                android:value="cct" />
+316-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\diamond\.gradle\caches\transforms-3\5806bd48b318b5112f6a9569b4e3a9fc\transformed\jetified-transport-backend-cct-3.1.8\AndroidManifest.xml:33:17-36
+317        </service>
+318        <service
+318-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\diamond\.gradle\caches\transforms-3\3052db885c0cb9103bb9f581f90c8244\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:26:9-30:19
+319            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+319-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\diamond\.gradle\caches\transforms-3\3052db885c0cb9103bb9f581f90c8244\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:27:13-117
+320            android:exported="false"
+320-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\diamond\.gradle\caches\transforms-3\3052db885c0cb9103bb9f581f90c8244\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:28:13-37
+321            android:permission="android.permission.BIND_JOB_SERVICE" >
+321-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\diamond\.gradle\caches\transforms-3\3052db885c0cb9103bb9f581f90c8244\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:29:13-69
+322        </service>
+323
+324        <receiver
+324-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\diamond\.gradle\caches\transforms-3\3052db885c0cb9103bb9f581f90c8244\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:32:9-34:40
+325            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+325-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\diamond\.gradle\caches\transforms-3\3052db885c0cb9103bb9f581f90c8244\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:33:13-132
+326            android:exported="false" />
+326-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\diamond\.gradle\caches\transforms-3\3052db885c0cb9103bb9f581f90c8244\transformed\jetified-transport-runtime-3.1.8\AndroidManifest.xml:34:13-37
+327
+328        <service
+328-->[androidx.camera:camera-camera2:1.1.0] C:\Users\diamond\.gradle\caches\transforms-3\2f6e8a1944f8db9b7a3c60841533e4a1\transformed\jetified-camera-camera2-1.1.0\AndroidManifest.xml:26:9-35:19
+329            android:name="androidx.camera.core.impl.MetadataHolderService"
+329-->[androidx.camera:camera-camera2:1.1.0] C:\Users\diamond\.gradle\caches\transforms-3\2f6e8a1944f8db9b7a3c60841533e4a1\transformed\jetified-camera-camera2-1.1.0\AndroidManifest.xml:27:13-75
+330            android:enabled="false"
+330-->[androidx.camera:camera-camera2:1.1.0] C:\Users\diamond\.gradle\caches\transforms-3\2f6e8a1944f8db9b7a3c60841533e4a1\transformed\jetified-camera-camera2-1.1.0\AndroidManifest.xml:28:13-36
+331            android:exported="false" >
+331-->[androidx.camera:camera-camera2:1.1.0] C:\Users\diamond\.gradle\caches\transforms-3\2f6e8a1944f8db9b7a3c60841533e4a1\transformed\jetified-camera-camera2-1.1.0\AndroidManifest.xml:29:13-37
+332            <meta-data
+332-->[androidx.camera:camera-camera2:1.1.0] C:\Users\diamond\.gradle\caches\transforms-3\2f6e8a1944f8db9b7a3c60841533e4a1\transformed\jetified-camera-camera2-1.1.0\AndroidManifest.xml:32:13-34:89
+333                android:name="androidx.camera.core.impl.MetadataHolderService.DEFAULT_CONFIG_PROVIDER"
+333-->[androidx.camera:camera-camera2:1.1.0] C:\Users\diamond\.gradle\caches\transforms-3\2f6e8a1944f8db9b7a3c60841533e4a1\transformed\jetified-camera-camera2-1.1.0\AndroidManifest.xml:33:17-103
+334                android:value="androidx.camera.camera2.Camera2Config$DefaultProvider" />
+334-->[androidx.camera:camera-camera2:1.1.0] C:\Users\diamond\.gradle\caches\transforms-3\2f6e8a1944f8db9b7a3c60841533e4a1\transformed\jetified-camera-camera2-1.1.0\AndroidManifest.xml:34:17-86
+335        </service>
+336    </application>
+337
+338</manifest>

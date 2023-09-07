@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ButtonIconWidget extends StatelessWidget {
   final double width;
   final IconData icon;
+  final String pathIcon;
   final String title;
   final VoidCallback function;
   final Color bgColor;
@@ -13,22 +14,24 @@ class ButtonIconWidget extends StatelessWidget {
   final double? borderRadius;
   final FocusNode? focusNode;
   final Alignment? alignment;
+  final EdgeInsets paddingIcon;
 
-  const ButtonIconWidget({
-    super.key,
-    required this.width,
-    required this.icon,
-    required this.title,
-    required this.function,
-    required this.bgColor,
-    required this.textColor,
-    this.height,
-    this.textSize,
-    this.autoFocus,
-    this.borderRadius,
-    this.focusNode,
-    this.alignment,
-  });
+  const ButtonIconWidget(
+      {super.key,
+      required this.width,
+      this.icon = Icons.add,
+      required this.title,
+      required this.function,
+      required this.bgColor,
+      required this.textColor,
+      this.height,
+      this.textSize,
+      this.autoFocus,
+      this.borderRadius,
+      this.focusNode,
+      this.alignment,
+      this.pathIcon = '',
+      this.paddingIcon = EdgeInsets.zero});
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +54,20 @@ class ButtonIconWidget extends StatelessWidget {
               ? MainAxisAlignment.start
               : MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: textColor,
-              size: (textSize != null) ? textSize : 15,
-            ),
+            if (pathIcon.isNotEmpty)
+              Image.asset(
+                pathIcon,
+                height: 40,
+              )
+            else
+              Padding(
+                padding: paddingIcon,
+                child: Icon(
+                  icon,
+                  color: textColor,
+                  size: (textSize != null) ? textSize : 15,
+                ),
+              ),
             if (title.isNotEmpty) ...[
               const Padding(padding: EdgeInsets.only(left: 5)),
               Text(

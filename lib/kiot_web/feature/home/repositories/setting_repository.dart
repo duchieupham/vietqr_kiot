@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:http/http.dart' as http;
 import 'package:viet_qr_kiot/commons/constants/env/env_config.dart';
 import 'package:viet_qr_kiot/commons/enums/authentication_type.dart';
 import 'package:viet_qr_kiot/commons/utils/base_api.dart';
@@ -64,6 +66,38 @@ class SettingRepository {
       }
     } catch (e) {
       LOG.error(e.toString());
+    }
+    return result;
+  }
+
+  Future upLoadImage(Map<String, dynamic> param, File? image) async {
+    ResponseMessageDTO result =
+        const ResponseMessageDTO(status: '', message: '');
+    try {
+      final String url = '${EnvConfig.getBaseUrl()}accounts/setting/image';
+      final List<http.MultipartFile> files = [];
+      if (image != null) {
+        final imageFile =
+            await http.MultipartFile.fromPath('image', image.path);
+        files.add(imageFile);
+        final response = await BaseAPIClient.postMultipartAPI(
+          url: url,
+          fields: param,
+          files: files,
+        );
+        if (response.statusCode == 200 || response.statusCode == 400) {
+          var data = jsonDecode(response.body);
+          result = ResponseMessageDTO.fromJson(data);
+          if (result.message.trim().isNotEmpty) {
+            // await UserInformationHelper.instance.setImageId(result.message);
+          }
+        } else {
+          result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+        }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
     }
     return result;
   }

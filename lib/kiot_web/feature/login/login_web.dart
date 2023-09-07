@@ -296,6 +296,7 @@ class _LoginState extends State<_Login> {
             }
 
             return Scaffold(
+              resizeToAvoidBottomInset: false,
               body: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -378,7 +379,9 @@ class _LoginState extends State<_Login> {
                 phoneController: phoneNoController,
                 onChanged: provider.updatePhone,
                 onSubmitted: (value) {
-                  _bloc.add(CheckExitsPhoneEvent(phone: provider.phone));
+                  if (value.length == 11 || value.length == 12) {
+                    _bloc.add(CheckExitsPhoneEvent(phone: provider.phone));
+                  }
                 },
               ),
               if (provider.errorPhone != null)

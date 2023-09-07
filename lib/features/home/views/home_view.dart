@@ -7,15 +7,18 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:viet_qr_kiot/commons/constants/configurations/numeral.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/route.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
 import 'package:viet_qr_kiot/commons/utils/file_utils.dart';
+import 'package:viet_qr_kiot/commons/utils/image_utils.dart';
 import 'package:viet_qr_kiot/commons/utils/log.dart';
 import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
 import 'package:viet_qr_kiot/commons/widgets/ambient_avatar_widget.dart';
 import 'package:viet_qr_kiot/commons/widgets/button_icon_widget.dart';
 import 'package:viet_qr_kiot/commons/widgets/dialog_widget.dart';
 import 'package:viet_qr_kiot/features/generate_qr/repositories/qr_repository.dart';
+import 'package:viet_qr_kiot/features/home/views/widget/setting_page.dart';
 import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
 import 'package:viet_qr_kiot/features/logout/events/log_out_event.dart';
 import 'package:viet_qr_kiot/features/logout/states/log_out_state.dart';
@@ -25,9 +28,12 @@ import 'package:viet_qr_kiot/features/token/states/token_state.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/blocs/setting_bloc.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/events/setting_event.dart';
 import 'package:viet_qr_kiot/layouts/box_layout.dart';
+import 'package:viet_qr_kiot/layouts/list_qr_mobile.dart';
 import 'package:viet_qr_kiot/models/qr_create_dto.dart';
+import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
 import 'package:viet_qr_kiot/services/providers/add_image_dashboard_provider.dart';
 import 'package:viet_qr_kiot/services/providers/clock_provider.dart';
+import 'package:viet_qr_kiot/services/providers/list_qr_provider.dart';
 import 'package:viet_qr_kiot/services/providers/setting_provider.dart';
 import 'package:viet_qr_kiot/services/user_information_helper.dart';
 
@@ -41,18 +47,21 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreen extends State<HomeScreen> {
   //providers
   final ClockProvider clockProvider = ClockProvider('');
-
+  bool showPopup = false;
   //
   late TokenBloc _tokenBloc;
   late LogoutBloc _logoutBloc;
 
   //
   final ImagePicker imagePicker = ImagePicker();
-
+  List<QRGeneratedDTO> listQR = [];
   @override
   void initState() {
     Provider.of<SettingProvider>(context, listen: false).getSettingVoiceKiot();
+    Provider.of<AddImageDashboardProvider>(context, listen: false).init();
+
     _tokenBloc = BlocProvider.of(context);
+    _tokenBloc.add(GetListQrEvent());
     _logoutBloc = BlocProvider.of(context);
     _tokenBloc.add(const TokenFcmUpdateEvent());
     clockProvider.getRealTime();
@@ -62,6 +71,7 @@ class _HomeScreen extends State<HomeScreen> {
   Widget _buildClock(double width, double height) {
     return LayoutBuilder(builder: (context, constraints) {
       double sizeText = 30;
+
       if (constraints.maxWidth >= 300 &&
           constraints.maxHeight >= 260 &&
           constraints.maxWidth <= 440) {
@@ -83,6 +93,7 @@ class _HomeScreen extends State<HomeScreen> {
           ),
         );
       }
+
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
@@ -172,6 +183,9 @@ class _HomeScreen extends State<HomeScreen> {
             if (state is TokenFcmUpdateSuccessState) {
               LOG.info('Update FCM Token success');
             }
+            if (state is GetListQrSuccessState) {
+              listQR = state.qrList;
+            }
           },
           child: Stack(
             children: [
@@ -186,150 +200,165 @@ class _HomeScreen extends State<HomeScreen> {
                 ),
                 child: Column(
                   children: [
-                    const SizedBox(height: kToolbarHeight),
-                    Expanded(
-                      flex: 1,
-                      child: _buildClock(width, height),
-                    ),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Consumer<AddImageDashboardProvider>(
-                          builder: (context, provider, child) {
-                            if ((provider.bodyImageFile == null)) {
-                              return InkWell(
-                                onTap: onSelectImage1,
-                                child: BoxLayout(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 50),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            6, 2, 12, 2),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          color: AppColor.BLUE_TEXT
-                                              .withOpacity(0.4),
+                    if (MediaQuery.of(context).orientation ==
+                        Orientation.landscape)
+                      Expanded(child: _buildWidgetPortrait(height, width))
+                    else ...[
+                      const SizedBox(height: kToolbarHeight),
+                      Expanded(
+                        flex: 1,
+                        child: _buildClock(width, height),
+                      ),
+                      const SizedBox(height: 16),
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Consumer<AddImageDashboardProvider>(
+                            builder: (context, provider, child) {
+                              if (provider.settingMainScreen ==
+                                  Numeral.MAIN_SCREEN_SHOW_QR) {
+                                return _buildListQR(false);
+                              }
+
+                              if (provider.loadingBodyImage) {
+                                return _buildLoadingWidget();
+                              }
+                              if ((provider.imageBodyId.isEmpty)) {
+                                return InkWell(
+                                  onTap: onSelectImage1,
+                                  child: BoxLayout(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 50),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              6, 2, 12, 2),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            color: AppColor.BLUE_TEXT
+                                                .withOpacity(0.4),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(
+                                                'assets/images/ic-edit-avatar-setting.png',
+                                                width: 30,
+                                                color: AppColor.BLUE_TEXT,
+                                              ),
+                                              const Text(
+                                                'Chọn ảnh',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: AppColor.BLUE_TEXT,
+                                                    height: 1.4),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Image.asset(
-                                              'assets/images/ic-edit-avatar-setting.png',
-                                              width: 30,
-                                              color: AppColor.BLUE_TEXT,
-                                            ),
-                                            const Text(
-                                              'Chọn ảnh',
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: AppColor.BLUE_TEXT,
-                                                  height: 1.4),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            } else {
-                              return GestureDetector(
-                                onTap: onSelectImage1,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: Image.file(
-                                        provider.bodyImageFile!,
-                                        fit: BoxFit.cover,
-                                      ).image,
+                                      ],
                                     ),
                                   ),
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Consumer<AddImageDashboardProvider>(
-                          builder: (context, provider, child) {
-                            if ((provider.footerImageFile == null)) {
-                              return InkWell(
-                                onTap: onSelectImage2,
-                                child: BoxLayout(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 50),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            6, 2, 12, 2),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          color: AppColor.BLUE_TEXT
-                                              .withOpacity(0.4),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Image.asset(
-                                              'assets/images/ic-edit-avatar-setting.png',
-                                              width: 30,
-                                              color: AppColor.BLUE_TEXT,
-                                            ),
-                                            const Text(
-                                              'Chọn ảnh',
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: AppColor.BLUE_TEXT,
-                                                  height: 1.4),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            } else {
-                              return GestureDetector(
-                                onTap: onSelectImage2,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: Image.file(
-                                        provider.footerImageFile!,
+                                );
+                              } else {
+                                return GestureDetector(
+                                  onTap: onSelectImage1,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      image: DecorationImage(
                                         fit: BoxFit.cover,
-                                      ).image,
+                                        image: ImageUtils.instance
+                                            .getImageNetWork(
+                                                provider.imageBodyId),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }
-                          },
+                                );
+                              }
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: kToolbarHeight),
+                      const SizedBox(height: 16),
+                      Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Consumer<AddImageDashboardProvider>(
+                            builder: (context, provider, child) {
+                              if (provider.loadingFooterImage) {
+                                return _buildLoadingWidget();
+                              }
+                              if ((provider.imageFooterId.isEmpty)) {
+                                return InkWell(
+                                  onTap: onSelectImage2,
+                                  child: BoxLayout(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 50),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              6, 2, 12, 2),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            color: AppColor.BLUE_TEXT
+                                                .withOpacity(0.4),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(
+                                                'assets/images/ic-edit-avatar-setting.png',
+                                                width: 30,
+                                                color: AppColor.BLUE_TEXT,
+                                              ),
+                                              const Text(
+                                                'Chọn ảnh',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: AppColor.BLUE_TEXT,
+                                                    height: 1.4),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return GestureDetector(
+                                  onTap: onSelectImage2,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: ImageUtils.instance
+                                            .getImageNetWork(
+                                                provider.imageFooterId),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: kToolbarHeight),
+                    ],
                     _buildFooter(),
                   ],
                 ),
@@ -358,7 +387,7 @@ class _HomeScreen extends State<HomeScreen> {
                     ),
                     child: Container(
                       width: 250,
-                      height: 45,
+                      height: 100,
                       decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
                         borderRadius: const BorderRadius.horizontal(
@@ -379,17 +408,46 @@ class _HomeScreen extends State<HomeScreen> {
                       padding: EdgeInsets.zero,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: ButtonIconWidget(
-                          width: width,
-                          height: 40,
-                          icon: Icons.logout_rounded,
-                          title: 'Đăng xuất',
-                          alignment: Alignment.centerLeft,
-                          function: () {
-                            _logoutBloc.add(const LogoutEventSubmit());
-                          },
-                          bgColor: AppColor.TRANSPARENT,
-                          textColor: AppColor.RED_TEXT,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            ButtonIconWidget(
+                              width: width,
+                              height: 40,
+                              pathIcon: 'assets/images/ic-menu-setting.png',
+                              title: 'Cài đặt giao diện',
+                              alignment: Alignment.centerLeft,
+                              function: () {
+                                provider.updateMenuOpen(false);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SettingPage()));
+                              },
+                              bgColor: AppColor.TRANSPARENT,
+                              textColor: AppColor.BLUE_TEXT,
+                            ),
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            ButtonIconWidget(
+                              width: width,
+                              height: 40,
+                              paddingIcon:
+                                  const EdgeInsets.symmetric(horizontal: 6),
+                              icon: Icons.logout_rounded,
+                              title: 'Đăng xuất',
+                              alignment: Alignment.centerLeft,
+                              function: () {
+                                _logoutBloc.add(const LogoutEventSubmit());
+                              },
+                              bgColor: AppColor.TRANSPARENT,
+                              textColor: AppColor.RED_TEXT,
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -400,6 +458,154 @@ class _HomeScreen extends State<HomeScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildWidgetPortrait(double height, double width) {
+    return Row(
+      children: [
+        Expanded(
+            child: Column(
+          children: [
+            const SizedBox(height: kToolbarHeight),
+            Expanded(
+              child: _buildClock(width, height),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(left: 16, bottom: 16),
+                child: Consumer<AddImageDashboardProvider>(
+                  builder: (context, provider, child) {
+                    if (provider.loadingFooterImage) {
+                      return _buildLoadingWidget();
+                    }
+                    if ((provider.imageFooterId.isEmpty)) {
+                      return InkWell(
+                        onTap: onSelectImage2,
+                        child: BoxLayout(
+                          padding: const EdgeInsets.symmetric(vertical: 50),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.fromLTRB(6, 2, 12, 2),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: AppColor.BLUE_TEXT.withOpacity(0.4),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/ic-edit-avatar-setting.png',
+                                      width: 30,
+                                      color: AppColor.BLUE_TEXT,
+                                    ),
+                                    const Text(
+                                      'Chọn ảnh',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: AppColor.BLUE_TEXT,
+                                          height: 1.4),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    } else {
+                      return GestureDetector(
+                        onTap: onSelectImage2,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: ImageUtils.instance
+                                  .getImageNetWork(provider.imageFooterId),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+          ],
+        )),
+        Expanded(
+          child: Container(
+            margin:
+                const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 28),
+            child: Consumer<AddImageDashboardProvider>(
+              builder: (context, provider, child) {
+                if (provider.settingMainScreen == Numeral.MAIN_SCREEN_SHOW_QR) {
+                  return _buildListQR(true);
+                }
+
+                if (provider.loadingBodyImage) {
+                  return _buildLoadingWidget();
+                }
+                if ((provider.imageBodyId.isEmpty)) {
+                  return InkWell(
+                    onTap: onSelectImage1,
+                    child: BoxLayout(
+                      padding: const EdgeInsets.symmetric(vertical: 50),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(6, 2, 12, 2),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: AppColor.BLUE_TEXT.withOpacity(0.4),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/images/ic-edit-avatar-setting.png',
+                                  width: 30,
+                                  color: AppColor.BLUE_TEXT,
+                                ),
+                                const Text(
+                                  'Chọn ảnh',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColor.BLUE_TEXT,
+                                      height: 1.4),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                } else {
+                  return GestureDetector(
+                    onTap: onSelectImage1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: ImageUtils.instance
+                              .getImageNetWork(provider.imageBodyId),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -539,23 +745,90 @@ class _HomeScreen extends State<HomeScreen> {
     );
   }
 
-// InkWell(
-//   onTap: () {
-//     Provider.of<MenuProvider>(context, listen: false)
-//         .updateMenuOpen(false);
-//     _logoutBloc.add(const LogoutEventSubmit());
-//   },
-//   child: BoxLayout(
-//     width: 35,
-//     height: 35,
-//     borderRadius: 20,
-//     bgColor: Theme.of(context).canvasColor,
-//     padding: const EdgeInsets.all(0),
-//     child: const Icon(
-//       Icons.logout_rounded,
-//       size: 15,
-//       color: AppColor.RED_TEXT,
-//     ),
-//   ),
-// ),
+  Widget _buildPopUpSetting() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 80, left: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      width: 240,
+      height: 120,
+      decoration: BoxDecoration(
+        color: AppColor.WHITE,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () {
+              setState(() {
+                showPopup = false;
+              });
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return SettingPage();
+              }));
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/images/ic-menu-setting.png',
+                  height: 28,
+                ),
+                const SizedBox(
+                  width: 12,
+                ),
+                const Text('Cài đặt giao diện')
+              ],
+            ),
+          ),
+          const Spacer(),
+          InkWell(
+            onTap: () {
+              _logoutBloc.add(const LogoutEventSubmit());
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/images/ic-menu-logout.png',
+                  height: 28,
+                ),
+                const SizedBox(
+                  width: 12,
+                ),
+                const Text('Đăng xuất')
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListQR(bool isLandscape) {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          image: const DecorationImage(
+            image: AssetImage('assets/images/bg_napas_qr.png'),
+            fit: BoxFit.fill,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          color: AppColor.WHITE),
+      child: ChangeNotifierProvider<ListQRProvider>(
+        create: (context) => ListQRProvider(),
+        child: ListVietQrMobile(
+          qrGeneratedDTOs: listQR,
+          isLandscape: isLandscape,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingWidget() {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12), color: AppColor.WHITE),
+      child: const SizedBox(
+          height: 40, width: 40, child: CircularProgressIndicator()),
+    );
+  }
 }

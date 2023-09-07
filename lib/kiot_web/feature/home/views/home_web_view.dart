@@ -1,6 +1,4 @@
 // import 'dart:html' as html;
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_analog_clock/flutter_analog_clock.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:viet_qr_kiot/commons/constants/configurations/numeral.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
 import 'package:viet_qr_kiot/commons/utils/log.dart';
 import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
@@ -15,13 +14,18 @@ import 'package:viet_qr_kiot/commons/widgets/ambient_avatar_widget.dart';
 import 'package:viet_qr_kiot/commons/widgets/dialog_widget.dart';
 import 'package:viet_qr_kiot/features/generate_qr/repositories/qr_repository.dart';
 import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
+import 'package:viet_qr_kiot/features/logout/events/log_out_event.dart';
 import 'package:viet_qr_kiot/features/logout/states/log_out_state.dart';
 import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
+import 'package:viet_qr_kiot/features/token/events/token_event.dart';
 import 'package:viet_qr_kiot/features/token/states/token_state.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/blocs/setting_bloc.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/frames/home_frame.dart';
+import 'package:viet_qr_kiot/kiot_web/feature/home/views/provider/home_provider.dart';
 import 'package:viet_qr_kiot/layouts/box_layout.dart';
+import 'package:viet_qr_kiot/layouts/list_viet_qr.dart';
 import 'package:viet_qr_kiot/models/qr_create_dto.dart';
+import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
 import 'package:viet_qr_kiot/services/providers/clock_provider.dart';
 import 'package:viet_qr_kiot/services/providers/setting_provider.dart';
 import 'package:viet_qr_kiot/services/user_information_helper.dart';
@@ -46,10 +50,11 @@ class _HomeScreen extends State<HomeWebScreen> {
 
   //
   final ImagePicker imagePicker = ImagePicker();
-
+  List<QRGeneratedDTO> listQR = [];
   @override
   void initState() {
     _tokenBloc = BlocProvider.of(context);
+    _tokenBloc.add(GetListQrEvent());
     _logoutBloc = BlocProvider.of(context);
     // _tokenBloc.add(const TokenFcmUpdateEvent());
     clockProvider.getRealTime();
@@ -63,34 +68,49 @@ class _HomeScreen extends State<HomeWebScreen> {
     final double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: BlocListener<LogoutBloc, LogoutState>(
-          listener: (context, state) {
-            if (state is LogoutLoadingState) {
-              DialogWidget.instance.openLoadingDialog();
-            }
-            if (state is LogoutSuccessfulState) {
-              if (Navigator.canPop(context)) {
-                Navigator.pop(context);
+      body: ChangeNotifierProvider<HomeProvider>(
+        create: (context) => HomeProvider(),
+        child: BlocListener<LogoutBloc, LogoutState>(
+            listener: (context, state) {
+              if (state is LogoutLoadingState) {
+                DialogWidget.instance.openLoadingDialog();
               }
-              context.go('/login');
-            }
-            if (state is LogoutFailedState) {
-              Navigator.pop(context);
-              DialogWidget.instance.openMsgDialog(
-                title: 'Không thể đăng xuất',
-                msg: 'Vui lòng thử lại sau.',
-              );
-            }
-          },
-          child: BlocListener<TokenBloc, TokenState>(
-            listener: (context, state) {},
-            child: HomeWebFrame(
-              layout1: _buildClock(width, height),
-              footer: _buildFooter(width),
-              layout2: _buildLayout2(),
-              layout3: _buildLayout3(),
-            ),
-          )),
+              if (state is LogoutSuccessfulState) {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+                context.go('/login');
+              }
+              if (state is LogoutFailedState) {
+                Navigator.pop(context);
+                DialogWidget.instance.openMsgDialog(
+                  title: 'Không thể đăng xuất',
+                  msg: 'Vui lòng thử lại sau.',
+                );
+              }
+            },
+            child: BlocListener<TokenBloc, TokenState>(
+              listener: (context, state) {
+                if (state is GetListQrSuccessState) {
+                  listQR = state.qrList;
+                }
+              },
+              child:
+                  Consumer<HomeProvider>(builder: (context, provider, child) {
+                return HomeWebFrame(
+                  layout1: _buildClock(width, height),
+                  footer: _buildFooter(width, provider),
+                  layout2: _buildLayout2(),
+                  layout3: _buildLayout3(),
+                  settingPopup: _buildPopUpSetting(provider),
+                  showPopupSetting: provider.showPopup,
+                  onHidePopup: () {
+                    provider.updateShowPopup(false);
+                  },
+                );
+              }),
+            )),
+      ),
     );
   }
 
@@ -189,7 +209,6 @@ class _HomeScreen extends State<HomeWebScreen> {
       }
 
       if (constraints.maxHeight < 130) {
-        print('----------------------------${constraints.maxWidth} ');
         if (constraints.maxHeight > 87) {
           sizeText = constraints.maxWidth * 0.06;
         } else {
@@ -282,70 +301,74 @@ class _HomeScreen extends State<HomeWebScreen> {
   Widget _buildLayout2() {
     return Consumer<AddImageWebDashboardProvider>(
       builder: (context, provider, child) {
-        return (provider.bodyImageFile == null)
-            ? InkWell(
-                onTap: () async {
-                  // html.FileUploadInputElement uploadInput =
-                  //     html.FileUploadInputElement();
-                  // uploadInput.accept = '.png,.jpg';
-                  // uploadInput.multiple = true;
-                  // uploadInput.draggable = true;
-                  // uploadInput.click();
-                  // uploadInput.onChange.listen((event) async {
-                  //   final files = uploadInput.files;
-                  //   final file = files![0];
-                  //   final reader = html.FileReader();
-                  //   reader.readAsArrayBuffer(file);
-                  //   await reader.onLoad.first;
-                  //   provider.updateBodyImage(reader.result as Uint8List);
-                  //
-                  //   // reader.readAsDataUrl(file);
-                  // });
-                },
-                child: BoxLayout(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(6, 2, 12, 4),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: AppColor.BLUE_TEXT.withOpacity(0.4),
+        if (provider.settingMainScreen == Numeral.MAIN_SCREEN_SHOW_IMAGE) {
+          return (provider.bodyImageFile == null)
+              ? InkWell(
+                  onTap: () async {
+                    // html.FileUploadInputElement uploadInput =
+                    //     html.FileUploadInputElement();
+                    // uploadInput.accept = '.png,.jpg';
+                    // uploadInput.multiple = true;
+                    // uploadInput.draggable = true;
+                    // uploadInput.click();
+                    // uploadInput.onChange.listen((event) async {
+                    //   final files = uploadInput.files;
+                    //   final file = files![0];
+                    //   final reader = html.FileReader();
+                    //   reader.readAsArrayBuffer(file);
+                    //   await reader.onLoad.first;
+                    //   provider.updateBodyImage(reader.result as Uint8List);
+
+                    //   // reader.readAsDataUrl(file);
+                    // });
+                  },
+                  child: BoxLayout(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(6, 2, 12, 4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: AppColor.BLUE_TEXT.withOpacity(0.4),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/ic-edit-avatar-setting.png',
+                                width: 30,
+                                color: AppColor.BLUE_TEXT,
+                              ),
+                              const Text(
+                                'Chọn ảnh',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: AppColor.BLUE_TEXT,
+                                    height: 1.4),
+                              ),
+                            ],
+                          ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/images/ic-edit-avatar-setting.png',
-                              width: 30,
-                              color: AppColor.BLUE_TEXT,
-                            ),
-                            const Text(
-                              'Chọn ảnh',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppColor.BLUE_TEXT,
-                                  height: 1.4),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              )
-            : Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: Image.memory(
-                      provider.bodyImageFile!,
+                )
+              : Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    image: DecorationImage(
                       fit: BoxFit.cover,
-                    ).image,
+                      image: Image.memory(
+                        provider.bodyImageFile!,
+                        fit: BoxFit.cover,
+                      ).image,
+                    ),
                   ),
-                ),
-              );
+                );
+        } else {
+          return _buildListQR();
+        }
       },
     );
   }
@@ -421,7 +444,7 @@ class _HomeScreen extends State<HomeWebScreen> {
     );
   }
 
-  Widget _buildFooter(double width) {
+  Widget _buildFooter(double width, HomeProvider homeProvider) {
     return BlocProvider<SettingBloc>(
       create: (context) => SettingBloc(),
       child: Consumer<SettingProvider>(builder: (context, provider, child) {
@@ -430,36 +453,11 @@ class _HomeScreen extends State<HomeWebScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           child: Row(
             children: [
-              // Consumer<SettingProvider>(
-              //   builder: (context, provider, child) {
-              //     return Container(
-              //       width: 150,
-              //       height: 45,
-              //       decoration: BoxDecoration(
-              //         color: Theme.of(context).cardColor,
-              //         borderRadius: const BorderRadius.horizontal(
-              //             right: Radius.circular(16)),
-              //       ),
-              //       padding: EdgeInsets.zero,
-              //       child: Padding(
-              //         padding: const EdgeInsets.symmetric(horizontal: 20),
-              //         child: ButtonIconWidget(
-              //           width: width,
-              //           height: 40,
-              //           icon: Icons.logout_rounded,
-              //           title: 'Đăng xuất',
-              //           alignment: Alignment.centerLeft,
-              //           function: () {
-              //             _logoutBloc.add(const LogoutEventSubmit());
-              //           },
-              //           bgColor: AppColor.TRANSPARENT,
-              //           textColor: AppColor.RED_TEXT,
-              //         ),
-              //       ),
-              //     );
-              //   },
-              // ),
-              _buildAvatarWidget(context),
+              GestureDetector(
+                  onTap: () {
+                    homeProvider.updateShowPopup(!homeProvider.showPopup);
+                  },
+                  child: _buildAvatarWidget(context)),
               const SizedBox(width: 10),
               Text(UserInformationHelper.instance.getUserFullname()),
               const Spacer(),
@@ -496,6 +494,62 @@ class _HomeScreen extends State<HomeWebScreen> {
           ),
         );
       }),
+    );
+  }
+
+  Widget _buildListQR() {
+    return BoxLayout(
+      child: ListVietQr(qrGeneratedDTOs: listQR),
+    );
+  }
+
+  Widget _buildPopUpSetting(HomeProvider provider) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8, left: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      width: 240,
+      height: 120,
+      decoration: BoxDecoration(
+        color: AppColor.WHITE,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () {},
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/images/ic-menu-setting.png',
+                  height: 28,
+                ),
+                const SizedBox(
+                  width: 12,
+                ),
+                const Text('Cài đặt giao diện')
+              ],
+            ),
+          ),
+          const Spacer(),
+          InkWell(
+            onTap: () {
+              _logoutBloc.add(const LogoutEventSubmit());
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/images/ic-menu-logout.png',
+                  height: 28,
+                ),
+                const SizedBox(
+                  width: 12,
+                ),
+                const Text('Đăng xuất')
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

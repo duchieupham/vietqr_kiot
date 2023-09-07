@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 // import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -31,11 +30,10 @@ import 'package:viet_qr_kiot/services/providers/setting_provider.dart';
 import 'package:viet_qr_kiot/services/providers/theme_provider.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/account_helper.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/event_bloc_helper.dart';
+import 'package:viet_qr_kiot/services/shared_preferences/session.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/theme_helper.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/user_information_helper.dart';
 import 'package:viet_qr_kiot/services/shared_preferences/web_socket_helper.dart';
-
-import 'kiot_web/main_web.dart';
 
 //Share Preferences
 late SharedPreferences sharedPrefs;
@@ -44,19 +42,19 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   sharedPrefs = await SharedPreferences.getInstance();
   await _initialServiceHelper();
-  // setUrlStrategy(PathUrlStrategy());
   if (!kIsWeb) {
     await Firebase.initializeApp();
   } else {
+    // setUrlStrategy(PathUrlStrategy());
     await WebSocketHelper.instance.initialWebSocket();
   }
 
   LOG.verbose('Config Environment: ${EnvConfig.getEnv()}');
-  if (kIsWeb) {
-    runApp(const VietKiotWeb());
-  } else {
-    runApp(const VietQRApp());
-  }
+  // if (kIsWeb) {
+  //   runApp(const VietKiotWeb());
+  // } else {
+  runApp(const VietQRApp());
+  // }
 }
 
 Future<void> _initialServiceHelper() async {
@@ -93,6 +91,7 @@ class _VietQRApp extends State<VietQRApp> {
   @override
   void initState() {
     super.initState();
+    Session.load;
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -122,7 +121,7 @@ class _VietQRApp extends State<VietQRApp> {
   void onFcmMessage() async {
     await NotificationService().initialNotification();
     FirebaseMessaging.onMessage.listen(
-          (RemoteMessage message) {
+      (RemoteMessage message) {
         // Xử lý push notification nếu ứng dụng đang chạy
         LOG.info(
             "Push notification received: ${message.notification?.title} - ${message.notification?.body}");
@@ -245,4 +244,3 @@ class _VietQRApp extends State<VietQRApp> {
     );
   }
 }
-

@@ -89,6 +89,7 @@ class Session {
   Future fetchAccountSetting() async {
     String userId = UserInformationHelper.instance.getUserId();
     final settingAccount = await settingRepository.getSettingAccount(userId);
+    UserInformationHelper.instance.setAccountSetting(settingAccount);
     _settingDto = settingAccount;
   }
 

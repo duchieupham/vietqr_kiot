@@ -15,7 +15,9 @@ import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
 import 'package:viet_qr_kiot/commons/widgets/ambient_avatar_widget.dart';
 import 'package:viet_qr_kiot/commons/widgets/dialog_widget.dart';
 import 'package:viet_qr_kiot/features/generate_qr/repositories/qr_repository.dart';
+import 'package:viet_qr_kiot/features/home/views/widget/setting_page.dart';
 import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
+import 'package:viet_qr_kiot/features/logout/events/log_out_event.dart';
 import 'package:viet_qr_kiot/features/logout/states/log_out_state.dart';
 import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
 import 'package:viet_qr_kiot/features/token/events/token_event.dart';
@@ -36,7 +38,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreen extends State<HomeScreen> {
   //providers
   final ClockProvider clockProvider = ClockProvider('');
-
+  bool showPopup = false;
   //
   late TokenBloc _tokenBloc;
   late LogoutBloc _logoutBloc;
@@ -96,658 +98,358 @@ class _HomeScreen extends State<HomeScreen> {
                   image: Image.asset('assets/images/bgr-header.png').image,
                 ),
               ),
-              child: Column(
+              child: Stack(
                 children: [
-                  const SizedBox(height: kToolbarHeight),
-                  Expanded(
-                    flex: 1,
-                    child: BoxLayout(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Spacer(),
-                          ValueListenableBuilder(
-                            valueListenable: clockProvider,
-                            builder: (_, clock, child) {
-                              return (clock.toString().isNotEmpty)
-                                  ? SizedBox(
-                                      width: width,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          BoxLayout(
-                                            width: (!PlatformUtils.instance
-                                                    .isLandscape())
-                                                ? width * 0.2
-                                                : width * 0.1,
-                                            height: (!PlatformUtils.instance
-                                                    .isLandscape())
-                                                ? width * 0.2
-                                                : width * 0.1,
-                                            bgColor:
-                                                Theme.of(context).canvasColor,
-                                            alignment: Alignment.center,
-                                            padding: const EdgeInsets.all(0),
-                                            enableShadow: true,
-                                            child: Text(
-                                              clock.toString().split(':')[0],
-                                              style: TextStyle(
-                                                fontSize: fontClockSize,
+                  Column(
+                    children: [
+                      const SizedBox(height: kToolbarHeight),
+                      Expanded(
+                        flex: 1,
+                        child: BoxLayout(
+                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Spacer(),
+                              ValueListenableBuilder(
+                                valueListenable: clockProvider,
+                                builder: (_, clock, child) {
+                                  return (clock.toString().isNotEmpty)
+                                      ? SizedBox(
+                                          width: width,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              BoxLayout(
+                                                width: (!PlatformUtils.instance
+                                                        .isLandscape())
+                                                    ? width * 0.2
+                                                    : width * 0.1,
+                                                height: (!PlatformUtils.instance
+                                                        .isLandscape())
+                                                    ? width * 0.2
+                                                    : width * 0.1,
+                                                bgColor: Theme.of(context)
+                                                    .canvasColor,
+                                                alignment: Alignment.center,
+                                                padding:
+                                                    const EdgeInsets.all(0),
+                                                enableShadow: true,
+                                                child: Text(
+                                                  clock
+                                                      .toString()
+                                                      .split(':')[0],
+                                                  style: TextStyle(
+                                                    fontSize: fontClockSize,
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
+                                                ':',
+                                                style: TextStyle(
+                                                  fontSize: fontClockSize,
+                                                ),
+                                              ),
+                                              BoxLayout(
+                                                width: (!PlatformUtils.instance
+                                                        .isLandscape())
+                                                    ? width * 0.2
+                                                    : width * 0.1,
+                                                height: (!PlatformUtils.instance
+                                                        .isLandscape())
+                                                    ? width * 0.2
+                                                    : width * 0.1,
+                                                bgColor: Theme.of(context)
+                                                    .canvasColor,
+                                                alignment: Alignment.center,
+                                                padding:
+                                                    const EdgeInsets.all(0),
+                                                enableShadow: true,
+                                                child: Text(
+                                                  clock
+                                                      .toString()
+                                                      .split(':')[1],
+                                                  style: TextStyle(
+                                                    fontSize: fontClockSize,
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
+                                                ':',
+                                                style: TextStyle(
+                                                  fontSize: fontClockSize,
+                                                ),
+                                              ),
+                                              BoxLayout(
+                                                width: (!PlatformUtils.instance
+                                                        .isLandscape())
+                                                    ? width * 0.2
+                                                    : width * 0.1,
+                                                height: (!PlatformUtils.instance
+                                                        .isLandscape())
+                                                    ? width * 0.2
+                                                    : width * 0.1,
+                                                bgColor: Theme.of(context)
+                                                    .canvasColor,
+                                                alignment: Alignment.center,
+                                                padding:
+                                                    const EdgeInsets.all(0),
+                                                enableShadow: true,
+                                                child: Text(
+                                                  clock
+                                                      .toString()
+                                                      .split(':')[2],
+                                                  style: TextStyle(
+                                                    fontSize: fontClockSize,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : const SizedBox();
+                                },
+                              ),
+                              const Spacer(),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '${TimeUtils.instance.getCurrentDateInWeek(DateTime.now())}, ${TimeUtils.instance.getCurentDate(DateTime.now())}, năm 2023',
+                                  style: TextStyle(fontSize: dateFontSize),
+                                ),
+                              ),
+                              const Spacer(),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Consumer<AddImageDashboardProvider>(
+                            builder: (context, provider, child) {
+                              return (provider.bodyImageFile == null)
+                                  ? InkWell(
+                                      onTap: () async {
+                                        await Permission.mediaLibrary.request();
+                                        await imagePicker
+                                            .pickImage(
+                                                source: ImageSource.gallery)
+                                            .then(
+                                          (pickedFile) {
+                                            if (pickedFile != null) {
+                                              File? file =
+                                                  File(pickedFile.path);
+                                              File? compressedFile = FileUtils
+                                                  .instance
+                                                  .compressImage(file);
+                                              Provider.of<AddImageDashboardProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .updateBodyImage(
+                                                      compressedFile);
+                                            }
+                                          },
+                                        );
+                                      },
+                                      child: BoxLayout(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 50),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      6, 2, 12, 2),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: AppColor.BLUE_TEXT
+                                                    .withOpacity(0.4),
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(
+                                                    'assets/images/ic-edit-avatar-setting.png',
+                                                    width: 30,
+                                                    color: AppColor.BLUE_TEXT,
+                                                  ),
+                                                  const Text(
+                                                    'Chọn ảnh',
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color:
+                                                            AppColor.BLUE_TEXT,
+                                                        height: 1.4),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          ),
-                                          Text(
-                                            ':',
-                                            style: TextStyle(
-                                              fontSize: fontClockSize,
-                                            ),
-                                          ),
-                                          BoxLayout(
-                                            width: (!PlatformUtils.instance
-                                                    .isLandscape())
-                                                ? width * 0.2
-                                                : width * 0.1,
-                                            height: (!PlatformUtils.instance
-                                                    .isLandscape())
-                                                ? width * 0.2
-                                                : width * 0.1,
-                                            bgColor:
-                                                Theme.of(context).canvasColor,
-                                            alignment: Alignment.center,
-                                            padding: const EdgeInsets.all(0),
-                                            enableShadow: true,
-                                            child: Text(
-                                              clock.toString().split(':')[1],
-                                              style: TextStyle(
-                                                fontSize: fontClockSize,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            ':',
-                                            style: TextStyle(
-                                              fontSize: fontClockSize,
-                                            ),
-                                          ),
-                                          BoxLayout(
-                                            width: (!PlatformUtils.instance
-                                                    .isLandscape())
-                                                ? width * 0.2
-                                                : width * 0.1,
-                                            height: (!PlatformUtils.instance
-                                                    .isLandscape())
-                                                ? width * 0.2
-                                                : width * 0.1,
-                                            bgColor:
-                                                Theme.of(context).canvasColor,
-                                            alignment: Alignment.center,
-                                            padding: const EdgeInsets.all(0),
-                                            enableShadow: true,
-                                            child: Text(
-                                              clock.toString().split(':')[2],
-                                              style: TextStyle(
-                                                fontSize: fontClockSize,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     )
-                                  : const SizedBox();
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: Image.file(
+                                            provider.bodyImageFile!,
+                                            fit: BoxFit.cover,
+                                          ).image,
+                                        ),
+                                      ),
+                                    );
                             },
                           ),
-                          const Spacer(),
-                          Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              '${TimeUtils.instance.getCurrentDateInWeek(DateTime.now())}, ${TimeUtils.instance.getCurentDate(DateTime.now())}, năm 2023',
-                              style: TextStyle(fontSize: dateFontSize),
-                            ),
-                          ),
-                          const Spacer(),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Consumer<AddImageDashboardProvider>(
-                        builder: (context, provider, child) {
-                          return (provider.bodyImageFile == null)
-                              ? InkWell(
-                                  onTap: () async {
-                                    await Permission.mediaLibrary.request();
-                                    await imagePicker
-                                        .pickImage(source: ImageSource.gallery)
-                                        .then(
-                                      (pickedFile) {
-                                        if (pickedFile != null) {
-                                          File? file = File(pickedFile.path);
-                                          File? compressedFile = FileUtils
-                                              .instance
-                                              .compressImage(file);
-                                          Provider.of<AddImageDashboardProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .updateBodyImage(compressedFile);
-                                        }
+                      const SizedBox(height: 16),
+                      Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Consumer<AddImageDashboardProvider>(
+                            builder: (context, provider, child) {
+                              return (provider.footerImageFile == null)
+                                  ? InkWell(
+                                      onTap: () async {
+                                        await Permission.mediaLibrary.request();
+                                        await imagePicker
+                                            .pickImage(
+                                                source: ImageSource.gallery)
+                                            .then(
+                                          (pickedFile) {
+                                            if (pickedFile != null) {
+                                              File? file =
+                                                  File(pickedFile.path);
+                                              File? compressedFile = FileUtils
+                                                  .instance
+                                                  .compressImage(file);
+                                              Provider.of<AddImageDashboardProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .updateFooterImage(
+                                                      compressedFile);
+                                            }
+                                          },
+                                        );
                                       },
+                                      child: BoxLayout(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 50),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      6, 2, 12, 2),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: AppColor.BLUE_TEXT
+                                                    .withOpacity(0.4),
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(
+                                                    'assets/images/ic-edit-avatar-setting.png',
+                                                    width: 30,
+                                                    color: AppColor.BLUE_TEXT,
+                                                  ),
+                                                  const Text(
+                                                    'Chọn ảnh',
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color:
+                                                            AppColor.BLUE_TEXT,
+                                                        height: 1.4),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: Image.file(
+                                            provider.footerImageFile!,
+                                            fit: BoxFit.cover,
+                                          ).image,
+                                        ),
+                                      ),
                                     );
-                                  },
-                                  child: BoxLayout(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 50),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              6, 2, 12, 2),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            color: AppColor.BLUE_TEXT
-                                                .withOpacity(0.4),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Image.asset(
-                                                'assets/images/ic-edit-avatar-setting.png',
-                                                width: 30,
-                                                color: AppColor.BLUE_TEXT,
-                                              ),
-                                              const Text(
-                                                'Chọn ảnh',
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: AppColor.BLUE_TEXT,
-                                                    height: 1.4),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: Image.file(
-                                        provider.bodyImageFile!,
-                                        fit: BoxFit.cover,
-                                      ).image,
-                                    ),
-                                  ),
-                                );
-                        },
+                            },
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Consumer<AddImageDashboardProvider>(
-                        builder: (context, provider, child) {
-                          return (provider.footerImageFile == null)
-                              ? InkWell(
-                                  onTap: () async {
-                                    Navigator.pushNamed(
-                                        context, Routes.PAYMENT_SUCCESS);
-                                    // await Permission.mediaLibrary.request();
-                                    // await imagePicker
-                                    //     .pickImage(source: ImageSource.gallery)
-                                    //     .then(
-                                    //   (pickedFile) {
-                                    //     if (pickedFile != null) {
-                                    //       File? file = File(pickedFile.path);
-                                    //       File? compressedFile = FileUtils
-                                    //           .instance
-                                    //           .compressImage(file);
-                                    //       Provider.of<AddImageDashboardProvider>(
-                                    //               context,
-                                    //               listen: false)
-                                    //           .updateFooterImage(compressedFile);
-                                    //     }
-                                    //   },
-                                    // );
-                                  },
-                                  child: BoxLayout(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 50),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              6, 2, 12, 2),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            color: AppColor.BLUE_TEXT
-                                                .withOpacity(0.4),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Image.asset(
-                                                'assets/images/ic-edit-avatar-setting.png',
-                                                width: 30,
-                                                color: AppColor.BLUE_TEXT,
-                                              ),
-                                              const Text(
-                                                'Chọn ảnh',
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: AppColor.BLUE_TEXT,
-                                                    height: 1.4),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: Image.file(
-                                        provider.footerImageFile!,
-                                        fit: BoxFit.cover,
-                                      ).image,
-                                    ),
-                                  ),
-                                );
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: kToolbarHeight),
-                  Container(
-                    color: AppColor.WHITE,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 12),
-                    child: Row(
-                      children: [
-                        _buildAvatarWidget(context),
-                        const SizedBox(width: 10),
-                        Text(UserInformationHelper.instance.getUserFullname()),
-                        const Spacer(),
-                        Row(
+                      const SizedBox(height: kToolbarHeight),
+                      Container(
+                        color: AppColor.WHITE,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 12),
+                        child: Row(
                           children: [
-                            const Text(
-                              // provider.enableVoice ? 'Bật' : 'Tắt',
-                              'Giọng nói',
-                              style: TextStyle(
-                                  fontSize: 12, color: AppColor.GREY_TEXT),
-                            ),
-                            Switch(
-                              value: true,
-                              activeColor: AppColor.BLUE_TEXT,
-                              onChanged: (bool value) {
-                                // provider.updateOpenVoice(value);
-                                Map<String, dynamic> param = {};
-                                param['userId'] =
-                                    UserInformationHelper.instance.getUserId();
-                                param['value'] = value ? 1 : 0;
-                                param['type'] = 0;
-                                // _updateVoiceSetting(param);
-                              },
+                            GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    showPopup = true;
+                                  });
+                                },
+                                child: _buildAvatarWidget(context)),
+                            const SizedBox(width: 10),
+                            Text(UserInformationHelper.instance
+                                .getUserFullname()),
+                            const Spacer(),
+                            Row(
+                              children: [
+                                const Text(
+                                  // provider.enableVoice ? 'Bật' : 'Tắt',
+                                  'Giọng nói',
+                                  style: TextStyle(
+                                      fontSize: 12, color: AppColor.GREY_TEXT),
+                                ),
+                                Switch(
+                                  value: true,
+                                  activeColor: AppColor.BLUE_TEXT,
+                                  onChanged: (bool value) {
+                                    // provider.updateOpenVoice(value);
+                                    Map<String, dynamic> param = {};
+                                    param['userId'] = UserInformationHelper
+                                        .instance
+                                        .getUserId();
+                                    param['value'] = value ? 1 : 0;
+                                    param['type'] = 0;
+                                    // _updateVoiceSetting(param);
+                                  },
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        // InkWell(
-                        //   onTap: () {
-                        //     Provider.of<MenuProvider>(context, listen: false)
-                        //         .updateMenuOpen(false);
-                        //     _logoutBloc.add(const LogoutEventSubmit());
-                        //   },
-                        //   child: BoxLayout(
-                        //     width: 35,
-                        //     height: 35,
-                        //     borderRadius: 20,
-                        //     bgColor: Theme.of(context).canvasColor,
-                        //     padding: const EdgeInsets.all(0),
-                        //     child: const Icon(
-                        //       Icons.logout_rounded,
-                        //       size: 15,
-                        //       color: AppColor.RED_TEXT,
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                  if (showPopup) _buildSetting(height, width)
                 ],
               ),
             ),
-
-            // Container(
-            //   width: width,
-            //   decoration: BoxDecoration(
-            //       image: DecorationImage(
-            //     fit: BoxFit.cover,
-            //     image: Image.asset('assets/images/bg-qr.png').image,
-            //   )),
-            //   child:
-
-            //   Column(
-            //     children: [
-            //       Container(
-            //         width: width,
-            //         height: 50,
-            //         alignment: Alignment.center,
-            //         child: Text('Quét mã VietQR.vn để thanh toán'),
-            //       ),
-            //       Expanded(
-            //         child: Row(
-            //           children: [
-            //             Expanded(
-            //               child: Column(
-            //                 children: [
-            //                   if (isLanscape)
-            //                     const Padding(padding: EdgeInsets.only(top: 30)),
-            //                   if (!isLanscape)
-            //                     SizedBox(
-            //                       width: width,
-            //                       height: 100,
-            //                       child: Row(
-            //                         children: [
-            //                           const Padding(
-            //                               padding: EdgeInsets.only(left: 20)),
-            //                           Column(
-            //                             mainAxisAlignment: MainAxisAlignment.center,
-            //                             crossAxisAlignment:
-            //                                 CrossAxisAlignment.start,
-            //                             children: [
-            //                               const Text(
-            //                                 'Trang chủ',
-            //                                 style: TextStyle(
-            //                                   fontSize: 20,
-            //                                   fontWeight: FontWeight.bold,
-            //                                 ),
-            //                               ),
-            //                               Text(
-            //                                   'Xin chào, ${UserInformationHelper.instance.getUserFullname().trim()}'),
-            //                             ],
-            //                           ),
-            //                           const Spacer(),
-            //                           Container(
-            //                               width: 120,
-            //                               height: 40,
-            //                               decoration: BoxDecoration(
-            //                                 color: Theme.of(context).cardColor,
-            //                                 borderRadius: BorderRadius.circular(10),
-            //                               ),
-            //                               child: Row(
-            //                                 // mainAxisAlignment: MainAxisAlignment.center,
-            //                                 crossAxisAlignment:
-            //                                     CrossAxisAlignment.center,
-            //                                 children: [
-            //                                   Container(
-            //                                     width: 80,
-            //                                     // height: 40,
-            //                                     padding: const EdgeInsets.symmetric(
-            //                                         horizontal: 5),
-            //                                     decoration: BoxDecoration(
-            //                                       color:
-            //                                           Theme.of(context).cardColor,
-            //                                       borderRadius:
-            //                                           BorderRadius.circular(10),
-            //                                     ),
-            //                                     child: Image.asset(
-            //                                       'assets/images/ic-viet-qr.png',
-            //                                       width: 50,
-            //                                     ),
-            //                                   ),
-            //                                   const Padding(
-            //                                     padding: EdgeInsets.only(top: 5),
-            //                                     child: Text(
-            //                                       'kiot',
-            //                                       // style:
-            //                                       //     TextStyle(color: DefaultTheme.RED_CALENDAR),
-            //                                     ),
-            //                                   ),
-            //                                 ],
-            //                               )),
-            //                           const Padding(
-            //                               padding: EdgeInsets.only(left: 20)),
-            //                         ],
-            //                       ),
-            //                     ),
-            //                   Expanded(
-            //                     child: Container(),
-            //                   ),
-            //                   // ListView(
-            //                   //   padding: const EdgeInsets.symmetric(horizontal: 20),
-            //                   //   children: [
-            //                   //     Container(
-            //                   //       width: width,
-            //                   //       padding: const EdgeInsets.symmetric(
-            //                   //           horizontal: 10, vertical: 10),
-            //                   //       decoration: BoxDecoration(
-            //                   //         color: Theme.of(context).cardColor,
-            //                   //         borderRadius: BorderRadius.circular(10),
-            //                   //       ),
-            //                   //       child: Row(
-            //                   //         children: [
-            //                   //           Container(
-            //                   //             width: 50,
-            //                   //             height: 50,
-            //                   //             decoration: BoxDecoration(
-            //                   //               borderRadius: BorderRadius.circular(50),
-            //                   //               image: DecorationImage(
-            //                   //                 image: Image.asset(
-            //                   //                         'assets/images/ic-avatar.png')
-            //                   //                     .image,
-            //                   //               ),
-            //                   //             ),
-            //                   //           ),
-            //                   //           const Padding(
-            //                   //               padding: EdgeInsets.only(left: 10)),
-            //                   //           Expanded(
-            //                   //               child: Column(
-            //                   //             crossAxisAlignment: CrossAxisAlignment.start,
-            //                   //             children: [
-            //                   //               Text(
-            //                   //                 UserInformationHelper.instance
-            //                   //                     .getUserFullname(),
-            //                   //               ),
-            //                   //               Text(
-            //                   //                 UserInformationHelper.instance
-            //                   //                     .getPhoneNo(),
-            //                   //               ),
-            //                   //             ],
-            //                   //           ))
-            //                   //         ],
-            //                   //       ),
-            //                   //     ),
-            //                   //     const Padding(padding: EdgeInsets.only(top: 30)),
-            //                   //     const Text(
-            //                   //       'Nạp tiền điện thoại',
-            //                   //       style: TextStyle(
-            //                   //         fontSize: 18,
-            //                   //         fontWeight: FontWeight.bold,
-            //                   //       ),
-            //                   //     ),
-            //                   //     const Padding(padding: EdgeInsets.only(top: 10)),
-            //                   //     SizedBox(
-            //                   //       width: width,
-            //                   //       child: Row(
-            //                   //         children: [
-            //                   //           InkWell(
-            //                   //             onTap: () async {
-            //                   //               await onSubmit('10000');
-            //                   //             },
-            //                   //             child: Container(
-            //                   //               width: (width / 2 - 25) - (width * 0.1),
-            //                   //               height: 60,
-            //                   //               decoration: BoxDecoration(
-            //                   //                 color: Theme.of(context).cardColor,
-            //                   //                 borderRadius: BorderRadius.circular(10),
-            //                   //               ),
-            //                   //               alignment: Alignment.center,
-            //                   //               child: const Text(
-            //                   //                 '10 000 VND',
-            //                   //                 style: TextStyle(
-            //                   //                   color: DefaultTheme.GREEN,
-            //                   //                 ),
-            //                   //               ),
-            //                   //             ),
-            //                   //           ),
-            //                   //           const Padding(
-            //                   //               padding: EdgeInsets.only(left: 10)),
-            //                   //           InkWell(
-            //                   //             onTap: () async {
-            //                   //               await onSubmit('20000');
-            //                   //             },
-            //                   //             child: Container(
-            //                   //               width: (width / 2 - 25) - (width * 0.1),
-            //                   //               height: 60,
-            //                   //               decoration: BoxDecoration(
-            //                   //                 color: Theme.of(context).cardColor,
-            //                   //                 borderRadius: BorderRadius.circular(10),
-            //                   //               ),
-            //                   //               alignment: Alignment.center,
-            //                   //               child: const Text(
-            //                   //                 '20 000 VND',
-            //                   //                 style: TextStyle(
-            //                   //                   color: DefaultTheme.GREEN,
-            //                   //                 ),
-            //                   //               ),
-            //                   //             ),
-            //                   //           ),
-            //                   //         ],
-            //                   //       ),
-            //                   //     ),
-            //                   //     const Padding(padding: EdgeInsets.only(top: 10)),
-            //                   //     SizedBox(
-            //                   //       width: width,
-            //                   //       child: Row(
-            //                   //         children: [
-            //                   //           InkWell(
-            //                   //             onTap: () async {
-            //                   //               await onSubmit('50000');
-            //                   //             },
-            //                   //             child: Container(
-            //                   //               width: (width / 2 - 25) - (width * 0.1),
-            //                   //               height: 60,
-            //                   //               decoration: BoxDecoration(
-            //                   //                 color: Theme.of(context).cardColor,
-            //                   //                 borderRadius: BorderRadius.circular(10),
-            //                   //               ),
-            //                   //               alignment: Alignment.center,
-            //                   //               child: const Text(
-            //                   //                 '50 000 VND',
-            //                   //                 style: TextStyle(
-            //                   //                   color: DefaultTheme.GREEN,
-            //                   //                 ),
-            //                   //               ),
-            //                   //             ),
-            //                   //           ),
-            //                   //           const Padding(
-            //                   //               padding: EdgeInsets.only(left: 10)),
-            //                   //           InkWell(
-            //                   //             onTap: () async {
-            //                   //               await onSubmit('100000');
-            //                   //             },
-            //                   //             child: Container(
-            //                   //               width: (width / 2 - 25) - (width * 0.1),
-            //                   //               height: 60,
-            //                   //               decoration: BoxDecoration(
-            //                   //                 color: Theme.of(context).cardColor,
-            //                   //                 borderRadius: BorderRadius.circular(10),
-            //                   //               ),
-            //                   //               alignment: Alignment.center,
-            //                   //               child: const Text(
-            //                   //                 '100 000 VND',
-            //                   //                 style: TextStyle(
-            //                   //                   color: DefaultTheme.GREEN,
-            //                   //                 ),
-            //                   //               ),
-            //                   //             ),
-            //                   //           ),
-            //                   //         ],
-            //                   //       ),
-            //                   //     ),
-            //                   //     const Padding(padding: EdgeInsets.only(top: 10)),
-            //                   //     SizedBox(
-            //                   //       width: width,
-            //                   //       child: Row(
-            //                   //         children: [
-            //                   //           InkWell(
-            //                   //             onTap: () async {
-            //                   //               await onSubmit('200000');
-            //                   //             },
-            //                   //             child: Container(
-            //                   //               width: (width / 2 - 25) - (width * 0.1),
-            //                   //               height: 60,
-            //                   //               decoration: BoxDecoration(
-            //                   //                 color: Theme.of(context).cardColor,
-            //                   //                 borderRadius: BorderRadius.circular(10),
-            //                   //               ),
-            //                   //               alignment: Alignment.center,
-            //                   //               child: const Text(
-            //                   //                 '200 000 VND',
-            //                   //                 style: TextStyle(
-            //                   //                   color: DefaultTheme.GREEN,
-            //                   //                 ),
-            //                   //               ),
-            //                   //             ),
-            //                   //           ),
-            //                   //           const Padding(
-            //                   //               padding: EdgeInsets.only(left: 10)),
-            //                   //           InkWell(
-            //                   //             onTap: () async {
-            //                   //               await onSubmit('500000');
-            //                   //             },
-            //                   //             child: Container(
-            //                   //               width: (width / 2 - 25) - (width * 0.1),
-            //                   //               height: 60,
-            //                   //               decoration: BoxDecoration(
-            //                   //                 color: Theme.of(context).cardColor,
-            //                   //                 borderRadius: BorderRadius.circular(10),
-            //                   //               ),
-            //                   //               alignment: Alignment.center,
-            //                   //               child: const Text(
-            //                   //                 '500 000 VND',
-            //                   //                 style: TextStyle(
-            //                   //                   color: DefaultTheme.GREEN,
-            //                   //                 ),
-            //                   //               ),
-            //                   //             ),
-            //                   //           ),
-            //                   //         ],
-            //                   //       ),
-            //                   //     ),
-            //                   //   ],
-            //                   // ),
-            //                 ],
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
           )),
     );
   }
@@ -809,5 +511,79 @@ class _HomeScreen extends State<HomeScreen> {
     } catch (e) {
       LOG.error(e.toString());
     }
+  }
+
+  Widget _buildSetting(double height, double width) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          showPopup = false;
+        });
+      },
+      child: Container(
+        width: width,
+        height: height,
+        color: AppColor.BLACK_DARK.withOpacity(0.6),
+        alignment: Alignment.bottomLeft,
+        child: _buildPopUpSetting(),
+      ),
+    );
+  }
+
+  Widget _buildPopUpSetting() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 80, left: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      width: 240,
+      height: 120,
+      decoration: BoxDecoration(
+        color: AppColor.WHITE,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () {
+              setState(() {
+                showPopup = false;
+              });
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return SettingPage();
+              }));
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/images/ic-menu-setting.png',
+                  height: 28,
+                ),
+                const SizedBox(
+                  width: 12,
+                ),
+                const Text('Cài đặt giao diện')
+              ],
+            ),
+          ),
+          const Spacer(),
+          InkWell(
+            onTap: () {
+              _logoutBloc.add(const LogoutEventSubmit());
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/images/ic-menu-logout.png',
+                  height: 28,
+                ),
+                const SizedBox(
+                  width: 12,
+                ),
+                const Text('Đăng xuất')
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

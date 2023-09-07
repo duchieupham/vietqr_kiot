@@ -111,7 +111,7 @@ class BaseAPIClient {
     request.headers['Authorization'] = 'Bearer $_token';
     if (fields.isNotEmpty) {
       for (String key in fields.keys) {
-        request.fields[key] = fields[key];
+        request.fields[key] = fields[key].toString();
       }
     }
     if (files.isNotEmpty) {

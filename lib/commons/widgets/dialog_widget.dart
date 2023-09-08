@@ -333,25 +333,36 @@ class DialogWidget {
   Future showFullModalBottomContent({
     BuildContext? context,
     required Widget widget,
+    bool? isDissmiss,
+    Color? color,
   }) async {
     context ??= NavigatorUtils.navigatorKey.currentContext!;
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     return await showModalBottomSheet(
+        isDismissible: (isDissmiss != null && !isDissmiss) ? isDissmiss : true,
         isScrollControlled: true,
         enableDrag: false,
         // Ngăn người dùng kéo ModalBottomSheet
         context: context,
-        backgroundColor: AppColor.TRANSPARENT,
+        backgroundColor: (color != null) ? color : AppColor.TRANSPARENT,
         builder: (context) {
-          return Container(
-            width: width,
-            height: height,
-            padding: const EdgeInsets.all(0),
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
+          return WillPopScope(
+            onWillPop: () async {
+              if (isDissmiss == null || isDissmiss) {
+                Navigator.pop(context);
+              }
+              return false;
+            },
+            child: Container(
+              width: width,
+              height: height,
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              decoration: BoxDecoration(
+                color: (color != null) ? color : Theme.of(context).cardColor,
+              ),
+              child: widget,
             ),
-            child: widget,
           );
         });
   }

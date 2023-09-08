@@ -16,3 +16,21 @@ enum BlocStatus {
 enum LoginType { NONE, SUCCESS, TOAST, ERROR, CHECK_EXIST, REGISTER }
 
 enum TypeOTP { SUCCESS, FAILED, ERROR, AWAIT, NONE }
+
+enum HomeType {
+  NONE,
+  TOKEN,
+}
+
+enum TokenType {
+  NONE,
+  InValid,
+  Valid,
+  MainSystem,
+  Internet,
+  Expired,
+  Logout,
+  Logout_failed,
+  Fcm_success,
+  Fcm_failed,
+}

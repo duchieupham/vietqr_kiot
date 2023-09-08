@@ -33,3 +33,5 @@ class UploadImageEvent extends TokenEvent {
   @override
   List<Object?> get props => [param, imageByte];
 }
+
+class TokenEventLogout extends TokenEvent {}

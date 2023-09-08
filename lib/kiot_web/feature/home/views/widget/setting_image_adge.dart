@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
+import 'package:viet_qr_kiot/commons/utils/image_utils.dart';
 import 'package:viet_qr_kiot/services/providers/add_image_dashboard_web_provider.dart';
 
 class SettingImageEdge extends StatelessWidget {
@@ -40,7 +41,47 @@ class SettingImageEdge extends StatelessWidget {
         const Spacer(),
         Consumer<AddImageWebDashboardProvider>(
           builder: (context, provider, child) {
-            if ((provider.bodyImageFile == null)) {
+            if (provider.bodyImageFile != null) {
+              return Column(
+                children: [
+                  Container(
+                    height: 200,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: Image.memory(
+                          provider.bodyImageFile!,
+                          fit: BoxFit.cover,
+                        ).image,
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      changeImage(provider);
+                    },
+                    child: Container(
+                      height: 36,
+                      margin: const EdgeInsets.only(top: 24),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 28, vertical: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: AppColor.BLUE_TEXT.withOpacity(0.3),
+                      ),
+                      child: const Text(
+                        'Thay đổi ảnh',
+                        style: TextStyle(color: AppColor.BLUE_TEXT),
+                      ),
+                    ),
+                  )
+                ],
+              );
+            }
+
+            if (provider.imageEdgeId.isEmpty) {
               return Column(
                 children: [
                   Container(
@@ -81,10 +122,8 @@ class SettingImageEdge extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: Image.memory(
-                          provider.bodyImageFile!,
-                          fit: BoxFit.cover,
-                        ).image,
+                        image: ImageUtils.instance
+                            .getImageNetWork(provider.imageEdgeId),
                       ),
                     ),
                   ),

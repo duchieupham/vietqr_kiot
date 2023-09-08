@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-// import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +23,7 @@ import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
 import 'package:viet_qr_kiot/features/notification/payment_qr_view.dart';
 import 'package:viet_qr_kiot/features/notification/payment_success_view.dart';
 import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
+import 'package:viet_qr_kiot/kiot_web/main_web.dart';
 import 'package:viet_qr_kiot/models/notification_transaction_success_dto.dart';
 import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
 import 'package:viet_qr_kiot/services/local_notification/notification_service.dart';
@@ -48,16 +49,16 @@ void main() async {
   if (!kIsWeb) {
     await Firebase.initializeApp();
   } else {
-    // setUrlStrategy(PathUrlStrategy());
+    setUrlStrategy(PathUrlStrategy());
     await WebSocketHelper.instance.initialWebSocket();
   }
 
   LOG.verbose('Config Environment: ${EnvConfig.getEnv()}');
-  // if (kIsWeb) {
-  //   runApp(const VietKiotWeb());
-  // } else {
-  runApp(const VietQRApp());
-  // }
+  if (kIsWeb) {
+    runApp(const VietKiotWeb());
+  } else {
+    runApp(const VietQRApp());
+  }
 }
 
 Future<void> _initialServiceHelper() async {

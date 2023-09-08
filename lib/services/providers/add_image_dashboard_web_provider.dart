@@ -16,18 +16,33 @@ class AddImageWebDashboardProvider with ChangeNotifier {
   Uint8List? get bodyImageFile => _bodyImageFile;
 
   int settingMainScreen = UserInformationHelper.instance.getSettingMainScreen();
+  String imageEdgeId =
+      UserInformationHelper.instance.getAccountSetting().edgeImgId;
+  String imageFooterId =
+      UserInformationHelper.instance.getAccountSetting().footerImgId;
 
   TokenRepository tokenRepository = const TokenRepository();
 
-  void updateFooterImage(Uint8List? file) {
-    _footerImageFile = file;
-    uploadImage(1, file, Session.instance.settingDto.footerImgId);
+  init() async {
+    await Session.instance.fetchAccountSetting();
+    imageEdgeId = Session.instance.settingDto.edgeImgId;
+    imageFooterId = Session.instance.settingDto.footerImgId;
     notifyListeners();
   }
 
-  void updateBodyImage(Uint8List? file) {
+  void updateFooterImage(Uint8List? file) async {
+    _footerImageFile = file;
+    uploadImage(1, file, Session.instance.settingDto.footerImgId);
+    await Session.instance.fetchAccountSetting();
+    imageFooterId = Session.instance.settingDto.footerImgId;
+    notifyListeners();
+  }
+
+  void updateBodyImage(Uint8List? file) async {
     _bodyImageFile = file;
     uploadImage(0, file, Session.instance.settingDto.edgeImgId);
+    await Session.instance.fetchAccountSetting();
+    imageEdgeId = Session.instance.settingDto.edgeImgId;
     notifyListeners();
   }
 

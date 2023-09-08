@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/numeral.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
+import 'package:viet_qr_kiot/commons/utils/image_utils.dart';
 import 'package:viet_qr_kiot/commons/utils/log.dart';
 import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
 import 'package:viet_qr_kiot/commons/widgets/ambient_avatar_widget.dart';
@@ -62,6 +63,8 @@ class _HomeScreen extends State<HomeWebScreen> {
     // _tokenBloc.add(const TokenFcmUpdateEvent());
     clockProvider.getRealTime();
     Provider.of<SettingProvider>(context, listen: false).getSettingVoiceKiot();
+    Provider.of<AddImageWebDashboardProvider>(context, listen: false).init();
+
     super.initState();
   }
 
@@ -305,7 +308,21 @@ class _HomeScreen extends State<HomeWebScreen> {
     return Consumer<AddImageWebDashboardProvider>(
       builder: (context, provider, child) {
         if (provider.settingMainScreen == Numeral.MAIN_SCREEN_SHOW_IMAGE) {
-          return (provider.bodyImageFile == null)
+          if (provider.bodyImageFile != null) {
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: Image.memory(
+                    provider.bodyImageFile!,
+                    fit: BoxFit.cover,
+                  ).image,
+                ),
+              ),
+            );
+          }
+          return (provider.imageEdgeId.isEmpty)
               ? InkWell(
                   onTap: () async {
                     html.FileUploadInputElement uploadInput =
@@ -362,10 +379,8 @@ class _HomeScreen extends State<HomeWebScreen> {
                     borderRadius: BorderRadius.circular(15),
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: Image.memory(
-                        provider.bodyImageFile!,
-                        fit: BoxFit.cover,
-                      ).image,
+                      image: ImageUtils.instance
+                          .getImageNetWork(provider.imageEdgeId),
                     ),
                   ),
                 );
@@ -379,7 +394,21 @@ class _HomeScreen extends State<HomeWebScreen> {
   Widget _buildLayout3() {
     return Consumer<AddImageWebDashboardProvider>(
       builder: (context, provider, child) {
-        return (provider.footerImageFile == null)
+        if (provider.footerImageFile != null) {
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: Image.memory(
+                  provider.footerImageFile!,
+                  fit: BoxFit.cover,
+                ).image,
+              ),
+            ),
+          );
+        }
+        return (provider.imageFooterId.isEmpty)
             ? InkWell(
                 onTap: () async {
                   html.FileUploadInputElement uploadInput =
@@ -436,10 +465,8 @@ class _HomeScreen extends State<HomeWebScreen> {
                   borderRadius: BorderRadius.circular(15),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: Image.memory(
-                      provider.footerImageFile!,
-                      fit: BoxFit.cover,
-                    ).image,
+                    image: ImageUtils.instance
+                        .getImageNetWork(provider.imageFooterId),
                   ),
                 ),
               );
@@ -501,7 +528,14 @@ class _HomeScreen extends State<HomeWebScreen> {
   }
 
   Widget _buildListQR() {
-    return BoxLayout(
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/bg_napas_qr.png'),
+          fit: BoxFit.fill,
+        ),
+      ),
       child: ListVietQr(qrGeneratedDTOs: listQR),
     );
   }

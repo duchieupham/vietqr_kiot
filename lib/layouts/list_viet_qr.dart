@@ -19,51 +19,46 @@ class ListVietQr extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-    bool isSmallWidget = height < 800;
     return ChangeNotifierProvider<ListQRProvider>(
       create: (context) => ListQRProvider(),
       child: LayoutBuilder(builder: (context, constraints) {
+        print(
+            '----------------------------${constraints.maxWidth / constraints.maxHeight}');
         print('----------------------------${constraints.maxWidth}');
-        print('----------------------------${constraints.maxHeight}');
-        return SizedBox(
+        return Container(
           width: width,
-          child: UnconstrainedBox(
-            child: Container(
-              width: constraints.maxWidth >= 640
-                  ? 500
-                  : constraints.maxWidth * 0.8,
-              margin: height < 800
-                  ? EdgeInsets.zero
-                  : const EdgeInsets.symmetric(vertical: 8),
-              padding: height < 800
-                  ? const EdgeInsets.only(bottom: 16, left: 20, right: 20)
-                  : const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/bg_napas_qr.png'),
-                  fit: BoxFit.fill,
-                ),
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.only(bottom: 20, left: 32, right: 32),
+          child: Column(
+            children: [
+              Expanded(
+                child: CarouselSlider(
+                    carouselController: carouselController,
+                    items: List.generate(qrGeneratedDTOs.length, (index) {
+                      return _buildItemQR(
+                          qrGeneratedDTOs[index],
+                          context,
+                          (constraints.maxWidth / constraints.maxHeight) > 1.4,
+                          constraints.maxWidth < 700);
+                    }).toList(),
+                    options: CarouselOptions(
+                      viewportFraction: 1,
+                      aspectRatio:
+                          (constraints.maxWidth / constraints.maxHeight) > 1.4
+                              ? (constraints.maxWidth / constraints.maxHeight)
+                              : 0.8,
+                      disableCenter: true,
+                      onPageChanged: ((index, reason) {
+                        Provider.of<ListQRProvider>(context, listen: false)
+                            .updateQrIndex(index);
+                      }),
+                    )),
               ),
-              child: Column(
-                children: [
-                  CarouselSlider(
-                      carouselController: carouselController,
-                      items: List.generate(qrGeneratedDTOs.length, (index) {
-                        return _buildItemQR(qrGeneratedDTOs[index], context);
-                      }).toList(),
-                      options: CarouselOptions(
-                        viewportFraction: 1,
-                        aspectRatio: 0.6,
-                        disableCenter: true,
-                        onPageChanged: ((index, reason) {
-                          Provider.of<ListQRProvider>(context, listen: false)
-                              .updateQrIndex(index);
-                        }),
-                      )),
-                  _buildIndicatorDot()
-                ],
+              const SizedBox(
+                height: 12,
               ),
-            ),
+              _buildIndicatorDot()
+            ],
           ),
         );
       }),
@@ -92,73 +87,191 @@ class ListVietQr extends StatelessWidget {
     });
   }
 
-  Widget _buildItemQR(QRGeneratedDTO qrGeneratedDTO, BuildContext context) {
+  Widget _buildItemQR(QRGeneratedDTO qrGeneratedDTO, BuildContext context,
+      bool horizontalRotation, bool forMobile) {
+    if (horizontalRotation) {
+      return _buildHorizontalRotation(qrGeneratedDTO, context, forMobile);
+    }
     return Column(
       children: [
-        Container(
-          margin: const EdgeInsets.only(left: 8, right: 8, top: 24, bottom: 20),
-          decoration: BoxDecoration(
-            color: AppColor.WHITE,
-            borderRadius: const BorderRadius.all(Radius.circular(16)),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).shadowColor.withOpacity(0.1),
-                spreadRadius: 2,
-                blurRadius: 3,
-                offset: const Offset(1, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Image.asset(
-                  'assets/images/ic-viet-qr.png',
-                  width: 150,
+        Expanded(
+          child: Container(
+            margin:
+                const EdgeInsets.only(left: 8, right: 8, top: 24, bottom: 20),
+            decoration: BoxDecoration(
+              color: AppColor.WHITE,
+              borderRadius: const BorderRadius.all(Radius.circular(16)),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).shadowColor.withOpacity(0.1),
+                  spreadRadius: 2,
+                  blurRadius: 3,
+                  offset: const Offset(1, 2),
                 ),
-              ),
-              const SizedBox(height: 4),
-              QrImage(
-                data: qrGeneratedDTO.qrCode,
-                version: QrVersions.auto,
-                embeddedImage:
-                    const AssetImage('assets/images/ic-viet-qr-small.png'),
-                embeddedImageStyle: QrEmbeddedImageStyle(
-                  size: const Size(30, 30),
+              ],
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Image.asset(
+                    'assets/images/ic-viet-qr.png',
+                    width: 120,
+                  ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24),
-                    child: Image.asset(
-                      'assets/images/ic-napas247.png',
-                      width: 120,
+                const SizedBox(height: 4),
+                Expanded(
+                  child: QrImage(
+                    data: qrGeneratedDTO.qrCode,
+                    version: QrVersions.auto,
+                    embeddedImage:
+                        const AssetImage('assets/images/ic-viet-qr-small.png'),
+                    embeddedImageStyle: QrEmbeddedImageStyle(
+                      size: const Size(26, 26),
                     ),
                   ),
-                  if (qrGeneratedDTO.imgId.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: Image(
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Image.asset(
+                      'assets/images/ic-napas247.png',
+                      width: 100,
+                    ),
+                    if (qrGeneratedDTO.imgId.isNotEmpty)
+                      Image(
                         image: ImageUtils.instance
                             .getImageNetWork(qrGeneratedDTO.imgId),
-                        width: 120,
+                        width: 100,
                         fit: BoxFit.fill,
-                      ),
-                    )
-                  else
-                    const SizedBox(width: 120),
-                ],
-              ),
-              const SizedBox(height: 16),
-            ],
+                      )
+                    else
+                      const SizedBox(width: 120),
+                  ],
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
+            children: [
+              Text(
+                qrGeneratedDTO.userBankName.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                qrGeneratedDTO.bankAccount,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                qrGeneratedDTO.bankName,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHorizontalRotation(
+      QRGeneratedDTO qrGeneratedDTO, BuildContext context, bool forMobileWeb) {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            margin:
+                const EdgeInsets.only(left: 8, right: 8, top: 24, bottom: 20),
+            decoration: BoxDecoration(
+              color: AppColor.WHITE,
+              borderRadius: const BorderRadius.all(Radius.circular(16)),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).shadowColor.withOpacity(0.1),
+                  spreadRadius: 2,
+                  blurRadius: 3,
+                  offset: const Offset(1, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Image.asset(
+                    'assets/images/ic-viet-qr.png',
+                    width: forMobileWeb
+                        ? MediaQuery.of(context).size.width * 0.12
+                        : MediaQuery.of(context).size.height * 0.15,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Expanded(
+                  child: QrImage(
+                    data: qrGeneratedDTO.qrCode,
+                    version: QrVersions.auto,
+                    embeddedImage:
+                        const AssetImage('assets/images/ic-viet-qr-small.png'),
+                    embeddedImageStyle: QrEmbeddedImageStyle(
+                      size: const Size(26, 26),
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 24),
+                      child: Image.asset(
+                        'assets/images/ic-napas247.png',
+                        width: forMobileWeb
+                            ? MediaQuery.of(context).size.width * 0.10
+                            : MediaQuery.of(context).size.height * 0.12,
+                      ),
+                    ),
+                    if (qrGeneratedDTO.imgId.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: Image(
+                          image: ImageUtils.instance
+                              .getImageNetWork(qrGeneratedDTO.imgId),
+                          width: forMobileWeb
+                              ? MediaQuery.of(context).size.width * 0.10
+                              : MediaQuery.of(context).size.height * 0.12,
+                          fit: BoxFit.fill,
+                        ),
+                      )
+                    else
+                      SizedBox(
+                          width: forMobileWeb
+                              ? MediaQuery.of(context).size.width * 0.10
+                              : MediaQuery.of(context).size.height * 0.12),
+                  ],
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 12,
+        ),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 qrGeneratedDTO.userBankName.toUpperCase(),

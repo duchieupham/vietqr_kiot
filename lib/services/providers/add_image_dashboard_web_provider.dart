@@ -16,10 +16,8 @@ class AddImageWebDashboardProvider with ChangeNotifier {
   Uint8List? get bodyImageFile => _bodyImageFile;
 
   int settingMainScreen = UserInformationHelper.instance.getSettingMainScreen();
-  String imageEdgeId =
-      UserInformationHelper.instance.getAccountSetting().edgeImgId;
-  String imageFooterId =
-      UserInformationHelper.instance.getAccountSetting().footerImgId;
+  String imageEdgeId = '';
+  String imageFooterId = '';
 
   TokenRepository tokenRepository = const TokenRepository();
 

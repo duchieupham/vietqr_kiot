@@ -10,7 +10,7 @@ import 'package:viet_qr_kiot/models/qr_generated_dto.dart';
 import 'package:viet_qr_kiot/models/response_message_dto.dart';
 
 class TokenBloc extends Bloc<TokenEvent, TokenState> {
-  TokenBloc() : super(const TokenState()) {
+  TokenBloc() : super(const TokenState(qrList: [])) {
     on<TokenEventCheckValid>(_checkValidToken);
     on<TokenFcmUpdateEvent>(_updateFcmToken);
 
@@ -95,43 +95,50 @@ class TokenBloc extends Bloc<TokenEvent, TokenState> {
           typeToken: TokenType.Logout_failed));
     }
   }
+
+  void _getListQR(TokenEvent event, Emitter emit) async {
+    List<QRGeneratedDTO> qrList = [];
+    try {
+      if (event is GetListQrEvent) {
+        qrList = await tokenRepository.getListQR();
+        if (qrList.isNotEmpty) {
+          emit(state.copyWith(
+            status: BlocStatus.NONE,
+            request: HomeType.GET_LIST,
+            qrList: qrList,
+          ));
+        } else {
+          emit(
+              state.copyWith(status: BlocStatus.NONE, request: HomeType.ERROR));
+        }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(status: BlocStatus.NONE, request: HomeType.ERROR));
+    }
+  }
+
+  void _uploadImage(TokenEvent event, Emitter emit) async {
+    try {
+      if (event is UploadImageEvent) {
+        emit(state.copyWith(status: BlocStatus.NONE, request: HomeType.NONE));
+        final ResponseMessageDTO result =
+            await tokenRepository.upLoadImage(event.param, event.imageByte);
+        if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
+          emit(state.copyWith(
+              status: BlocStatus.NONE, request: HomeType.UPLOAD));
+        } else {
+          emit(
+              state.copyWith(status: BlocStatus.NONE, request: HomeType.ERROR));
+        }
+      }
+    } catch (e) {
+      emit(state.copyWith(status: BlocStatus.NONE, request: HomeType.ERROR));
+      LOG.error(e.toString());
+    }
+  }
 }
 
 const TokenRepository tokenRepository = TokenRepository();
-
-void _getListQR(TokenEvent event, Emitter emit) async {
-  List<QRGeneratedDTO> qrList = [];
-  try {
-    if (event is GetListQrEvent) {
-      qrList = await tokenRepository.getListQR();
-      if (qrList.isNotEmpty) {
-        emit(GetListQrSuccessState(qrList));
-      } else {
-        emit(GetListQrFailedState());
-      }
-    }
-  } catch (e) {
-    LOG.error(e.toString());
-    emit(GetListQrFailedState());
-  }
-}
-
-void _uploadImage(TokenEvent event, Emitter emit) async {
-  try {
-    if (event is UploadImageEvent) {
-      emit(UploadImageLoadingState());
-      final ResponseMessageDTO result =
-          await tokenRepository.upLoadImage(event.param, event.imageByte);
-      if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
-        emit(UploadImageSuccessState());
-      } else {
-        emit(UploadImageFailedState());
-      }
-    }
-  } catch (e) {
-    emit(UploadImageFailedState());
-    LOG.error(e.toString());
-  }
-}
 
 const LogoutRepository logoutRepository = LogoutRepository();

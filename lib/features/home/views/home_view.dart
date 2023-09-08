@@ -50,6 +50,7 @@ class _HomeScreen extends State<HomeScreen> {
   //providers
   final ClockProvider clockProvider = ClockProvider('');
   bool showPopup = false;
+
   //
   late TokenBloc _tokenBloc;
   late LogoutBloc _logoutBloc;
@@ -57,17 +58,17 @@ class _HomeScreen extends State<HomeScreen> {
   //
   final ImagePicker imagePicker = ImagePicker();
   List<QRGeneratedDTO> listQR = [];
+
   @override
   void initState() {
     super.initState();
     Provider.of<SettingProvider>(context, listen: false).getSettingVoiceKiot();
     Provider.of<AddImageDashboardProvider>(context, listen: false).init();
-
     _tokenBloc = BlocProvider.of(context);
-    _tokenBloc.add(GetListQrEvent());
     _logoutBloc = BlocProvider.of(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _tokenBloc.add(const TokenEventCheckValid());
+      _tokenBloc.add(GetListQrEvent());
     });
     clockProvider.getRealTime();
   }
@@ -217,7 +218,7 @@ class _HomeScreen extends State<HomeScreen> {
                 );
               }
             }
-            if (state is GetListQrSuccessState) {
+            if (state.request == HomeType.GET_LIST) {
               listQR = state.qrList;
             }
           },

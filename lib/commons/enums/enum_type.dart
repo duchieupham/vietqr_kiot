@@ -17,10 +17,7 @@ enum LoginType { NONE, SUCCESS, TOAST, ERROR, CHECK_EXIST, REGISTER }
 
 enum TypeOTP { SUCCESS, FAILED, ERROR, AWAIT, NONE }
 
-enum HomeType {
-  NONE,
-  TOKEN,
-}
+enum HomeType { NONE, TOKEN, UPLOAD, GET_LIST, ERROR }
 
 enum TokenType {
   NONE,

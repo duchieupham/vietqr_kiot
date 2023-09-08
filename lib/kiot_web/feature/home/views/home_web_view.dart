@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/numeral.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
+import 'package:viet_qr_kiot/commons/enums/enum_type.dart';
 import 'package:viet_qr_kiot/commons/utils/log.dart';
 import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
 import 'package:viet_qr_kiot/commons/widgets/ambient_avatar_widget.dart';
@@ -51,6 +52,7 @@ class _HomeScreen extends State<HomeWebScreen> {
   //
   final ImagePicker imagePicker = ImagePicker();
   List<QRGeneratedDTO> listQR = [];
+
   @override
   void initState() {
     _tokenBloc = BlocProvider.of(context);
@@ -91,7 +93,7 @@ class _HomeScreen extends State<HomeWebScreen> {
             },
             child: BlocListener<TokenBloc, TokenState>(
               listener: (context, state) {
-                if (state is GetListQrSuccessState) {
+                if (state.request == HomeType.GET_LIST) {
                   listQR = state.qrList;
                 }
               },

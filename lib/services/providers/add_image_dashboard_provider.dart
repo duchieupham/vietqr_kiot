@@ -13,16 +13,16 @@ class AddImageDashboardProvider with ChangeNotifier {
 
   File? get bodyImageFile => _bodyImageFile;
 
-  String imageBodyId =
-      UserInformationHelper.instance.getAccountSetting().edgeImgId;
-  String imageFooterId =
-      UserInformationHelper.instance.getAccountSetting().footerImgId;
+  String imageBodyId = '';
+  String imageFooterId = '';
   int settingMainScreen = UserInformationHelper.instance.getSettingMainScreen();
   SettingRepository settingRepository = const SettingRepository();
   bool loadingBodyImage = true;
   bool loadingFooterImage = true;
   init() async {
     await Session.instance.fetchAccountSetting();
+    imageFooterId = Session.instance.settingDto.footerImgId;
+    imageBodyId = Session.instance.settingDto.edgeImgId;
     loadingBodyImage = false;
     loadingFooterImage = false;
     notifyListeners();

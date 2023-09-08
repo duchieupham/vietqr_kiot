@@ -20,6 +20,13 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   final ImagePicker imagePicker = ImagePicker();
+  int currentPage = 0;
+
+  updateCurrentPage(int page) {
+    setState(() {
+      currentPage = page;
+    });
+  }
 
   changeImageBody() async {
     await Permission.mediaLibrary.request();
@@ -49,6 +56,16 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  String getSubTitle() {
+    if (currentPage == 0) {
+      return 'Màn hình chính';
+    } else if (currentPage == 1) {
+      return 'Ảnh cạnh bên';
+    } else {
+      return 'Ảnh dưới';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -69,54 +86,60 @@ class _SettingPageState extends State<SettingPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    padding: const EdgeInsets.only(left: 20),
-                    icon: const Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.black,
-                      size: 18,
+              if (MediaQuery.of(context).orientation == Orientation.landscape)
+                _buildTitleLandscape()
+              else
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      padding: const EdgeInsets.only(left: 20),
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.black,
+                        size: 18,
+                      ),
                     ),
-                  ),
-                  const Text(
-                    'Cài đặt giao diện',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  Container(
-                    width: 50,
-                    height: 40,
-                    margin: const EdgeInsets.only(right: 20),
-                    child: Image.asset(
-                      'assets/images/ic-viet-qr.png',
-                      height: 44,
+                    const Text(
+                      'Cài đặt giao diện',
+                      style: TextStyle(fontSize: 18),
                     ),
-                  )
-                ],
-              ),
+                    Container(
+                      width: 50,
+                      height: 40,
+                      margin: const EdgeInsets.only(right: 20),
+                      child: Image.asset(
+                        'assets/images/ic-viet-qr.png',
+                        height: 44,
+                      ),
+                    )
+                  ],
+                ),
               Expanded(
-                  child: ListView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                children: [
-                  _buildSettingMainScreen(),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  _buildSettingImageEdge(),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  _buildSettingImageBottom(),
-                  const SizedBox(
-                    height: 80,
-                  ),
-                ],
-              )),
+                  child: MediaQuery.of(context).orientation ==
+                          Orientation.landscape
+                      ? _buildWidgetLandscape()
+                      : ListView(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 24),
+                          children: [
+                            _buildSettingMainScreen(),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            _buildSettingImageEdge(),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            _buildSettingImageBottom(),
+                            const SizedBox(
+                              height: 80,
+                            ),
+                          ],
+                        )),
             ],
           ),
         ),
@@ -124,18 +147,99 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildSettingMainScreen() {
+  Widget _buildTitleLandscape() {
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          padding: const EdgeInsets.only(left: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+            size: 18,
+          ),
+        ),
+        const Text(
+          'Cài đặt giao diện',
+          style: TextStyle(fontSize: 18),
+        ),
+        const SizedBox(
+          width: 40,
+        ),
+        Expanded(
+          child: Text(
+            getSubTitle(),
+            style: const TextStyle(fontSize: 18),
+          ),
+        ),
+        Container(
+          width: 50,
+          height: 40,
+          margin: const EdgeInsets.only(right: 20),
+          child: Image.asset(
+            'assets/images/ic-viet-qr.png',
+            height: 44,
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildWidgetLandscape() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 220,
+          child: Column(
+            children: [
+              InkWell(
+                  onTap: () {
+                    updateCurrentPage(0);
+                  },
+                  child: _buildButtonSetting('assets/images/ic-home-layout.png',
+                      'Hiển thị màn hình chính', currentPage == 0)),
+              InkWell(
+                  onTap: () {
+                    updateCurrentPage(1);
+                  },
+                  child: _buildButtonSetting('assets/images/ic-edge-img.png',
+                      'Cài đặt ảnh cạnh bên', currentPage == 1)),
+              InkWell(
+                  onTap: () {
+                    updateCurrentPage(2);
+                  },
+                  child: _buildButtonSetting('assets/images/ic-bottom-img.png',
+                      'Cài đặt ảnh dưới', currentPage == 2))
+            ],
+          ),
+        ),
+        Expanded(
+            child: [
+          _buildSettingMainScreen(isLandscape: true),
+          _buildSettingImageEdge(isLandscape: true),
+          _buildSettingImageBottom(isLandscape: true)
+        ][currentPage])
+      ],
+    );
+  }
+
+  Widget _buildSettingMainScreen({bool isLandscape = false}) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Hiển thị màn hình chính',
-          style: TextStyle(fontSize: 16),
-        ),
-        const SizedBox(
-          height: 24,
-        ),
+        if (!isLandscape) ...[
+          const Text(
+            'Hiển thị màn hình chính',
+            style: TextStyle(fontSize: 16),
+          ),
+          const SizedBox(
+            height: 24,
+          ),
+        ],
         Consumer<AddImageDashboardProvider>(
             builder: (context, provider, child) {
           return Row(
@@ -223,20 +327,22 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildSettingImageEdge() {
+  Widget _buildSettingImageEdge({bool isLandscape = false}) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Align(
-          alignment: Alignment.topLeft,
-          child: Text(
-            'Cài đặt ảnh cạnh bên',
-            style: TextStyle(fontSize: 16),
+        if (!isLandscape) ...[
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Cài đặt ảnh cạnh bên',
+              style: TextStyle(fontSize: 16),
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 24,
-        ),
+          const SizedBox(
+            height: 24,
+          ),
+        ],
         Consumer<AddImageDashboardProvider>(
           builder: (context, provider, child) {
             if (provider.loadingBodyImage) {
@@ -331,20 +437,22 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildSettingImageBottom() {
+  Widget _buildSettingImageBottom({bool isLandscape = false}) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Align(
-          alignment: Alignment.topLeft,
-          child: Text(
-            'Cài đặt ảnh dưới',
-            style: TextStyle(fontSize: 16),
+        if (!isLandscape) ...[
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Cài đặt ảnh dưới',
+              style: TextStyle(fontSize: 16),
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 24,
-        ),
+          const SizedBox(
+            height: 24,
+          ),
+        ],
         Consumer<AddImageDashboardProvider>(
           builder: (context, provider, child) {
             if (provider.loadingFooterImage) {
@@ -436,6 +544,34 @@ class _SettingPageState extends State<SettingPage> {
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildButtonSetting(String pathIcon, String title, bool isSelected) {
+    return Container(
+      height: 45,
+      padding: const EdgeInsets.only(left: 12),
+      alignment: Alignment.centerLeft,
+      decoration: BoxDecoration(
+          color: isSelected
+              ? AppColor.BLUE_TEXT.withOpacity(0.3)
+              : AppColor.TRANSPARENT),
+      child: Row(
+        children: [
+          Image.asset(
+            pathIcon,
+            height: 32,
+            width: 32,
+          ),
+          const SizedBox(
+            width: 12,
+          ),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 12),
+          )
+        ],
+      ),
     );
   }
 

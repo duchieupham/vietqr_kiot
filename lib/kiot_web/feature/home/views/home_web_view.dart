@@ -134,6 +134,10 @@ class _HomeScreen extends State<HomeWebScreen> {
                   );
                 }
               }
+
+              if (state.request == HomeType.GET_LIST) {
+                listQR = state.qrList;
+              }
             },
             child: Consumer<HomeProvider>(
               builder: (context, provider, child) {

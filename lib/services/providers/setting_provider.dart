@@ -14,15 +14,6 @@ class SettingProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  bool _isMenuOpen = false;
-
-  bool get menuOpen => _isMenuOpen;
-
-  void updateMenuOpen(bool value) {
-    _isMenuOpen = value;
-    notifyListeners();
-  }
-
   getSettingVoiceKiot() async {
     await Session.instance.fetchAccountSetting();
     _enableVoice = Session.instance.settingDto.voiceMobileKiot;

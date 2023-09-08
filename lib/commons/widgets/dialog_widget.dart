@@ -38,130 +38,130 @@ class DialogWidget {
           child: Center(
             child: (PlatformUtils.instance.isWeb())
                 ? Container(
-              width: 300,
-              height: 300,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 10, vertical: 10),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Padding(padding: EdgeInsets.only(top: 10)),
-                  const Text(
-                    'Mật khẩu',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 10)),
-                  const SizedBox(
-                    width: 250,
-                    height: 60,
-                    child: Text(
-                      'Mật khẩu bao gồm 6 số.',
-                      textAlign: TextAlign.center,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                  Container(
                     width: 300,
-                    height: 80,
+                    height: 300,
                     alignment: Alignment.center,
-                    child: PinWidget(
-                      width: 300,
-                      pinSize: 15,
-                      pinLength: Numeral.DEFAULT_PIN_LENGTH,
-                      focusNode: focusNode,
-                      onDone: onDone,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 30)),
-                  ButtonWidget(
-                    width: 250,
-                    height: 30,
-                    text: 'Đóng',
-                    textColor: AppColor.WHITE,
-                    bgColor: AppColor.GREEN,
-                    borderRadius: 5,
-                    function: () {
-                      focusNode.dispose();
-                      Provider.of<PinProvider>(context, listen: false)
-                          .reset();
-                      Navigator.pop(context);
-                    },
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 10)),
-                ],
-              ),
-            )
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        const Text(
+                          'Mật khẩu',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        const SizedBox(
+                          width: 250,
+                          height: 60,
+                          child: Text(
+                            'Mật khẩu bao gồm 6 số.',
+                            textAlign: TextAlign.center,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 300,
+                          height: 80,
+                          alignment: Alignment.center,
+                          child: PinWidget(
+                            width: 300,
+                            pinSize: 15,
+                            pinLength: Numeral.DEFAULT_PIN_LENGTH,
+                            focusNode: focusNode,
+                            onDone: onDone,
+                          ),
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 30)),
+                        ButtonWidget(
+                          width: 250,
+                          height: 30,
+                          text: 'Đóng',
+                          textColor: AppColor.WHITE,
+                          bgColor: AppColor.GREEN,
+                          borderRadius: 5,
+                          function: () {
+                            focusNode.dispose();
+                            Provider.of<PinProvider>(context, listen: false)
+                                .reset();
+                            Navigator.pop(context);
+                          },
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                      ],
+                    ),
+                  )
                 : Container(
-              width: 350,
-              height: 200,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 10, vertical: 10),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: InkWell(
-                      onTap: () {
-                        focusNode.dispose();
-                        Provider.of<PinProvider>(context, listen: false)
-                            .reset();
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        width: 25,
-                        height: 25,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: Theme.of(context).canvasColor,
-                        ),
-                        child: const Icon(
-                          Icons.close_rounded,
-                          color: AppColor.RED_TEXT,
-                          size: 15,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 50)),
-                  PinWidget(
                     width: 350,
-                    pinSize: 15,
-                    pinLength: Numeral.DEFAULT_PIN_LENGTH,
-                    focusNode: focusNode,
-                    onDone: onDone,
+                    height: 200,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: InkWell(
+                            onTap: () {
+                              focusNode.dispose();
+                              Provider.of<PinProvider>(context, listen: false)
+                                  .reset();
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              width: 25,
+                              height: 25,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Theme.of(context).canvasColor,
+                              ),
+                              child: const Icon(
+                                Icons.close_rounded,
+                                color: AppColor.RED_TEXT,
+                                size: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 50)),
+                        PinWidget(
+                          width: 350,
+                          pinSize: 15,
+                          pinLength: Numeral.DEFAULT_PIN_LENGTH,
+                          focusNode: focusNode,
+                          onDone: onDone,
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
           ),
         );
       },
@@ -232,7 +232,7 @@ class DialogWidget {
                 height: 350,
                 alignment: Alignment.center,
                 padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(10),
@@ -289,8 +289,8 @@ class DialogWidget {
                       function: (cancelFunction != null)
                           ? cancelFunction
                           : () {
-                        Navigator.pop(context);
-                      },
+                              Navigator.pop(context);
+                            },
                     ),
                   ],
                 ),
@@ -301,9 +301,9 @@ class DialogWidget {
   }
 
   openContentDialog(
-      VoidCallback? onClose,
-      Widget child,
-      ) {
+    VoidCallback? onClose,
+    Widget child,
+  ) {
     BuildContext context = NavigatorUtils.navigatorKey.currentContext!;
     final double width = MediaQuery.of(context).size.width;
     return showDialog(
@@ -319,7 +319,7 @@ class DialogWidget {
                 alignment: Alignment.center,
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(10),
@@ -334,33 +334,44 @@ class DialogWidget {
   Future showFullModalBottomContent({
     BuildContext? context,
     required Widget widget,
+    bool? isDissmiss,
+    Color? color,
   }) async {
     context ??= NavigatorUtils.navigatorKey.currentContext!;
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     return await showModalBottomSheet(
+        isDismissible: (isDissmiss != null && !isDissmiss) ? isDissmiss : true,
         isScrollControlled: true,
         enableDrag: false,
         // Ngăn người dùng kéo ModalBottomSheet
         context: context,
-        backgroundColor: AppColor.TRANSPARENT,
+        backgroundColor: (color != null) ? color : AppColor.TRANSPARENT,
         builder: (context) {
-          return Container(
-            width: width,
-            height: height,
-            padding: const EdgeInsets.all(0),
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
+          return WillPopScope(
+            onWillPop: () async {
+              if (isDissmiss == null || isDissmiss) {
+                Navigator.pop(context);
+              }
+              return false;
+            },
+            child: Container(
+              width: width,
+              height: height,
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              decoration: BoxDecoration(
+                color: (color != null) ? color : Theme.of(context).cardColor,
+              ),
+              child: widget,
             ),
-            child: widget,
           );
         });
   }
 
   Future showModalBottomContent(
       {BuildContext? context,
-        required Widget widget,
-        required double height}) async {
+      required Widget widget,
+      required double height}) async {
     context ??= NavigatorUtils.navigatorKey.currentContext!;
     return await showModalBottomSheet(
         isScrollControlled: true,
@@ -471,46 +482,46 @@ class DialogWidget {
               child: Center(
                 child: (PlatformUtils.instance.isWeb())
                     ? Container(
-                  width: 200,
-                  height: 200,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      CircularProgressIndicator(
-                        color: AppColor.GREEN,
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 30)),
-                      Text(
-                        'Đang tải',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                        width: 200,
+                        height: 200,
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const [
+                            CircularProgressIndicator(
+                              color: AppColor.GREEN,
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 30)),
+                            Text(
+                              'Đang tải',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(
+                        width: 250,
+                        height: 200,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor.withOpacity(0.9),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const CircularProgressIndicator(
+                          color: AppColor.GREEN,
                         ),
                       ),
-                    ],
-                  ),
-                )
-                    : Container(
-                  width: 250,
-                  height: 200,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor.withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const CircularProgressIndicator(
-                    color: AppColor.GREEN,
-                  ),
-                ),
               ),
             );
           }).then((value) => isPopLoading = false);
@@ -527,105 +538,105 @@ class DialogWidget {
             color: AppColor.TRANSPARENT,
             child: Center(
                 child:
-                // (PlatformUtils.instance.isWeb())
-                //     ?
-                Container(
-                  width: 300,
-                  height: 300,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(15),
+                    // (PlatformUtils.instance.isWeb())
+                    //     ?
+                    Container(
+              width: 300,
+              height: 300,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/ic-warning.png',
+                    width: 80,
+                    height: 80,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/images/ic-warning.png',
-                        width: 80,
-                        height: 80,
-                      ),
-                      const Padding(padding: EdgeInsets.only(top: 10)),
-                      Text(
-                        title,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Padding(padding: EdgeInsets.only(top: 10)),
-                      SizedBox(
-                        width: 250,
-                        height: 60,
-                        child: Text(
-                          msg,
-                          textAlign: TextAlign.center,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                      const Padding(padding: EdgeInsets.only(top: 30)),
-                      ButtonWidget(
-                        width: 250,
-                        height: 40,
-                        text: 'Đóng',
-                        textColor: AppColor.WHITE,
-                        bgColor: AppColor.GREEN,
-                        borderRadius: 5,
-                        function: (function != null)
-                            ? function
-                            : () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      // const Padding(padding: EdgeInsets.only(top: 10)),
-                    ],
+                  const Padding(padding: EdgeInsets.only(top: 10)),
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                )
-              // : Container(
-              //     width: 300,
-              //     height: 250,
-              //     alignment: Alignment.center,
-              //     padding: const EdgeInsets.symmetric(horizontal: 40),
-              //     decoration: BoxDecoration(
-              //       color: Theme.of(context).cardColor,
-              //       borderRadius: BorderRadius.circular(20),
-              //     ),
-              //     child: Column(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       crossAxisAlignment: CrossAxisAlignment.center,
-              //       children: [
-              //         const Spacer(),
-              //         Text(
-              //           msg,
-              //           textAlign: TextAlign.center,
-              //           style: const TextStyle(
-              //             fontSize: 16,
-              //           ),
-              //         ),
-              //         const Spacer(),
-              //         ButtonWidget(
-              //           width: 230,
-              //           text: 'OK',
-              //           textColor: DefaultTheme.WHITE,
-              //           bgColor: DefaultTheme.GREEN,
-              //           function: (function != null)
-              //               ? function
-              //               : () {
-              //                   Navigator.pop(context);
-              //                 },
-              //         ),
-              //         const Padding(padding: EdgeInsets.only(bottom: 20)),
-              //       ],
-              //     ),
-              //   ),
-            ),
+                  const Padding(padding: EdgeInsets.only(top: 10)),
+                  SizedBox(
+                    width: 250,
+                    height: 60,
+                    child: Text(
+                      msg,
+                      textAlign: TextAlign.center,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 30)),
+                  ButtonWidget(
+                    width: 250,
+                    height: 40,
+                    text: 'Đóng',
+                    textColor: AppColor.WHITE,
+                    bgColor: AppColor.GREEN,
+                    borderRadius: 5,
+                    function: (function != null)
+                        ? function
+                        : () {
+                            Navigator.pop(context);
+                          },
+                  ),
+                  // const Padding(padding: EdgeInsets.only(top: 10)),
+                ],
+              ),
+            )
+                // : Container(
+                //     width: 300,
+                //     height: 250,
+                //     alignment: Alignment.center,
+                //     padding: const EdgeInsets.symmetric(horizontal: 40),
+                //     decoration: BoxDecoration(
+                //       color: Theme.of(context).cardColor,
+                //       borderRadius: BorderRadius.circular(20),
+                //     ),
+                //     child: Column(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       crossAxisAlignment: CrossAxisAlignment.center,
+                //       children: [
+                //         const Spacer(),
+                //         Text(
+                //           msg,
+                //           textAlign: TextAlign.center,
+                //           style: const TextStyle(
+                //             fontSize: 16,
+                //           ),
+                //         ),
+                //         const Spacer(),
+                //         ButtonWidget(
+                //           width: 230,
+                //           text: 'OK',
+                //           textColor: DefaultTheme.WHITE,
+                //           bgColor: DefaultTheme.GREEN,
+                //           function: (function != null)
+                //               ? function
+                //               : () {
+                //                   Navigator.pop(context);
+                //                 },
+                //         ),
+                //         const Padding(padding: EdgeInsets.only(bottom: 20)),
+                //       ],
+                //     ),
+                //   ),
+                ),
           );
         });
   }
@@ -644,22 +655,22 @@ class DialogWidget {
             child: LayoutBuilder(builder: (context, constraints) {
               return Center(
                   child: Container(
-                    width: constraints.maxWidth < 750 && constraints.maxHeight > 500
-                        ? width
-                        : width * 0.9,
-                    height:
+                width: constraints.maxWidth < 750 && constraints.maxHeight > 500
+                    ? width
+                    : width * 0.9,
+                height:
                     constraints.maxWidth < 750 && constraints.maxHeight > 500
                         ? height
                         : height * 0.9,
-                    alignment: Alignment.center,
-                    padding: padding ??
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                    decoration: BoxDecoration(
-                      color: bgColor ?? Theme.of(context).cardColor,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: child,
-                  ));
+                alignment: Alignment.center,
+                padding: padding ??
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                decoration: BoxDecoration(
+                  color: bgColor ?? Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: child,
+              ));
             }),
           );
         });
@@ -679,22 +690,22 @@ class DialogWidget {
             child: LayoutBuilder(builder: (context, constraints) {
               return Center(
                   child: Container(
-                    width: constraints.maxWidth < 750 || constraints.maxHeight < 500
-                        ? width
-                        : width * 0.9,
-                    height:
+                width: constraints.maxWidth < 750 || constraints.maxHeight < 500
+                    ? width
+                    : width * 0.9,
+                height:
                     constraints.maxWidth < 750 || constraints.maxHeight < 500
                         ? height
                         : height * 0.9,
-                    alignment: Alignment.center,
-                    padding: padding ??
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                    decoration: BoxDecoration(
-                      color: bgColor ?? Theme.of(context).cardColor,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: child,
-                  ));
+                alignment: Alignment.center,
+                padding: padding ??
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                decoration: BoxDecoration(
+                  color: bgColor ?? Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: child,
+              ));
             }),
           );
         });
@@ -829,9 +840,9 @@ class DialogWidget {
       date,
     );
     Color transactionColor =
-    (BankInformationUtil.instance.isIncome(dto.transaction))
-        ? AppColor.GREEN
-        : AppColor.RED_TEXT;
+        (BankInformationUtil.instance.isIncome(dto.transaction))
+            ? AppColor.GREEN
+            : AppColor.RED_TEXT;
     return showDialog(
       barrierDismissible: false,
       context: NavigatorUtils.navigatorKey.currentContext!,

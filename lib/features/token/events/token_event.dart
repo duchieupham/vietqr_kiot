@@ -20,3 +20,6 @@ class TokenFcmUpdateEvent extends TokenEvent {
   @override
   List<Object?> get props => [];
 }
+
+
+class TokenEventLogout extends TokenEvent {}

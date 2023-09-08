@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/route.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
+import 'package:viet_qr_kiot/commons/enums/enum_type.dart';
 import 'package:viet_qr_kiot/commons/utils/file_utils.dart';
 import 'package:viet_qr_kiot/commons/utils/log.dart';
 import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
@@ -16,6 +17,7 @@ import 'package:viet_qr_kiot/commons/widgets/ambient_avatar_widget.dart';
 import 'package:viet_qr_kiot/commons/widgets/button_icon_widget.dart';
 import 'package:viet_qr_kiot/commons/widgets/dialog_widget.dart';
 import 'package:viet_qr_kiot/features/generate_qr/repositories/qr_repository.dart';
+import 'package:viet_qr_kiot/features/home/frames/maintain_widget.dart';
 import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
 import 'package:viet_qr_kiot/features/logout/events/log_out_event.dart';
 import 'package:viet_qr_kiot/features/logout/states/log_out_state.dart';
@@ -51,12 +53,14 @@ class _HomeScreen extends State<HomeScreen> {
 
   @override
   void initState() {
+    super.initState();
     Provider.of<SettingProvider>(context, listen: false).getSettingVoiceKiot();
     _tokenBloc = BlocProvider.of(context);
     _logoutBloc = BlocProvider.of(context);
-    _tokenBloc.add(const TokenFcmUpdateEvent());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _tokenBloc.add(const TokenEventCheckValid());
+    });
     clockProvider.getRealTime();
-    super.initState();
   }
 
   Widget _buildClock(double width, double height) {
@@ -141,10 +145,18 @@ class _HomeScreen extends State<HomeScreen> {
     );
   }
 
+  void _updateFcmToken(bool isFromLogin) {
+    if (!isFromLogin) {
+      _tokenBloc.add(const TokenFcmUpdateEvent());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
+    bool isFromLogin = false;
+
     return Scaffold(
       body: BlocListener<LogoutBloc, LogoutState>(
         listener: (context, state) {
@@ -168,9 +180,31 @@ class _HomeScreen extends State<HomeScreen> {
           }
         },
         child: BlocListener<TokenBloc, TokenState>(
-          listener: (context, state) {
-            if (state is TokenFcmUpdateSuccessState) {
-              LOG.info('Update FCM Token success');
+          listener: (context, state) async {
+            if (state.request == HomeType.TOKEN) {
+              if (state.typeToken == TokenType.Valid) {
+                _updateFcmToken(isFromLogin);
+              } else if (state.typeToken == TokenType.MainSystem) {
+                await DialogWidget.instance.showFullModalBottomContent(
+                  isDissmiss: false,
+                  widget: MaintainWidget(tokenBloc: _tokenBloc),
+                );
+              } else if (state.typeToken == TokenType.Expired) {
+                await DialogWidget.instance.openMsgDialog(
+                    title: 'Phiên đăng nhập hết hạn',
+                    msg: 'Vui lòng đăng nhập lại ứng dụng',
+                    function: () {
+                      Navigator.pop(context);
+                      _tokenBloc.add(TokenEventLogout());
+                    });
+              } else if (state.typeToken == TokenType.Logout) {
+                Navigator.of(context).pushReplacementNamed(Routes.LOGIN);
+              } else if (state.typeToken == TokenType.Logout_failed) {
+                await DialogWidget.instance.openMsgDialog(
+                  title: 'Không thể đăng xuất',
+                  msg: 'Vui lòng thử lại sau.',
+                );
+              }
             }
           },
           child: Stack(

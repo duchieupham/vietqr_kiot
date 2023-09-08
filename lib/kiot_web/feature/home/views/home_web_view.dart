@@ -9,7 +9,9 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/numeral.dart';
+import 'package:viet_qr_kiot/commons/constants/configurations/route.dart';
 import 'package:viet_qr_kiot/commons/constants/configurations/theme.dart';
+import 'package:viet_qr_kiot/commons/enums/enum_type.dart';
 import 'package:viet_qr_kiot/commons/utils/image_utils.dart';
 import 'package:viet_qr_kiot/commons/utils/log.dart';
 import 'package:viet_qr_kiot/commons/utils/time_utils.dart';
@@ -19,11 +21,12 @@ import 'package:viet_qr_kiot/features/generate_qr/repositories/qr_repository.dar
 import 'package:viet_qr_kiot/features/logout/blocs/log_out_bloc.dart';
 import 'package:viet_qr_kiot/features/logout/events/log_out_event.dart';
 import 'package:viet_qr_kiot/features/logout/states/log_out_state.dart';
-import 'package:viet_qr_kiot/features/token/blocs/token_bloc.dart';
-import 'package:viet_qr_kiot/features/token/events/token_event.dart';
-import 'package:viet_qr_kiot/features/token/states/token_state.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/blocs/setting_bloc.dart';
+import 'package:viet_qr_kiot/kiot_web/feature/home/blocs/token_bloc.dart';
+import 'package:viet_qr_kiot/kiot_web/feature/home/events/token_event.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/frames/home_frame.dart';
+import 'package:viet_qr_kiot/kiot_web/feature/home/frames/maintain_widget.dart';
+import 'package:viet_qr_kiot/kiot_web/feature/home/states/token_state.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/views/provider/home_provider.dart';
 import 'package:viet_qr_kiot/kiot_web/feature/home/views/widget/popup_setting.dart';
 import 'package:viet_qr_kiot/layouts/box_layout.dart';
@@ -55,54 +58,85 @@ class _HomeScreen extends State<HomeWebScreen> {
   //
   final ImagePicker imagePicker = ImagePicker();
   List<QRGeneratedDTO> listQR = [];
+
   @override
   void initState() {
+    super.initState();
     _tokenBloc = BlocProvider.of(context);
-    _tokenBloc.add(GetListQrEvent());
     _logoutBloc = BlocProvider.of(context);
-    // _tokenBloc.add(const TokenFcmUpdateEvent());
     clockProvider.getRealTime();
     Provider.of<SettingProvider>(context, listen: false).getSettingVoiceKiot();
     Provider.of<AddImageWebDashboardProvider>(context, listen: false).init();
 
-    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _tokenBloc.add(const TokenEventCheckValid());
+      _tokenBloc.add(GetListQrEvent());
+    });
+  }
+
+  void _updateFcmToken(bool isFromLogin) {
+    if (!isFromLogin) {
+      _tokenBloc.add(const TokenFcmUpdateEvent());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
-
+    bool isFromLogin = false;
     return Scaffold(
       body: ChangeNotifierProvider<HomeProvider>(
         create: (context) => HomeProvider(),
         child: BlocListener<LogoutBloc, LogoutState>(
-            listener: (context, state) {
-              if (state is LogoutLoadingState) {
-                DialogWidget.instance.openLoadingDialog();
-              }
-              if (state is LogoutSuccessfulState) {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                }
-                context.go('/login');
-              }
-              if (state is LogoutFailedState) {
+          listener: (context, state) {
+            if (state is LogoutLoadingState) {
+              DialogWidget.instance.openLoadingDialog();
+            }
+            if (state is LogoutSuccessfulState) {
+              if (Navigator.canPop(context)) {
                 Navigator.pop(context);
-                DialogWidget.instance.openMsgDialog(
-                  title: 'Không thể đăng xuất',
-                  msg: 'Vui lòng thử lại sau.',
-                );
+              }
+              context.go('/login');
+            }
+            if (state is LogoutFailedState) {
+              Navigator.pop(context);
+              DialogWidget.instance.openMsgDialog(
+                title: 'Không thể đăng xuất',
+                msg: 'Vui lòng thử lại sau.',
+              );
+            }
+          },
+          child: BlocListener<TokenBloc, TokenState>(
+            listener: (context, state) async {
+              if (state.request == HomeType.TOKEN) {
+                if (state.typeToken == TokenType.Valid) {
+                  _updateFcmToken(isFromLogin);
+                } else if (state.typeToken == TokenType.MainSystem) {
+                  await DialogWidget.instance.showFullModalBottomContent(
+                    isDissmiss: false,
+                    widget: MaintainWidget(tokenBloc: _tokenBloc),
+                  );
+                } else if (state.typeToken == TokenType.Expired) {
+                  await DialogWidget.instance.openMsgDialog(
+                      title: 'Phiên đăng nhập hết hạn',
+                      msg: 'Vui lòng đăng nhập lại ứng dụng',
+                      function: () {
+                        Navigator.pop(context);
+                        _tokenBloc.add(TokenEventLogout());
+                      });
+                } else if (state.typeToken == TokenType.Logout) {
+                  Navigator.of(context).pushReplacementNamed(Routes.LOGIN);
+                } else if (state.typeToken == TokenType.Logout_failed) {
+                  await DialogWidget.instance.openMsgDialog(
+                    title: 'Không thể đăng xuất',
+                    msg: 'Vui lòng thử lại sau.',
+                  );
+                }
               }
             },
-            child: BlocListener<TokenBloc, TokenState>(
-              listener: (context, state) {
-                if (state is GetListQrSuccessState) {
-                  listQR = state.qrList;
-                }
-              },
-              child:
-                  Consumer<HomeProvider>(builder: (context, provider, child) {
+            child: Consumer<HomeProvider>(
+              builder: (context, provider, child) {
                 return HomeWebFrame(
                   layout1: _buildClock(width, height),
                   footer: _buildFooter(width, provider),
@@ -114,8 +148,10 @@ class _HomeScreen extends State<HomeWebScreen> {
                     provider.updateShowPopup(false);
                   },
                 );
-              }),
-            )),
+              },
+            ),
+          ),
+        ),
       ),
     );
   }

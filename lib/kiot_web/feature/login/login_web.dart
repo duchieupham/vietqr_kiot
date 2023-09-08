@@ -97,48 +97,46 @@ class _LoginState extends State<_Login> {
 
               if (provider.infoUserDTO != null) {
                 List<String> list = [];
-                List<InfoUserDTO> listDto =
+                List<InfoUserDTO> listCheck =
                     UserInformationHelper.instance.getLoginAccount();
-                List<InfoUserDTO> listCheck = [];
 
-                if (listDto.isNotEmpty) {
-                  if (listDto.length <= 3) {
-                    listCheck = listDto
-                        .where((element) =>
-                            element.phoneNo == provider.infoUserDTO!.phoneNo)
-                        .toList();
+                if (listCheck.isNotEmpty) {
+                  if (listCheck.length == 3) {
+                    listCheck.removeWhere((element) =>
+                        element.phoneNo!.trim() ==
+                        provider.infoUserDTO!.phoneNo);
 
-                    if (listCheck.isNotEmpty) {
-                      int index = listDto.indexOf(listCheck.first);
-                      listDto.removeAt(index);
-                      listDto.add(provider.infoUserDTO!);
+                    if (listCheck.length < 3) {
+                      listCheck.add(provider.infoUserDTO!);
                     } else {
-                      if (listDto.length == 3) {
-                        listDto.sort((a, b) =>
-                            a.expiryAsDateTime.compareTo(b.expiryAsDateTime));
-                        listDto.removeAt(2);
-                        listDto.add(provider.infoUserDTO!);
-                      } else {
-                        listDto.add(provider.infoUserDTO!);
-                      }
+                      listCheck.sort((a, b) =>
+                          a.expiryAsDateTime.compareTo(b.expiryAsDateTime));
+                      listCheck.removeAt(2);
                     }
+                  } else {
+                    listCheck.removeWhere((element) =>
+                        element.phoneNo!.trim() ==
+                        provider.infoUserDTO!.phoneNo);
+
+                    listCheck.add(provider.infoUserDTO!);
                   }
                 } else {
-                  listDto.add(provider.infoUserDTO!);
+                  listCheck.add(provider.infoUserDTO!);
                 }
 
-                if (listDto.length >= 2) {
-                  listDto.sort((a, b) =>
+                if (listCheck.length >= 2) {
+                  listCheck.sort((a, b) =>
                       a.expiryAsDateTime.compareTo(b.expiryAsDateTime));
                 }
 
-                listDto.forEach((element) {
+                for (var element in listCheck) {
                   list.add(element.toSPJson().toString());
-                });
+                }
 
                 await UserInformationHelper.instance.setLoginAccount(list);
                 provider.updateListInfoUser();
               }
+              if (!mounted) return;
               WebSocketHelper.instance.listenTransactionSocket();
               context.go('/home');
 
@@ -160,6 +158,7 @@ class _LoginState extends State<_Login> {
 
             if (state.request == LoginType.ERROR) {
               FocusManager.instance.primaryFocus?.unfocus();
+              if (!mounted) return;
               Navigator.of(context).pop();
               //pop loading dialog
               //show msg dialog

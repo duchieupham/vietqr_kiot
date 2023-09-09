@@ -20,6 +20,7 @@ class Session {
   }
 
   late SharedPreferences sharedPrefs;
+
   static Session get instance => _singleton;
   final StreamController<EventType> _eventStream =
       StreamController<EventType>();
@@ -83,18 +84,24 @@ class Session {
   }
 
   SettingAccountDTO _settingDto = const SettingAccountDTO();
+
   SettingAccountDTO get settingDto => _settingDto;
+
   // Account setting
   final SettingRepository settingRepository = const SettingRepository();
-  Future fetchAccountSetting() async {
+
+  Future<SettingAccountDTO> fetchAccountSetting() async {
     String userId = UserInformationHelper.instance.getUserId();
     final settingAccount = await settingRepository.getSettingAccount(userId);
     UserInformationHelper.instance.setAccountSetting(settingAccount);
     _settingDto = settingAccount;
+    return _settingDto;
   }
 
   bool _isShowingPopup = false;
+
   bool get isShowingPopup => _isShowingPopup;
+
   updateStatusShowingPopup(bool show) {
     _isShowingPopup = show;
   }

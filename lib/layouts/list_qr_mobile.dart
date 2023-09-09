@@ -15,6 +15,7 @@ class ListVietQrMobile extends StatelessWidget {
       {super.key, required this.qrGeneratedDTOs, this.isLandscape = false});
 
   final carouselController = CarouselController();
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -75,7 +76,6 @@ class ListVietQrMobile extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          flex: 3,
           child: Container(
             margin:
                 const EdgeInsets.only(left: 8, right: 8, top: 24, bottom: 20),
@@ -140,7 +140,6 @@ class ListVietQrMobile extends StatelessWidget {
           ),
         ),
         Expanded(
-          flex: 2,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

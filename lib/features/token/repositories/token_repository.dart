@@ -85,20 +85,12 @@ class TokenRepository {
         url: url,
         type: AuthenticationType.SYSTEM,
       );
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        list = data
-            .map<QRGeneratedDTO>((json) => QRGeneratedDTO.fromJson(json))
-            .toList();
-        return list;
-      }
-      if (response.statusCode == 400) {
+      if (response.statusCode == 200 || response.statusCode == 400) {
         var data = jsonDecode(response.body);
         if (data != null) {
           list = data
               .map<QRGeneratedDTO>((json) => QRGeneratedDTO.fromJson(json))
               .toList();
-          return list;
         }
       }
     } catch (e) {

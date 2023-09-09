@@ -19,6 +19,7 @@ class AddImageDashboardProvider with ChangeNotifier {
   SettingRepository settingRepository = const SettingRepository();
   bool loadingBodyImage = true;
   bool loadingFooterImage = true;
+
   init() async {
     await Session.instance.fetchAccountSetting();
     imageFooterId = Session.instance.settingDto.footerImgId;
@@ -36,9 +37,9 @@ class AddImageDashboardProvider with ChangeNotifier {
     param['imgId'] = imageFooterId;
     param['userId'] = UserInformationHelper.instance.getUserId();
     param['type'] = 1;
-    settingRepository.upLoadImage(param, file);
-    await Session.instance.fetchAccountSetting();
-    imageFooterId = Session.instance.settingDto.footerImgId;
+    await settingRepository.upLoadImage(param, file);
+    final settingDTO = await Session.instance.fetchAccountSetting();
+    imageFooterId = settingDTO.footerImgId;
     loadingFooterImage = false;
     notifyListeners();
   }
@@ -51,9 +52,9 @@ class AddImageDashboardProvider with ChangeNotifier {
     param['imgId'] = imageBodyId;
     param['userId'] = UserInformationHelper.instance.getUserId();
     param['type'] = 0;
-    settingRepository.upLoadImage(param, file);
-    await Session.instance.fetchAccountSetting();
-    imageBodyId = Session.instance.settingDto.edgeImgId;
+    await settingRepository.upLoadImage(param, file);
+    final settingDTO = await Session.instance.fetchAccountSetting();
+    imageBodyId = settingDTO.edgeImgId;
     loadingBodyImage = false;
     notifyListeners();
   }

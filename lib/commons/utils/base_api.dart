@@ -105,10 +105,10 @@ class BaseAPIClient {
     required Map<String, dynamic> fields,
     required List<http.MultipartFile> files,
   }) async {
-    final String _token = AccountHelper.instance.getToken();
+    final String token = AccountHelper.instance.getToken();
     final Uri uri = Uri.parse(url);
     final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization'] = 'Bearer $_token';
+    request.headers['Authorization'] = 'Bearer $token';
     if (fields.isNotEmpty) {
       for (String key in fields.keys) {
         request.fields[key] = fields[key].toString();
@@ -139,8 +139,8 @@ class BaseAPIClient {
         result['Accept'] = '*/*';
         break;
       case AuthenticationType.SYSTEM:
-        final String _token = AccountHelper.instance.getToken();
-        result['Authorization'] = 'Bearer $_token';
+        final String token = AccountHelper.instance.getToken();
+        result['Authorization'] = 'Bearer $token';
         result['Content-Type'] = 'application/json';
         result['Accept'] = '*/*';
         break;

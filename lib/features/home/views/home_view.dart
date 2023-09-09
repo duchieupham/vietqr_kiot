@@ -62,69 +62,71 @@ class _HomeScreen extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<SettingProvider>(context, listen: false).getSettingVoiceKiot();
-    Provider.of<AddImageDashboardProvider>(context, listen: false).init();
     _tokenBloc = BlocProvider.of(context);
     _logoutBloc = BlocProvider.of(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<SettingProvider>(context, listen: false)
+          .getSettingVoiceKiot();
+      Provider.of<AddImageDashboardProvider>(context, listen: false).init();
       _tokenBloc.add(const TokenEventCheckValid());
       _tokenBloc.add(GetListQrEvent());
+      clockProvider.getRealTime();
     });
-    clockProvider.getRealTime();
   }
 
   Widget _buildClock(double width, double height) {
-    return LayoutBuilder(builder: (context, constraints) {
-      double sizeText = 30;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double sizeText = 30;
 
-      if (constraints.maxWidth >= 300 &&
-          constraints.maxHeight >= 260 &&
-          constraints.maxWidth <= 440) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 40,
-              ),
-              const Expanded(flex: 2, child: AnalogClock()),
-              const SizedBox(
-                height: 20,
-              ),
-              Expanded(
-                child: _buildTime(contentCenter: true, sizeText: sizeText),
-              ),
-            ],
-          ),
-        );
-      }
-
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Spacer(),
-            Row(
+        if (constraints.maxWidth >= 300 &&
+            constraints.maxHeight >= 260 &&
+            constraints.maxWidth <= 440) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
               children: [
-                const Expanded(child: AnalogClock()),
-                const SizedBox(
-                  width: 20,
-                ),
+                const SizedBox(height: 40),
+                const Expanded(flex: 2, child: AnalogClock()),
+                const SizedBox(height: 20),
                 Expanded(
-                  flex: 3,
-                  child: _buildTime(),
+                  child: _buildTime(
+                      contentCenter: true, sizeText: sizeText, height: height),
                 ),
               ],
             ),
-            const Spacer(),
-          ],
-        ),
-      );
-    });
+          );
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (height > 750) const Spacer(),
+              Row(
+                children: [
+                  const Expanded(child: AnalogClock()),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    flex: 3,
+                    child: _buildTime(height: height),
+                  ),
+                ],
+              ),
+              if (height > 750) const Spacer(),
+            ],
+          ),
+        );
+      },
+    );
   }
 
-  Widget _buildTime({bool contentCenter = false, double sizeText = 30}) {
+  Widget _buildTime({
+    bool contentCenter = false,
+    double sizeText = 30,
+    required double height,
+  }) {
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -145,12 +147,10 @@ class _HomeScreen extends State<HomeScreen> {
                   : const SizedBox();
             },
           ),
-          SizedBox(
-            height: contentCenter ? 4 : 16,
-          ),
+          const SizedBox(height: 4),
           Text(
             '${TimeUtils.instance.getCurrentDateInWeek(DateTime.now())}, ${DateTime.now().day} Tháng ${DateTime.now().month}, năm 2023',
-            style: const TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: height > 750 ? 18 : 16),
           ),
         ],
       ),
@@ -168,7 +168,10 @@ class _HomeScreen extends State<HomeScreen> {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     bool isFromLogin = false;
-
+    if (ModalRoute.of(context)!.settings.arguments != null) {
+      final arg = ModalRoute.of(context)!.settings.arguments as Map;
+      isFromLogin = arg['isFromLogin'] ?? false;
+    }
     return Scaffold(
       body: BlocListener<LogoutBloc, LogoutState>(
         listener: (context, state) {
@@ -194,7 +197,9 @@ class _HomeScreen extends State<HomeScreen> {
         child: BlocListener<TokenBloc, TokenState>(
           listener: (context, state) async {
             if (state.request == HomeType.TOKEN) {
-              if (state.typeToken == TokenType.Valid) {
+              if (state.typeToken == TokenType.Fcm_success) {
+                _tokenBloc.add(GetListQrEvent());
+              } else if (state.typeToken == TokenType.Valid) {
                 _updateFcmToken(isFromLogin);
               } else if (state.typeToken == TokenType.MainSystem) {
                 await DialogWidget.instance.showFullModalBottomContent(
@@ -239,12 +244,12 @@ class _HomeScreen extends State<HomeScreen> {
                         Orientation.landscape)
                       Expanded(child: _buildWidgetPortrait(height, width))
                     else ...[
-                      const SizedBox(height: kToolbarHeight),
+                      SizedBox(height: (height > 750) ? kToolbarHeight : 16),
                       Expanded(
                         flex: 1,
                         child: _buildClock(width, height),
                       ),
-                      const SizedBox(height: 16),
+                      if (height > 750) const SizedBox(height: 16),
                       Expanded(
                         flex: 2,
                         child: Container(
@@ -259,12 +264,10 @@ class _HomeScreen extends State<HomeScreen> {
                               if (provider.loadingBodyImage) {
                                 return _buildLoadingWidget();
                               }
-                              if ((provider.imageBodyId.isEmpty)) {
+                              if (provider.imageBodyId.isEmpty) {
                                 return InkWell(
                                   onTap: onSelectImage1,
                                   child: BoxLayout(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 50),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -321,7 +324,7 @@ class _HomeScreen extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: (height > 750) ? 16 : 8),
                       Expanded(
                         child: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -330,7 +333,7 @@ class _HomeScreen extends State<HomeScreen> {
                               if (provider.loadingFooterImage) {
                                 return _buildLoadingWidget();
                               }
-                              if ((provider.imageFooterId.isEmpty)) {
+                              if (provider.imageFooterId.isEmpty) {
                                 return InkWell(
                                   onTap: onSelectImage2,
                                   child: BoxLayout(
@@ -392,7 +395,7 @@ class _HomeScreen extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: kToolbarHeight),
+                      SizedBox(height: (height > 750) ? kToolbarHeight : 16),
                     ],
                     _buildFooter(),
                   ],
@@ -500,78 +503,77 @@ class _HomeScreen extends State<HomeScreen> {
     return Row(
       children: [
         Expanded(
-            child: Column(
-          children: [
-            const SizedBox(height: kToolbarHeight),
-            Expanded(
-              child: _buildClock(width, height),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.only(left: 16, bottom: 16),
-                child: Consumer<AddImageDashboardProvider>(
-                  builder: (context, provider, child) {
-                    if (provider.loadingFooterImage) {
-                      return _buildLoadingWidget();
-                    }
-                    if ((provider.imageFooterId.isEmpty)) {
-                      return InkWell(
-                        onTap: onSelectImage2,
-                        child: BoxLayout(
-                          padding: const EdgeInsets.symmetric(vertical: 50),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.fromLTRB(6, 2, 12, 2),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: AppColor.BLUE_TEXT.withOpacity(0.4),
+          child: Column(
+            children: [
+              Expanded(
+                child: _buildClock(width, height),
+              ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.only(left: 16, bottom: 16),
+                  child: Consumer<AddImageDashboardProvider>(
+                    builder: (context, provider, child) {
+                      if (provider.loadingFooterImage) {
+                        return _buildLoadingWidget();
+                      }
+                      if (provider.imageFooterId.isEmpty) {
+                        return InkWell(
+                          onTap: onSelectImage2,
+                          child: BoxLayout(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(6, 2, 12, 2),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: AppColor.BLUE_TEXT.withOpacity(0.4),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/ic-edit-avatar-setting.png',
+                                        width: 30,
+                                        color: AppColor.BLUE_TEXT,
+                                      ),
+                                      const Text(
+                                        'Chọn ảnh',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: AppColor.BLUE_TEXT,
+                                            height: 1.4),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/ic-edit-avatar-setting.png',
-                                      width: 30,
-                                      color: AppColor.BLUE_TEXT,
-                                    ),
-                                    const Text(
-                                      'Chọn ảnh',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: AppColor.BLUE_TEXT,
-                                          height: 1.4),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    } else {
-                      return GestureDetector(
-                        onTap: onSelectImage2,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: ImageUtils.instance
-                                  .getImageNetWork(provider.imageFooterId),
+                              ],
                             ),
                           ),
-                        ),
-                      );
-                    }
-                  },
+                        );
+                      } else {
+                        return GestureDetector(
+                          onTap: onSelectImage2,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: ImageUtils.instance
+                                    .getImageNetWork(provider.imageFooterId),
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
-        )),
+            ],
+          ),
+        ),
         Expanded(
           child: Container(
             margin:
@@ -585,40 +587,46 @@ class _HomeScreen extends State<HomeScreen> {
                 if (provider.loadingBodyImage) {
                   return _buildLoadingWidget();
                 }
-                if ((provider.imageBodyId.isEmpty)) {
+                if (provider.imageBodyId.isEmpty) {
                   return InkWell(
                     onTap: onSelectImage1,
-                    child: BoxLayout(
-                      padding: const EdgeInsets.symmetric(vertical: 50),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(6, 2, 12, 2),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: AppColor.BLUE_TEXT.withOpacity(0.4),
-                            ),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: BoxLayout(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.asset(
-                                  'assets/images/ic-edit-avatar-setting.png',
-                                  width: 30,
-                                  color: AppColor.BLUE_TEXT,
-                                ),
-                                const Text(
-                                  'Chọn ảnh',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: AppColor.BLUE_TEXT,
-                                      height: 1.4),
+                                Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(6, 2, 12, 2),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: AppColor.BLUE_TEXT.withOpacity(0.4),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/ic-edit-avatar-setting.png',
+                                        width: 30,
+                                        color: AppColor.BLUE_TEXT,
+                                      ),
+                                      const Text(
+                                        'Chọn ảnh',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: AppColor.BLUE_TEXT,
+                                            height: 1.4),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   );
                 } else {

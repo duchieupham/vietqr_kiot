@@ -14,6 +14,7 @@ class ListVietQr extends StatelessWidget {
   ListVietQr({super.key, required this.qrGeneratedDTOs, this.content});
 
   final carouselController = CarouselController();
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -33,30 +34,29 @@ class ListVietQr extends StatelessWidget {
             children: [
               Expanded(
                 child: CarouselSlider(
-                    carouselController: carouselController,
-                    items: List.generate(qrGeneratedDTOs.length, (index) {
-                      return _buildItemQR(
-                          qrGeneratedDTOs[index],
-                          context,
-                          (constraints.maxWidth / constraints.maxHeight) > 1.4,
-                          constraints.maxWidth < 700);
-                    }).toList(),
-                    options: CarouselOptions(
-                      viewportFraction: 1,
-                      aspectRatio:
-                          (constraints.maxWidth / constraints.maxHeight) > 1.4
-                              ? (constraints.maxWidth / constraints.maxHeight)
-                              : 0.8,
-                      disableCenter: true,
-                      onPageChanged: ((index, reason) {
-                        Provider.of<ListQRProvider>(context, listen: false)
-                            .updateQrIndex(index);
-                      }),
-                    )),
+                  carouselController: carouselController,
+                  items: List.generate(qrGeneratedDTOs.length, (index) {
+                    return _buildItemQR(
+                        qrGeneratedDTOs[index],
+                        context,
+                        (constraints.maxWidth / constraints.maxHeight) > 1.4,
+                        constraints.maxWidth < 700);
+                  }).toList(),
+                  options: CarouselOptions(
+                    viewportFraction: 1,
+                    aspectRatio:
+                        (constraints.maxWidth / constraints.maxHeight) > 1.4
+                            ? (constraints.maxWidth / constraints.maxHeight)
+                            : 0.8,
+                    disableCenter: true,
+                    onPageChanged: ((index, reason) {
+                      Provider.of<ListQRProvider>(context, listen: false)
+                          .updateQrIndex(index);
+                    }),
+                  ),
+                ),
               ),
-              const SizedBox(
-                height: 12,
-              ),
+              const SizedBox(height: 12),
               _buildIndicatorDot()
             ],
           ),

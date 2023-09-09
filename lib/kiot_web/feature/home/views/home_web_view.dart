@@ -356,7 +356,6 @@ class _HomeScreen extends State<HomeWebScreen> {
                   fit: BoxFit.cover,
                   image: Image.memory(
                     provider.bodyImageFile!,
-                    fit: BoxFit.cover,
                   ).image,
                 ),
               ),
@@ -442,7 +441,6 @@ class _HomeScreen extends State<HomeWebScreen> {
                 fit: BoxFit.cover,
                 image: Image.memory(
                   provider.footerImageFile!,
-                  fit: BoxFit.cover,
                 ).image,
               ),
             ),

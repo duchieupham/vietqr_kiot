@@ -57,6 +57,64 @@ class TokenRepository {
     }
     return result;
   }
+  //return
+  //0: ignore
+  //1: success
+  //2: maintain
+  //3: connection failed
+  //4: token expired
+  Future<int> checkValidTokenWeb() async {
+    int result = 0;
+    try {
+      String url = '${EnvConfig.getBaseUrl()}token';
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+
+      if (response.statusCode == 200) {
+        result = 1;
+      } else if (response.statusCode == 404 || response.statusCode == 400) {
+        result = 2;
+      } else if (response.statusCode == 403) {
+        result = 4;
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      if (e.toString().contains('Connection failed')) {
+        result = 3;
+      }
+    }
+    return result;
+  }
+
+  Future<bool> updateFcmTokenWeb() async {
+    bool result = false;
+    try {
+      String userId = UserInformationHelper.instance.getUserId();
+      String oldToken = AccountHelper.instance.getFcmToken();
+      String newToken = await FirebaseMessaging.instance.getToken() ?? '';
+      if (oldToken.trim() != newToken.trim()) {
+        FcmTokenUpdateDTO dto = FcmTokenUpdateDTO(
+            userId: userId, oldToken: oldToken, newToken: newToken);
+        final String url = '${EnvConfig.getBaseUrl()}fcm-token/update';
+        final response = await BaseAPIClient.postAPI(
+          url: url,
+          body: dto.toJson(),
+          type: AuthenticationType.SYSTEM,
+        );
+        if (response.statusCode == 200) {
+          result = true;
+          await AccountHelper.instance.setFcmToken(newToken);
+        }
+      } else {
+        result = true;
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
 
   Future<List<QRGeneratedDTO>> getListQR() async {
     List<QRGeneratedDTO> list = [];

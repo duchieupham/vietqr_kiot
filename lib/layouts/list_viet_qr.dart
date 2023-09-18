@@ -99,7 +99,7 @@ class ListVietQr extends StatelessWidget {
         Expanded(
           child: Container(
             margin:
-                const EdgeInsets.only(left: 8, right: 8, top: 24, bottom: 20),
+                const EdgeInsets.only(left: 24, right: 24, top: 24, bottom: 20),
             decoration: BoxDecoration(
               color: AppColor.WHITE,
               borderRadius: const BorderRadius.all(Radius.circular(16)),
@@ -123,13 +123,16 @@ class ListVietQr extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Expanded(
-                  child: QrImage(
-                    data: qrGeneratedDTO.qrCode,
-                    version: QrVersions.auto,
-                    embeddedImage:
-                        const AssetImage('assets/images/ic-viet-qr-small.png'),
-                    embeddedImageStyle: QrEmbeddedImageStyle(
-                      size: const Size(26, 26),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: QrImage(
+                      data: qrGeneratedDTO.qrCode,
+                      version: QrVersions.auto,
+                      embeddedImage: const AssetImage(
+                          'assets/images/ic-viet-qr-small.png'),
+                      embeddedImageStyle: QrEmbeddedImageStyle(
+                        size: const Size(26, 26),
+                      ),
                     ),
                   ),
                 ),
